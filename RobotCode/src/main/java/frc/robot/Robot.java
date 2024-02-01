@@ -4,70 +4,101 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Subsystems.Swerve;
+import frc.robot.Utils.Consts;
+import frc.robot.Utils.Vision;
 
-public class Robot extends TimedRobot {
-  private Command m_autonomousCommand;
-
-  private RobotContainer m_robotContainer;
-
+public class Robot extends TimedRobot implements Consts{
+  private Swerve m_swerveInstance;
+  private Field2d m_field;
+  private Vision m_vision;
+  
   @Override
   public void robotInit() {
-    m_robotContainer = new RobotContainer();
+    m_swerveInstance = Swerve.getInstance(ChassisValues.USES_ABS_ENCODER);
+    new RobotContainer();
+    SmartDashboard.putNumber("max drive speed", 1);
+    SmartDashboard.putNumber("max angular speed", 200);
+    m_swerveInstance.zeroModulesAngles();
+    //create and add robot field data to dashboard
+    m_field = new Field2d();
+    SmartDashboard.putData(m_field);
+    m_vision = new Vision(VisionValues.LOCALIZATION_VISION_PORT);
   }
 
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
+    //get current position and rotation of robot 
+    double xCurrent = m_swerveInstance.getX();
+    double yCurrent = m_swerveInstance.getY();
+    double headingCurrent = m_swerveInstance.getAngleWithOffset();
+    //update the robot position of dashboard
+    m_field.setRobotPose(xCurrent, yCurrent, new Rotation2d(Math.toRadians(-headingCurrent + 90)));
   }
 
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    m_swerveInstance.stop();
+  }
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+  }
 
   @Override
-  public void disabledExit() {}
+  public void disabledExit() {
+  }
 
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
-    }
   }
 
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+  }
 
   @Override
-  public void autonomousExit() {}
+  public void autonomousExit() {
+  }
 
   @Override
   public void teleopInit() {
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
-    }
+    CommandScheduler.getInstance().cancelAll();
+    m_swerveInstance.zeroYaw();
+    m_swerveInstance.resetOdometry();
+    m_swerveInstance.setModulesToAbs();
+    RobotContainer.teleop.schedule();
   }
 
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+  }
 
   @Override
-  public void teleopExit() {}
+  public void teleopExit() {
+    m_swerveInstance.stop();
+  }
 
   @Override
   public void testInit() {
+    m_swerveInstance.zeroYaw();
     CommandScheduler.getInstance().cancelAll();
+    RobotContainer.teleop.schedule();
   }
 
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+  }
 
   @Override
-  public void testExit() {}
+  public void testExit() {
+    m_swerveInstance.stop();
+  }
 }

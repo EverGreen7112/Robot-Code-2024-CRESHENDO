@@ -1,7 +1,9 @@
 package frc.robot.Utils;
 
-public class Vector2d {
-     /**
+
+public class Vector2d
+{
+    /**
      * X-coordinate of the vector.
      */
     public double x;
@@ -191,9 +193,17 @@ public class Vector2d {
 
         double nx = x * cosTheta - y * sinTheta;
         double ny = x * sinTheta + y * cosTheta;
-
+        
         x = nx;
         y = ny;
+        return this;
+    }
+
+    public Vector2d rotateBy(double thetaRadians){
+        double mag = this.mag();
+        double theta = Math.atan2(this.x, this.y) + thetaRadians;
+        this.x = Math.cos(theta) * mag;
+        this.y = Math.sin(theta) * mag;
         return this;
     }
 
@@ -279,3 +289,4 @@ public class Vector2d {
         return tot;
     }
 }
+

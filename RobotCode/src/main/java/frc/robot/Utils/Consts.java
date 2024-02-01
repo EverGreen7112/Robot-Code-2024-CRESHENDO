@@ -82,6 +82,24 @@ public interface Consts {
         // module gear ratios
         public static final double DRIVE_GEAR_RATIO = 1 / 6.75; // L2
         public static final double STEERING_GEAR_RATIO = 1 / 12.8;
+
+        public static final double AUTONOMOUS_MAX_ANGULAR_SPEED = 0.5;
+
+        // max speed values in m/s
+        public static final Supplier<Double> MAX_SPEED = new Supplier<Double>() {
+            @Override
+            public Double get() {
+                return SmartDashboard.getNumber("max drive speed", 1);
+            }
+        };
+
+        // speed values in deg/s
+        public static final Supplier<Double> MAX_ANGULAR_SPEED = new Supplier<Double>() {
+            @Override
+            public Double get() {
+                return SmartDashboard.getNumber("max angular speed", 180);
+            }
+        };
     }
 
     public class ClimberValues{
@@ -105,25 +123,9 @@ public interface Consts {
 
     }
 
-    public class SpeedValues {
-        public static final double AUTONOMOUS_MAX_ANGULAR_SPEED = 0.5;
-
-        // max speed values in m/s
-        public static final Supplier<Double> MAX_SPEED = new Supplier<Double>() {
-            @Override
-            public Double get() {
-                return SmartDashboard.getNumber("max drive speed", 1);
-            }
-        };
-
-        // speed values in deg/s
-        public static final Supplier<Double> MAX_ANGULAR_SPEED = new Supplier<Double>() {
-            @Override
-            public Double get() {
-                return SmartDashboard.getNumber("max angular speed", 180);
-            }
-        };
-
+    public class VisionValues{
+        public static final int LOCALIZATION_VISION_PORT = 5800;
+          
     }
 
 }

@@ -89,7 +89,7 @@ public interface Consts {
     }
 
     public class IntakeValues{
-
+        public static final int INTAKE_MOTOR_PORT = 1;
     }
 
     public class ShooterValues{

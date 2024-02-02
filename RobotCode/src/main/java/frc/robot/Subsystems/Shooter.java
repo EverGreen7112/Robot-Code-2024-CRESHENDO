@@ -2,6 +2,7 @@ package frc.robot.Subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ColorMatch;
+import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
@@ -10,7 +11,6 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -103,11 +103,11 @@ public class Shooter extends SubsystemBase implements Consts{
             m_aimMotor.getEncoder().setPosition(ShooterValues.AIM_MOTOR_MIN_ANGLE);    
 
         //start spining rollers if note is inside the shooter 
-        if(m_colorMatcher.matchColor(m_colorSensor.getColor()).confidence >= ShooterValues.COLOR_SENSOR_CONFIDENCE)
+        ColorMatchResult result = m_colorMatcher.matchColor(m_colorSensor.getColor());
+        if(result != null && result.confidence >= ShooterValues.COLOR_SENSOR_CONFIDENCE)
             shootNote(getLeftRollerSpeed());
+
         
-
-
     }
 
     /**

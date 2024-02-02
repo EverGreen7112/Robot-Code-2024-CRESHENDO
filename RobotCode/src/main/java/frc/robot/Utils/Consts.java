@@ -85,11 +85,18 @@ public interface Consts {
     }
 
     public class ClimberValues{
+        public static final int CLIMBER_MOTOR_ONE_PORT = 7;
+        public static final int CLIMBER_MOTOR_TWO_PORT = 8;
+
+        public static final double CLIMBER_MOTOR_ONE_GEAR_RATIO = 1 / 45;
+        public static final double CLIMBER_MOTOR_TWO_GEAR_RATIO = 1 / 45;
 
     }
 
     public class IntakeValues{
+        public static final int INTAKE_MOTOR_PORT = 1;
 
+        public static final double INTAKE_SPEED = 0;
     }
 
     public class ShooterValues{

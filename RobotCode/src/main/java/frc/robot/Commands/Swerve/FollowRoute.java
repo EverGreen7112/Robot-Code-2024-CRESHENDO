@@ -4,9 +4,11 @@ import java.util.ArrayList;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Subsystems.Swerve;
 import frc.robot.Utils.Consts;
+import frc.robot.Utils.Funcs;
 import frc.robot.Utils.SwervePoint;
 import frc.robot.Utils.Vector2d;
 
@@ -18,6 +20,7 @@ public class FollowRoute extends CommandBase implements Consts {
     private int current;
 
     public FollowRoute(ArrayList<SwervePoint> posList) {
+        addRequirements(Swerve.getInstance(ChassisValues.USES_ABS_ENCODER));
         m_posList = posList;
     }
 
@@ -35,33 +38,34 @@ public class FollowRoute extends CommandBase implements Consts {
         // get current values
         double xCurrent = Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).getX();
         double yCurrent = Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).getY();
+
         // calculate outputs
-        double xOutput = MathUtil.clamp(m_xPidController.calculate(m_posList.get(current).getX() - xCurrent), -1, 1);
-        double yOutput = MathUtil.clamp(m_yPidController.calculate(m_posList.get(current).getY() - yCurrent), -1, 1);
+        double xOutput = MathUtil.clamp(m_xPidController.calculate(xCurrent, m_posList.get(current).getX()),
+                -Consts.ChassisValues.MAX_SPEED.get(),
+                Consts.ChassisValues.MAX_SPEED.get());
+        double yOutput = MathUtil.clamp(m_yPidController.calculate(yCurrent, m_posList.get(current).getY()),
+                -Consts.ChassisValues.MAX_SPEED.get(),
+                Consts.ChassisValues.MAX_SPEED.get());
 
         // apply outputs
-        Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).drive(new Vector2d(xOutput, yOutput), true);
-        Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).rotateTo(m_posList.get(current).getAngle());
+        Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).driveFieldOrientedAngle(new Vector2d(xOutput, yOutput));
+        Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).turnToFieldOriented(m_posList.get(current).getAngle());
     }
 
     @Override
     public boolean isFinished() {
         if (m_posList.isEmpty())
             return true;
-        //get current state of robot
+        // get current state of robot
         double xCurrent = Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).getX();
         double yCurrent = Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).getY();
-        double headingCurrent = Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).getGyro().getAngle();
-        if ((   //check if entered x threshold
-                (Math.abs(m_posList.get(current).getX()) + PIDValues.X_TOLERANCE) > Math.abs(xCurrent) &&
-                (Math.abs(m_posList.get(current).getX()) - PIDValues.X_TOLERANCE) < Math.abs(xCurrent) &&
-                //check if entered y threshold
-                (Math.abs(m_posList.get(current).getY()) + PIDValues.Y_TOLERANCE) > Math.abs(yCurrent) &&
-                (Math.abs(m_posList.get(current).getY()) - PIDValues.Y_TOLERANCE) < Math.abs(yCurrent) &&
-                //check if entered heading threshold
-                (Math.abs(m_posList.get(current).getAngle()) + PIDValues.HEADING_TOLERANCE) > Math.abs(headingCurrent) &&
-                (Math.abs(m_posList.get(current).getAngle()) - PIDValues.HEADING_TOLERANCE) < Math.abs(headingCurrent)   
-            )) {
+        double headingCurrent = Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).getFieldOrientedAngle();
+        if (( // check if entered x threshold
+        Math.abs(m_posList.get(current).getX() - xCurrent) < PIDValues.X_TOLERANCE &&
+        // check if entered y threshold
+                Math.abs(m_posList.get(current).getY() - yCurrent) < PIDValues.Y_TOLERANCE &&
+                // check if entered heading threshold
+                (Math.abs(m_posList.get(current).getAngle() - headingCurrent) % 360) < PIDValues.HEADING_TOLERANCE)) {
             current++;
         }
         return current >= m_posList.size();
@@ -72,4 +76,5 @@ public class FollowRoute extends CommandBase implements Consts {
         Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).stop();
         current = 0;
     }
+
 }

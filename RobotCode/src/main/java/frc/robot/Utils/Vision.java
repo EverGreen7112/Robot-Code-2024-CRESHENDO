@@ -58,6 +58,12 @@ public class Vision {
         m_visionThread.setDaemon(true);
         m_visionThread.start();
     }
+
+    // public void getLocals(){
+        
+                
+    // }
+
     public float[] getXYZ(){
         // this.getLocals();
         float[] newLocals={0,0,0};
@@ -79,11 +85,13 @@ public class Vision {
     
 
     public double getAngleY(){
+        // this.getLocals();
         float[] temp=getXYZ();
         return Math.toDegrees(Math.atan(temp[0]/temp[2]))*-1;
     }
 
     public double getAngleX(){
+        // this.getLocals();
         float[] temp=getXYZ();
         return Math.toDegrees(Math.atan(temp[1]/temp[2]))*-1;
     }    

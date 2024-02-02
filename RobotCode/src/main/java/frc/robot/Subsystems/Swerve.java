@@ -7,13 +7,13 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Utils.Consts.PIDValues;
 import frc.robot.Utils.Consts;
 import frc.robot.Utils.Funcs;
 import frc.robot.Utils.Vector2d;
+import frc.robot.Utils.Consts.ChassisValues;
 
-public class Swerve extends SubsystemBase implements Consts{
-    
+public class Swerve extends SubsystemBase implements Consts {
+
     // array of swerve modules
     private SwerveModule[] m_modules;
 
@@ -96,15 +96,45 @@ public class Swerve extends SubsystemBase implements Consts{
     }
 
     /**
-     * see math on pdf document for more information
+     * this function provides a trully field oriented drive as opposed to {@link #driveOriginOriented(Vector2d, boolean) driveRobotOrientedAngle}.
+     * 
+     * 
+     * this function uses the fields coordinate system as well as the fields angle of 0 to make sure the same vector
+     * would cause you to always drive in the same direction regardless of where the robot was facing on init.
+     * 
+     * this function is good for autonoumous but is not good for driving with joysticks
+     * 
+     * @param driveVec - 2d vector that represents target velocity vector (x
+     *                   and y values are between 1 and -1), keep in mind, a direction
+     *                   of 0 degrees will be the same regardless of where the robot was facing 
+     *                   when it was turned on
+     */
+    public void driveFieldOrientedAngle(Vector2d driveVec) {
+        Vector2d originOrientedDriveVec = driveVec.copy();
+        originOrientedDriveVec.rotateBy(Math.toRadians(-m_angleOffset - 90)); // -90 because setState adds 90
+        originOrientedDriveVec.x *= -1;
+        driveOriginOriented(originOrientedDriveVec, true);
+
+    }
+
+    /**
+     * DO NOT USE THIS FUNCTION ACCIDENTLY INSTEAD OF {@link #driveFieldOrientedAngle(Vector2d) driveFieldOrientedAngle},
+     * this function is not trully field oriented as the angle is relative to the robots starting point AND NOT THE FIELDS ACTUAL 0!!!
+     * this function is usefull for driving in real time BUT SHOULD NOT BE USED FOR AUTONOMOUS OR ANYTHING OF THIS SORT!!!
+     * 
+     * 
+     * see math on pdf document for more information on the how this function works
      * 
      * @param directionVec    - 2d vector that represents target velocity vector (x
-     *                        and y values are between 1 and -1)
-     * @param isFieldOriented - true if you want the robot to drive accoring to
-     *                        field coordinates false if you want the robot to drive
-     *                        accoring to robot facing direction
+     *                        and y values are between 1 and -1), keep in mind, 
+     *                        when using field oriented with this function a direction of 0 
+     *                        degrees is where ever the robot was facing when it was turned on 
+     * @param isOriginOriented - true if you want the robot to drive relative to its starting configuration
+     *                           (BUT STILL WITH A ORIGIN ORIENTED ANGLE) false if you want the robot to drive
+     *                           accoring to robot facing direction
+     *                        
      */
-    public void drive(Vector2d driveVec, boolean isFieldOriented) {
+    public void driveOriginOriented(Vector2d driveVec, boolean isOriginOriented) {
         // if drive values are 0 stop moving
         if (driveVec.mag() == 0 && m_rotationSpeed == 0) {
             for (int i = 0; i < m_modules.length; i++) {
@@ -116,7 +146,7 @@ public class Swerve extends SubsystemBase implements Consts{
         driveVec.mul(ChassisValues.MAX_SPEED.get());
 
         // convert driveVector to field oriented
-        if (isFieldOriented) {
+        if (isOriginOriented) {
             driveVec.rotate(Math.toRadians(m_gyro.getYaw()));
         }
 
@@ -143,19 +173,30 @@ public class Swerve extends SubsystemBase implements Consts{
 
     /**
      * 
-     * rotate chassis by angle
+     * turn chassis by angle
      */
-    public void rotateBy(double angle) {
-        m_headingTargetAngle += angle;
+    public void turnBy(double angleDegrees) {
+        m_headingTargetAngle += angleDegrees;
+    }
+
+    /**
+     * DO NOT USE THIS FUNCTION ACCIDENTLY, most of the times you should use {@link #turnToFieldOriented(double) turnToFieldOriented}.
+     * 
+     * this function turns chassis to a origin oriented angle, meaning the 0 angle isnt the real 0 but whatever 
+     * direction the robot was looking at when it was turned on
+     */
+    public void turnToOriginOriented(double angleDegrees) {
+        m_headingTargetAngle = angleDegrees;
     }
 
     /**
      * 
-     * rotate chassis to angle
+     * makes the robot turn to a field 
      */
-    public void rotateTo(double angle) {
-        m_headingTargetAngle = angle;
+    public void turnToFieldOriented(double angleDegrees) {
+        m_headingTargetAngle = angleDegrees - m_angleOffset;
     }
+
 
     /**
      * set gyro's yaw value to 0 
@@ -191,6 +232,13 @@ public class Swerve extends SubsystemBase implements Consts{
         }
     }
 
+    /**
+     * DO NOT USE ACCIDENTLY INSTEAD OF {@link #getFieldOrientedAngle() getFieldOrientedAngle}. 
+     * 
+     * this method returns the gyro which tells you the origin oriented angle of the robot
+     *  AND NOT the field oriented angle!!! most of the times you'd need the field oriented angle, so use this carefully
+     * @return
+     */
     public AHRS getGyro() {
         return m_gyro;
     }
@@ -235,6 +283,7 @@ public class Swerve extends SubsystemBase implements Consts{
     }
 
     /**
+     * 
      * @return get the current position as a vector
      */
     public Vector2d getPos(){
@@ -242,16 +291,17 @@ public class Swerve extends SubsystemBase implements Consts{
     }
 
     /**
-     * @return the angle offset that transforms an angle from robot oriented to field oriented
+     * @return the angle offset that transforms an angle from origin oriented to field oriented
      */
     public double getOffsetAngle(){ 
         return m_angleOffset;
     }
 
     /**
+     * 
      * @return the angle of the robot with an offset to make it field oriented 
      */
-    public double getAngleWithOffset(){
+    public double getFieldOrientedAngle(){
         return (m_gyro.getAngle() + m_angleOffset);
     }
 
@@ -261,6 +311,7 @@ public class Swerve extends SubsystemBase implements Consts{
         double robotDeltaY = 0;
         for (int i = 0; i < m_modules.length; i++) {
             double deltaP = m_modules[i].getPos() - m_modules[i].m_currentPosition;
+
             // these values are all robot oriented
             moduleDeltaX = (Math.cos(Math.toRadians(m_modules[i].getAngle())) * deltaP);
             moduleDeltaY = (Math.sin(Math.toRadians(m_modules[i].getAngle())) * deltaP);
@@ -277,12 +328,17 @@ public class Swerve extends SubsystemBase implements Consts{
 
         // this is the robot's Delta movement in robot oriented coordinates
         Vector2d robotDelta = new Vector2d(robotDeltaX, robotDeltaY);
-        robotDelta.rotateBy(Math.toRadians(getAngleWithOffset()));  // changes robotDelta to field oriented
+        robotDelta.rotateBy(Math.toRadians(getFieldOrientedAngle()));  // changes robotDelta to field oriented
 
         m_x -= robotDelta.x;
         m_y += robotDelta.y;
 
+
         SmartDashboard.putNumber("x", m_x);
         SmartDashboard.putNumber("y", m_y);
+        SmartDashboard.putNumber("angle", getFieldOrientedAngle());
+        SmartDashboard.putNumber("target angle", m_headingTargetAngle);
+        SmartDashboard.putNumber("vision angle", m_robotHeadingFromVision);
+        SmartDashboard.putNumber("offset", m_angleOffset);
     }
 }

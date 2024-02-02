@@ -53,7 +53,7 @@ public class DriveByJoysticks extends CommandBase implements Consts{
         speedY = Funcs.roundAfterDecimalPoint(speedY, 2);
 
         //rotate robot according to rotation supplier   
-        Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).rotateBy(ChassisValues.MAX_ANGULAR_SPEED.get() * rotation * deltaTime);
+        Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).turnBy(ChassisValues.MAX_ANGULAR_SPEED.get() * rotation * deltaTime);
         //create drive vector
         Vector2d vec = new Vector2d(-speedX, speedY);
         //make sure mag never goes over 1 so driving in all directions will be the same speed
@@ -61,7 +61,7 @@ public class DriveByJoysticks extends CommandBase implements Consts{
             vec.normalise();
         }
         //drive
-        Swerve.getInstance(m_usesAbsEncoder).drive(vec, m_isFieldOriented.get());
+        Swerve.getInstance(m_usesAbsEncoder).driveOriginOriented(vec, m_isFieldOriented.get());
         //update current time
         m_currentTime = System.currentTimeMillis() / 1000.0;
     }

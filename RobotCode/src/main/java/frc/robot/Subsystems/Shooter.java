@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
@@ -17,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Utils.Consts;
 
 public class Shooter extends SubsystemBase implements Consts{
+    private static Shooter m_instance;
     //controls the right side shooter rollers
     private CANSparkMax m_rightShootMotor;
     //controls the left side shooter roller
@@ -33,7 +35,7 @@ public class Shooter extends SubsystemBase implements Consts{
     private ColorSensorV3 m_colorSensor;
     private ColorMatch m_colorMatcher;
 
-    public Shooter(){
+    private Shooter(){
         //create motor controller objects
         m_rightShootMotor = new CANSparkMax(ShooterValues.RIGHT_SHOOT_MOTOR_ID, MotorType.kBrushless);
         m_leftShootMotor = new CANSparkMax(ShooterValues.LEFT_SHOOT_MOTOR_ID, MotorType.kBrushless);
@@ -69,14 +71,17 @@ public class Shooter extends SubsystemBase implements Consts{
         m_rightShootMotor.getPIDController().setP(PIDValues.RIGHT_ROLLERS_SPEED_KP);
         m_rightShootMotor.getPIDController().setI(PIDValues.RIGHT_ROLLERS_SPEED_KI);
         m_rightShootMotor.getPIDController().setD(PIDValues.RIGHT_ROLLERS_SPEED_KD);
-
+        m_rightShootMotor.getPIDController().setFF(PIDValues.RIGHT_ROLLERS_SPEED_KF);
+        
         m_leftShootMotor.getPIDController().setP(PIDValues.LEFT_ROLLERS_SPEED_KP);
         m_leftShootMotor.getPIDController().setI(PIDValues.LEFT_ROLLERS_SPEED_KI);
         m_leftShootMotor.getPIDController().setD(PIDValues.LEFT_ROLLERS_SPEED_KD);
-        
+        m_leftShootMotor.getPIDController().setFF(PIDValues.LEFT_ROLLERS_SPEED_KF);
+
         m_containmentMotor.getPIDController().setP(PIDValues.CONTAINMENT_SPEED_KP);
         m_containmentMotor.getPIDController().setI(PIDValues.CONTAINMENT_SPEED_KI);
         m_containmentMotor.getPIDController().setD(PIDValues.CONTAINMENT_SPEED_KD);
+        m_containmentMotor.getPIDController().setFF(PIDValues.CONTAINMENT_SPEED_KF);
 
         m_aimMotor.getPIDController().setP(PIDValues.SHOOTER_ANGLE_KP);
         m_aimMotor.getPIDController().setI(PIDValues.SHOOTER_ANGLE_KI);
@@ -88,6 +93,15 @@ public class Shooter extends SubsystemBase implements Consts{
 
         //gear ratio
         m_aimMotor.getEncoder().setPositionConversionFactor(ShooterValues.AIM_MOTOR_GEAR_RATIO * 360); //convert to degrees
+    }
+
+    /**
+     * @return only instance of this class
+     */
+    public static Shooter getInstance(){
+        if(m_instance == null)
+            m_instance = new Shooter();
+        return m_instance;
     }
 
     @Override

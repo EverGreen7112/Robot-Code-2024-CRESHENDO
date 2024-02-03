@@ -5,14 +5,19 @@ import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Utils.Consts;
 
 public class ClimberSubSystem extends SubsystemBase implements Consts {
     private static ClimberSubSystem m_climberSubSystem;
-    private CANSparkMax m_climberMotorOne, m_climberMotorTwo;
+    public CANSparkMax m_climberMotorOne, m_climberMotorTwo;
+    public DigitalInput m_climberLimitSwitchOne, m_climberLimitSwitchTwo;
 
     public ClimberSubSystem() {
+
+        m_climberLimitSwitchOne = new DigitalInput(ClimberValues.CLIMBER_LIMIT_SWITCH_ONE_PORT);
+        m_climberLimitSwitchTwo = new DigitalInput(ClimberValues.CLIMBER_LIMIT_SWITCH_TWO_PORT);
 
         m_climberMotorOne = new CANSparkMax(ClimberValues.CLIMBER_MOTOR_ONE_PORT, MotorType.kBrushless);
         m_climberMotorTwo = new CANSparkMax(ClimberValues.CLIMBER_MOTOR_TWO_PORT, MotorType.kBrushless);

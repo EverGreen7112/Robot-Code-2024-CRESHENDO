@@ -26,11 +26,36 @@ public interface Consts {
         public static final double X_TOLERANCE = 0.05;
         public static final double Y_TOLERANCE = 0.05;
 
-        // speed values
+        //speed values
         public static final double HEADING_KP = 0.03;
         public static final double HEADING_KI = 0;
         public static final double HEADING_KD = 0;
         public static final double HEADING_TOLERANCE = 3;
+        
+        //shooter angle
+        public static final double SHOOTER_ANGLE_KP = 0;
+        public static final double SHOOTER_ANGLE_KI = 0;
+        public static final double SHOOTER_ANGLE_KD = 0;
+        public static final double SHOOTER_ANGLE_KF = 0;
+        
+        //right rollers speed
+        public static final double RIGHT_ROLLERS_SPEED_KP = 0;
+        public static final double RIGHT_ROLLERS_SPEED_KI = 0;
+        public static final double RIGHT_ROLLERS_SPEED_KD = 0;
+        public static final double RIGHT_ROLLERS_SPEED_KF = 0;
+        
+        //left rollers speed
+        public static final double LEFT_ROLLERS_SPEED_KP = 0;
+        public static final double LEFT_ROLLERS_SPEED_KI = 0;
+        public static final double LEFT_ROLLERS_SPEED_KD = 0;
+        public static final double LEFT_ROLLERS_SPEED_KF = 0;
+        
+        //containment speed
+        public static final double CONTAINMENT_SPEED_KP = 0;
+        public static final double CONTAINMENT_SPEED_KI = 0;
+        public static final double CONTAINMENT_SPEED_KD = 0;
+        public static final double CONTAINMENT_SPEED_KF = 0;
+        
     }
 
     public class ChassisValues{
@@ -82,30 +107,7 @@ public interface Consts {
         // module gear ratios
         public static final double DRIVE_GEAR_RATIO = 1 / 6.75; // L2
         public static final double STEERING_GEAR_RATIO = 1 / 12.8;
-    }
 
-    public class ClimberValues{
-
-    }
-
-    public class IntakeValues{
-
-    }
-
-    public class ShooterValues{
-
-    }
-
-    public class JoystickValues {
-
-        public static final int LEFT_JOYSTICK = 0;
-        public static final int RIGHT_JOYSTICK = 1;
-        public static final int OPERATOR = 2;
-        public static final double JOYSTICK_DEADZONE = 0.2;
-
-    }
-
-    public class SpeedValues {
         public static final double AUTONOMOUS_MAX_ANGULAR_SPEED = 0.5;
 
         // max speed values in m/s
@@ -124,6 +126,52 @@ public interface Consts {
             }
         };
 
+    }
+
+    public class ClimberValues{
+
+    }
+
+    public class IntakeValues{
+
+    }
+
+    public class ShooterValues{
+        //gear ratio
+        public static final double AIM_MOTOR_GEAR_RATIO = 1 / 30.0;
+
+        //shooter speeds(in rpm)
+        public static final double SPEAKER_SHOOT_SPEED = 0;
+        public static final double AMP_SHOOT_SPEED = 0;
+        public static final double CONTAINMENT_SPEED = 0;
+        
+        //shooter angle range
+        public static final double AIM_MOTOR_MAX_ANGLE = 0;
+        public static final double AIM_MOTOR_MIN_ANGLE = -42;
+        
+        //motor controllers ids
+        public static final int RIGHT_SHOOT_MOTOR_ID = 0;
+        public static final int LEFT_SHOOT_MOTOR_ID = 0;
+        public static final int CONTAINMENT_MOTOR_ID = 0;
+        public static final int AIM_MOTOR_ID = 0;
+
+        //limit switches ids
+        public static final int TOP_LIMIT_SWITCH_ID = 0;
+        public static final int BOTTOM_LIMIT_SWITCH_ID = 0;
+
+        //color min confidence
+        public static final double COLOR_SENSOR_CONFIDENCE = 0.5;
+        //inverted motors
+        public static final boolean RIGHT_SHOOT_MOTOR_INVERTED = false;
+        public static final boolean LEFT_SHOOT_MOTOR_INVERTED = false;
+        public static final boolean CONTAINMENT_MOTOR_INVERTED = false;
+        public static final boolean AIM_MOTOR_INVERTED = false;    
+    }    
+
+    public class JoystickValues {
+        public static final int CHASSIS = 0;
+        public static final int OPERATOR = 1;
+        public static final double JOYSTICK_DEADZONE = 0.2;
     }
 
 }

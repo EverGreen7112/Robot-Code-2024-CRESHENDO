@@ -2,34 +2,34 @@ package frc.robot.Commands;
 
 import java.util.function.Supplier;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.SubSystems.IntakeSubSystem;
+import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Subsystems.Intake;
 import frc.robot.Utils.Consts;
 
-public class IntakeWithoutPID extends CommandBase implements Consts {
-    private Supplier<Boolean>IsPressed;
-    double speed;
+public class IntakeWithoutPID extends Command implements Consts {
+
+    private double m_speed;
 
     public IntakeWithoutPID(double speed,Supplier<Boolean>IsPressed){
-        this.speed = speed;
-        this.IsPressed = IsPressed;
+        this.m_speed = speed;
     }
+
     @Override
     public void initialize(){
-        addRequirements(IntakeSubSystem.getInstance());
+        addRequirements(Intake.getInstance());
     }
 
     @Override
     public void execute(){
-        IntakeSubSystem.getInstance().IntakeWithoutPID(speed);
+        Intake.getInstance().intakeWithoutPID(m_speed);
     }
     @Override
     public boolean isFinished(){
-        return IsPressed.get();
+        return false;
     }
 
     @Override
     public void end(boolean interrupted){
-        IntakeSubSystem.getInstance().m_intakeMotor.stopMotor();
+        Intake.getInstance().stopMotor();
     }
 }

@@ -226,5 +226,12 @@ public class Shooter extends SubsystemBase implements Consts{
         m_containmentMotor.set(0);
     }
 
+    /**
+     * stop the motor that controls the angle of the shooter
+     */
+    public void stopAimMotor(){
+        m_aimMotor.stopMotor();
+    }
+
 
 }

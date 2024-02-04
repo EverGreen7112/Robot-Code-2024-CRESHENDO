@@ -4,10 +4,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Subsystems.Shooter;
 import frc.robot.Utils.Consts.ShooterValues;
 
-public class ShootToSpeaker extends Command{
+public class ShootToAmp extends Command{
     @Override
     public void initialize() {
-        Shooter.getInstance().pullNote(ShooterValues.SPEAKER_SHOOT_SPEED);
+        Shooter.getInstance().shootNote(ShooterValues.AMP_SHOOT_SPEED);
     }
 
     @Override

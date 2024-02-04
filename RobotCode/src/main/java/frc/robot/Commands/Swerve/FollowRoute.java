@@ -4,15 +4,13 @@ import java.util.ArrayList;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Subsystems.Swerve;
 import frc.robot.Utils.Consts;
-import frc.robot.Utils.Funcs;
 import frc.robot.Utils.SwervePoint;
 import frc.robot.Utils.Vector2d;
 
-public class FollowRoute extends CommandBase implements Consts {
+public class FollowRoute extends Command implements Consts {
 
     private PIDController m_xPidController;
     private PIDController m_yPidController;

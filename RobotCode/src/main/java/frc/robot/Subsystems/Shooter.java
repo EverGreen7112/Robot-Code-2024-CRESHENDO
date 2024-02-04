@@ -20,6 +20,7 @@ import frc.robot.Utils.Consts;
 import frc.robot.Utils.Vector2d;
 
 public class Shooter extends SubsystemBase implements Consts{
+
     private static Shooter m_instance;
     //controls the right side shooter rollers
     private CANSparkMax m_rightShootMotor;
@@ -122,8 +123,7 @@ public class Shooter extends SubsystemBase implements Consts{
         ColorMatchResult result = m_colorMatcher.matchColor(m_colorSensor.getColor());
         if(result != null && result.confidence >= ShooterValues.COLOR_SENSOR_CONFIDENCE)
             shootNote(getLeftRollerSpeed());
-
-        
+            
     }
     
     /**
@@ -153,7 +153,7 @@ public class Shooter extends SubsystemBase implements Consts{
      * @param angle - target shooter angle in degrees
      */
     public void turnToAngle(double angle){
-        //clamp value to make sure bad input wont break the robot
+        //clamp value to make sure bad input won't break the robot
         angle = MathUtil.clamp(angle, ShooterValues.AIM_MOTOR_MIN_ANGLE, ShooterValues.AIM_MOTOR_MAX_ANGLE);
         //scale kf according to the shooter's angle(watch the sinus function graph inorder to understand why its here)
         m_aimMotor.getPIDController().setFF(Math.sin(Math.toRadians(angle)) * PIDValues.SHOOTER_ANGLE_KF);

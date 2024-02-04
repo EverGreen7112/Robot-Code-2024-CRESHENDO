@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Utils.Consts;
 import frc.robot.Utils.Funcs;
 import frc.robot.Utils.Vector2d;
-import frc.robot.Utils.Consts.ChassisValues;
 
 public class Swerve extends SubsystemBase implements Consts {
 

@@ -1,13 +1,10 @@
 package frc.robot.Subsystems;
 
-import frc.robot.Utils.Consts.PIDValues;
-
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.ControlType;
+import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Utils.Consts;
 import frc.robot.Utils.Funcs;

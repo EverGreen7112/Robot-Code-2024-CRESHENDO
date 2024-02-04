@@ -1,13 +1,11 @@
 package frc.robot.Commands.Swerve;
 
-import edu.wpi.first.hal.FRCNetComm.tInstances;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Subsystems.Swerve;
 import frc.robot.Utils.Consts;
 import frc.robot.Utils.Vector2d;
 
-public class TurnToPoint extends CommandBase implements Consts{
+public class TurnToPoint extends Command implements Consts{
     //target poiny
     private Vector2d m_target;
 

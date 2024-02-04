@@ -2,13 +2,13 @@ package frc.robot.Commands.Swerve;
 
 import java.util.function.Supplier;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Subsystems.Swerve;
 import frc.robot.Utils.Consts;
 import frc.robot.Utils.Funcs;
 import frc.robot.Utils.Vector2d;
 
-public class DriveByJoysticks extends CommandBase implements Consts{
+public class DriveByJoysticks extends Command implements Consts{
 
     private Supplier<Double> m_speedX, m_speedY, m_rotation;
     private Supplier<Boolean> m_isFieldOriented;

@@ -123,6 +123,17 @@ public class Shooter extends SubsystemBase implements Consts{
 
         
     }
+    
+    /**
+     * calculate the angle the shooter needs to be at according to the current distance from the speaker
+     * (func was created using excel)
+     * @param currentDistance - robot's current distance from the speaker (in meters)
+     * @return the angle the shooter needs to be at
+     */
+    public double distanceToAngle(){
+        return 1 * currentDistance + 0;
+    }
+
 
     /**
      * Turn the shooter to given angle

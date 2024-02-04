@@ -21,16 +21,7 @@ public class ClimbWithPID extends CommandBase implements Consts {
     
     @Override
     public void execute(){
-        ClimberSubSystem.getInstance().pidClimb(rpm);
-        if(ClimberSubSystem.getInstance().m_climberLimitSwitchOne.get()){
-            ClimberSubSystem.getInstance().m_climberMotorOne.stopMotor();
-            ClimberSubSystem.getInstance().m_climberMotorOne.setIdleMode(IdleMode.kBrake);
-        }
-        
-        if(ClimberSubSystem.getInstance().m_climberLimitSwitchTwo.get()){
-            ClimberSubSystem.getInstance().m_climberMotorTwo.stopMotor();
-            ClimberSubSystem.getInstance().m_climberMotorTwo.setIdleMode(IdleMode.kBrake);
-        }
+        ClimberSubSystem.getInstance().climbWithPID(rpm);
     } 
 
     @Override

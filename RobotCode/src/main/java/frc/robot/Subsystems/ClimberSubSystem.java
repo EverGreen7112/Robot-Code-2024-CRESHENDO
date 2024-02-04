@@ -39,9 +39,9 @@ public class ClimberSubSystem extends SubsystemBase implements Consts {
         m_climberMotorOne.getPIDController().setD(ClimberValues.CLIMBER_MOTOR_ONE_KD);
         m_climberMotorOne.getPIDController().setFF(ClimberValues.CLIMBER_MOTOR_ONE_FF);
 
-        m_climberMotorTwo.getPIDController().setP(ClimberValues.CLIMBER_MOTOR_ONE_KP);
-        m_climberMotorTwo.getPIDController().setI(ClimberValues.CLIMBER_MOTOR_ONE_KI);
-        m_climberMotorTwo.getPIDController().setD(ClimberValues.CLIMBER_MOTOR_ONE_KD);
+        m_climberMotorTwo.getPIDController().setP(ClimberValues.CLIMBER_MOTOR_TWO_KP);
+        m_climberMotorTwo.getPIDController().setI(ClimberValues.CLIMBER_MOTOR_TWO_KI);
+        m_climberMotorTwo.getPIDController().setD(ClimberValues.CLIMBER_MOTOR_TWO_KD);
         m_climberMotorTwo.getPIDController().setFF(ClimberValues.CLIMBER_MOTOR_TWO_FF);
 
         // invert motors if necessary
@@ -54,6 +54,21 @@ public class ClimberSubSystem extends SubsystemBase implements Consts {
         m_climberMotorOne.setIdleMode(IdleMode.kBrake);
         m_climberMotorTwo.setIdleMode(IdleMode.kBrake);
 
+    }
+
+    @Override
+    public void periodic(){
+
+        if(ClimberSubSystem.getInstance().m_climberLimitSwitchOne.get()){
+            ClimberSubSystem.getInstance().m_climberMotorOne.stopMotor();
+            ClimberSubSystem.getInstance().m_climberMotorOne.setIdleMode(IdleMode.kBrake);
+        }
+        
+        if(ClimberSubSystem.getInstance().m_climberLimitSwitchTwo.get()){
+            ClimberSubSystem.getInstance().m_climberMotorTwo.stopMotor();
+            ClimberSubSystem.getInstance().m_climberMotorTwo.setIdleMode(IdleMode.kBrake);
+        }
+        
     }
 
     /**
@@ -90,7 +105,7 @@ public class ClimberSubSystem extends SubsystemBase implements Consts {
      * 
      * @param speed Moves both climb motors at the given speed without pid
      */
-    public void move(double speed) {
+    public void climbWithoutPID(double speed) {
         m_climberMotorOne.set(speed);
         m_climberMotorTwo.set(speed);
 
@@ -101,7 +116,7 @@ public class ClimberSubSystem extends SubsystemBase implements Consts {
      * 
      * @param rpm move the motors at the given rpm.
      */
-    public void pidClimb(double rpm) {
+    public void climbWithPID(double rpm) {
         m_climberMotorOne.getPIDController().setReference(rpm, ControlType.kVelocity);
         m_climberMotorOne.getPIDController().setReference(rpm, ControlType.kVelocity);
 

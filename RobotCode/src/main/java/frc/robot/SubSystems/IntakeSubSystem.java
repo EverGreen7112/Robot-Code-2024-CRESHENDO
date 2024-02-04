@@ -15,12 +15,13 @@ public class IntakeSubSystem extends SubsystemBase implements Consts {
     public IntakeSubSystem(){
         m_intakeMotor = new CANSparkMax(IntakeValues.INTAKE_MOTOR_PORT, MotorType.kBrushless);
 
-        m_intakeMotor.getPIDController().setP(IntakeValues.INATKE_MOTOR_KP);
+        m_intakeMotor.getPIDController().setP(IntakeValues.INTAKE_MOTOR_KP);
         m_intakeMotor.getPIDController().setI(IntakeValues.INATKE_MOTOR_KI);
         m_intakeMotor.getPIDController().setD(IntakeValues.INATKE_MOTOR_KD);
         m_intakeMotor.getPIDController().setFF(IntakeValues.INTAKE_MOTOR_FF);
 
     }
+    
 
     public static IntakeSubSystem getInstance(){
         if(m_intakeSubSystem == null)

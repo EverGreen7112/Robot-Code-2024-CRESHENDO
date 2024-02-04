@@ -90,6 +90,13 @@ public interface Consts {
 
     public class IntakeValues{
         public static final int INTAKE_MOTOR_PORT = 1;
+
+        public static final double INTAKE_MOTOR_KP = 0;
+        public static final double INATKE_MOTOR_KI = 0;
+        public static final double INATKE_MOTOR_KD = 0;
+        public static final double INTAKE_MOTOR_FF = 0;
+
+        
     }
 
     public class ShooterValues{

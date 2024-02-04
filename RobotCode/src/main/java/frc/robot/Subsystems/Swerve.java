@@ -39,7 +39,7 @@ public class Swerve extends SubsystemBase implements Consts {
      * @param usesAbsEncoder -if robot got can coders connected to the steering
      *                       motors
      */
-    public Swerve(boolean usesAbsEncoder) {
+    private Swerve(boolean usesAbsEncoder) {
         m_modules = new SwerveModule[ChassisValues.physicalMoudulesVector.length];
         // create modules array
         if (usesAbsEncoder) {

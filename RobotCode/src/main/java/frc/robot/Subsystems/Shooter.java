@@ -12,10 +12,12 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Utils.Consts;
+import frc.robot.Utils.Vector2d;
 
 public class Shooter extends SubsystemBase implements Consts{
     private static Shooter m_instance;
@@ -127,13 +129,22 @@ public class Shooter extends SubsystemBase implements Consts{
     /**
      * calculate the angle the shooter needs to be at according to the current distance from the speaker
      * (func was created using excel)
-     * @param currentDistance - robot's current distance from the speaker (in meters)
      * @return the angle the shooter needs to be at
      */
-    public double distanceToAngle(){
-        double currentDistance = 
-
-        return 1 * currentDistance + 0;
+    public double getAngleToSpeaker(){
+        //get current position
+        Vector2d currentPos = Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).getPos();
+        Vector2d speakerPos = new Vector2d(0, 0);
+        //get position of speaker according to the alliance
+        if(DriverStation.getAlliance().get() == Alliance.Blue){
+            speakerPos = new Vector2d(0, 0);
+        }
+        else if(DriverStation.getAlliance().get() == Alliance.Red){
+            speakerPos = new Vector2d(0, 0);
+        }
+        //calculate the vector between them
+        Vector2d delta = currentPos.subtract(speakerPos);
+        return ShooterValues.DISTANCE_TO_ANGLE_M * delta.mag() + ShooterValues.DISTANCE_TO_ANGLE_B;
     }
 
 

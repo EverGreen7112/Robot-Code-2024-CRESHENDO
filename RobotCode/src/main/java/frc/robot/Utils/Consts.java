@@ -161,11 +161,16 @@ public interface Consts {
 
         //color min confidence
         public static final double COLOR_SENSOR_CONFIDENCE = 0.5;
+
         //inverted motors
         public static final boolean RIGHT_SHOOT_MOTOR_INVERTED = false;
         public static final boolean LEFT_SHOOT_MOTOR_INVERTED = false;
         public static final boolean CONTAINMENT_MOTOR_INVERTED = false;
         public static final boolean AIM_MOTOR_INVERTED = false;    
+
+        //distance to angle func values
+        public static final double DISTANCE_TO_ANGLE_M = 0;
+        public static final double DISTANCE_TO_ANGLE_B = 0;
     }    
 
     public class JoystickValues {

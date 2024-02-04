@@ -131,6 +131,8 @@ public class Shooter extends SubsystemBase implements Consts{
      * @return the angle the shooter needs to be at
      */
     public double distanceToAngle(){
+        double currentDistance = 
+
         return 1 * currentDistance + 0;
     }
 

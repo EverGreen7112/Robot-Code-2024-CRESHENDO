@@ -59,6 +59,24 @@ public interface Consts {
     }
 
     public class ChassisValues{
+        public static final double AUTONOMOUS_MAX_ANGULAR_SPEED = 0.5;
+
+        // max speed values in m/s
+        public static final Supplier<Double> MAX_SPEED = new Supplier<Double>() {
+            @Override
+            public Double get() {
+                return SmartDashboard.getNumber("max drive speed", 1);
+            }
+        };
+
+        // speed values in deg/s
+        public static final Supplier<Double> MAX_ANGULAR_SPEED = new Supplier<Double>() {
+            @Override
+            public Double get() {
+                return SmartDashboard.getNumber("max angular speed", 180);
+            }
+        };
+
         public static final boolean USES_ABS_ENCODER = true;
 
         // chassis motor ports
@@ -151,9 +169,15 @@ public interface Consts {
     }    
 
     public class JoystickValues {
-        public static final int CHASSIS = 0;
+        public static final int LEFT_JOYSTICK = 0;
+        public static final int RIGHT_JOYSTICK = 1;
         public static final int OPERATOR = 1;
         public static final double JOYSTICK_DEADZONE = 0.2;
+    }
+
+    public class VisionValues{
+        public static final int LOCALIZATION_VISION_PORT = 5800;
+          
     }
 
 }

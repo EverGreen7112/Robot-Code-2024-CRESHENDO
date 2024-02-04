@@ -1,13 +1,13 @@
 package frc.robot.Commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Subsystems.Shooter;
 
 public class ShootToSpeaker extends Command{
     
     @Override
     public void execute() {
-        // TODO Auto-generated method stub
-        super.execute();
+        Shooter.getInstance().shootNote(0);
     }    
 
 

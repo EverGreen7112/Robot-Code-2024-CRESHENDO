@@ -1,13 +1,10 @@
 package frc.robot.Commands;
 
-import com.revrobotics.CANSparkBase.IdleMode;
-
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Subsystems.ClimberSubSystem;
+import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Subsystems.Climber;
 import frc.robot.Utils.Consts;
-import frc.robot.Subsystems.ClimberSubSystem;
 
-public class ClimbWithPID extends CommandBase implements Consts {
+public class ClimbWithPID extends Command implements Consts {
 
     double rpm;
 
@@ -16,17 +13,17 @@ public class ClimbWithPID extends CommandBase implements Consts {
     }
     @Override
     public void initialize(){
-        addRequirements(ClimberSubSystem.getInstance());
+        addRequirements(Climber.getInstance());
     } 
     
     @Override
     public void execute(){
-        ClimberSubSystem.getInstance().climbWithPID(rpm);
+        Climber.getInstance().climbWithPID(rpm);
     } 
 
     @Override
     public boolean isFinished(){
-        return (ClimberSubSystem.getInstance().m_climberLimitSwitchOne.get() && ClimberSubSystem.getInstance().m_climberLimitSwitchTwo.get());
+        return (Climber.getInstance().m_climberLimitSwitchOne.get() && Climber.getInstance().m_climberLimitSwitchTwo.get());
     } 
 
     @Override

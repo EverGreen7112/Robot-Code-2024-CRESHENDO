@@ -174,8 +174,7 @@ public interface Consts {
     }    
 
     public class JoystickValues {
-        public static final int LEFT_JOYSTICK = 0;
-        public static final int RIGHT_JOYSTICK = 1;
+        public static final int CHASSIS = 0;
         public static final int OPERATOR = 1;
         public static final double JOYSTICK_DEADZONE = 0.2;
     }

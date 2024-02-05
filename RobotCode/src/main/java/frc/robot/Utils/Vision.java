@@ -59,11 +59,6 @@ public class Vision {
         m_visionThread.start();
     }
 
-    // public void getLocals(){
-        
-                
-    // }
-
     public float[] getXYZ(){
         // this.getLocals();
         float[] newLocals={0,0,0};
@@ -76,14 +71,15 @@ public class Vision {
     public float getX(){
         return m_locals[0];
     }
+    
     public float getY(){
         return m_locals[1];
     }
+
     public float getZ(){
         return m_locals[2];
     }
     
-
     public double getAngleY(){
         // this.getLocals();
         float[] temp=getXYZ();

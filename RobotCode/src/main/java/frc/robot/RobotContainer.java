@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.simulation.XboxControllerSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -25,53 +26,45 @@ public class RobotContainer implements Consts{
     configureBindings();
   }
 
-  public static final Joystick leftJoystick = new Joystick(JoystickValues.LEFT_JOYSTICK);
-  public static final Joystick rightJoystick = new Joystick(JoystickValues.RIGHT_JOYSTICK);
-  public static final Joystick controller = new Joystick(JoystickValues.OPERATOR);
-  public static final XboxController xbox = new XboxController(3);
+  public static final XboxController chassis = new XboxController(JoystickValues.CHASSIS);
+  public static final XboxController operator = new XboxController(JoystickValues.OPERATOR);
 
-  public static DriveByJoysticks teleop = new DriveByJoysticks(() -> controller.getX(), () -> controller.getY(),
-      () -> controller.getZ(), () -> true, ChassisValues.USES_ABS_ENCODER);
-  // new DriveByJoysticks(() -> xbox.getLeftX(), () -> xbox.getLeftY(), () ->
-  // xbox.getRightX(), () -> true, true);
-  // new DriveByJoysticks(() -> leftJoystick.getX(), () -> leftJoystick.getY(),
-  // ()-> rightJoystick.getX(), () -> true, Consts.USES_ABS_ENCODER);
+  public static DriveByJoysticks teleop = new DriveByJoysticks(() -> chassis.getLeftX(), () -> chassis.getLeftY(),
+      () -> chassis.getRightX(), () -> true, ChassisValues.USES_ABS_ENCODER);
+  
 
   private void configureBindings() {
 
-    Trigger rotateRobotBy45 = new JoystickButton(controller, 6).onTrue(new InstantCommand(() -> {
+    Trigger rotateRobotBy45 = new JoystickButton(chassis, XboxController.Button.kRightBumper.value).onTrue(new InstantCommand(() -> {
       Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).turnBy(45);
     }));
 
-    Trigger rotateRobotByMinus45 = new JoystickButton(controller, 5).onTrue(new InstantCommand(() -> {
+    Trigger rotateRobotByMinus45 = new JoystickButton(chassis, XboxController.Button.kLeftBumper.value).onTrue(new InstantCommand(() -> {
       Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).turnBy(-45);
       ;
     }));
-    Trigger rotateRobot180 = new JoystickButton(controller, 8).onTrue(new InstantCommand(() -> {
+
+    Trigger rotateRobot180 = new JoystickButton(chassis, XboxController.Axis.kRightTrigger.value).onTrue(new InstantCommand(() -> {
       Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).turnBy(180);
-      ;
     }));
-    Trigger rotateRobotTo0 = new JoystickButton(controller, 7).onTrue(new InstantCommand(() -> {
+
+    Trigger rotateRobotTo0 = new JoystickButton(chassis, XboxController.Axis.kLeftTrigger.value).onTrue(new InstantCommand(() -> {
       Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).turnToOriginOriented(0);
       ;
     }));
-    Trigger resetOdometry = new JoystickButton(controller, 3).onTrue(new InstantCommand(() -> {
-      Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).resetOdometry();
-    }));
-
+    
     ArrayList<SwervePoint> posList = new ArrayList<SwervePoint>();
 
-    Trigger FollowRoute = new JoystickButton(controller, 10).onTrue(
-      new SequentialCommandGroup(new FollowRoute(posList),  new DriveByJoysticks(() -> controller.getX(), () -> controller.getY(),
-      () -> controller.getZ(), () -> true, ChassisValues.USES_ABS_ENCODER)));
+    Trigger FollowRoute = new JoystickButton(chassis, XboxController.Button.kStart.value).onTrue(
+      new SequentialCommandGroup(new FollowRoute(posList),  teleop));
 
-    Trigger savePoint = new JoystickButton(controller, 2).onTrue(new InstantCommand(() -> {
+    Trigger savePoint = new JoystickButton(chassis, XboxController.Button.kA.value).onTrue(new InstantCommand(() -> {
       posList.add(new SwervePoint(Swerve.getInstance(Consts.ChassisValues.USES_ABS_ENCODER).getX(),
                                   Swerve.getInstance(Consts.ChassisValues.USES_ABS_ENCODER).getY(),
                                   Swerve.getInstance(Consts.ChassisValues.USES_ABS_ENCODER).getGyro().getAngle()));
     }));
 
-    Trigger removePoints = new JoystickButton(controller, 1).onTrue(new InstantCommand(() -> {
+    Trigger removePoints = new JoystickButton(chassis, XboxController.Button.kBack.value).onTrue(new InstantCommand(()->{
       posList.clear();
     }));
 

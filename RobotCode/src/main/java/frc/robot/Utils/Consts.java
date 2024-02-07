@@ -2,6 +2,8 @@ package frc.robot.Utils;
 
 import java.util.function.Supplier;
 
+import com.revrobotics.CANSparkBase.IdleMode;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public interface Consts {
@@ -166,7 +168,13 @@ public interface Consts {
         public static final boolean RIGHT_SHOOT_MOTOR_INVERTED = false;
         public static final boolean LEFT_SHOOT_MOTOR_INVERTED = false;
         public static final boolean CONTAINMENT_MOTOR_INVERTED = false;
-        public static final boolean AIM_MOTOR_INVERTED = false;    
+        public static final boolean AIM_MOTOR_INVERTED = false;
+        
+        //motors idle mode
+        public static final IdleMode RIGHT_SHOOT_IDLE_MODE = IdleMode.kBrake;
+        public static final IdleMode LEFT_SHOOT_IDLE_MODE = IdleMode.kBrake;
+        public static final IdleMode CONTAINMENT_IDLE_MODE = IdleMode.kBrake;
+        public static final IdleMode AIM_IDLE_MODE = IdleMode.kBrake;
 
         //distance to angle func values
         public static final double DISTANCE_TO_ANGLE_M = 0;

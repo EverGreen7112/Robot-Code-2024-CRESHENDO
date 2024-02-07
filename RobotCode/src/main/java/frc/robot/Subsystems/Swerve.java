@@ -297,6 +297,15 @@ public class Swerve extends SubsystemBase implements Consts {
     }
 
     /**
+     * runs all the setup functions
+     */
+    public void initSwerve(){
+        zeroYaw();
+        resetOdometry();
+        setModulesToAbs();
+    }
+
+    /**
      * 
      * @return the angle of the robot with an offset to make it field oriented 
      */

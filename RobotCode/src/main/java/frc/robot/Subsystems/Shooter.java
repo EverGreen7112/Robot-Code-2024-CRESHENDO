@@ -96,6 +96,9 @@ public class Shooter extends SubsystemBase implements Consts{
 
         //gear ratio
         m_aimMotor.getEncoder().setPositionConversionFactor(ShooterValues.AIM_MOTOR_GEAR_RATIO * 360); //convert to degrees
+
+        //initialize position in aim motor
+        m_aimMotor.getEncoder().setPosition(Consts.ShooterValues.AIM_MOTOR_MIN_ANGLE);
     }
 
     /**

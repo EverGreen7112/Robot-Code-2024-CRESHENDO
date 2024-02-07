@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.simulation.XboxControllerSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -77,7 +78,9 @@ public class RobotContainer implements Consts{
     }));
     // Trigger turnToZero = new JoystickButton(controller, 1).whileTrue(new TurnToPoint(0, 0)); 
     // Trigger turnToPoint = new JoystickButton(controller, 4).whileTrue(new TurnToPoint(16, 5.6));
-  
+    
+    
+
   }
 
   public Command getAutonomousCommand() {

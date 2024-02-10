@@ -154,9 +154,11 @@ public interface Consts {
         public static final double AMP_SHOOT_SPEED = 0;
         public static final double CONTAINMENT_SPEED = 0;
         
-        //shooter angle range
-        public static final double AIM_MOTOR_MAX_ANGLE = 0;
+        //shooter angles
+        public static final double AIM_MOTOR_MAX_ANGLE = 180;
         public static final double AIM_MOTOR_MIN_ANGLE = -42;
+        public static final double AIM_MOTOR_AMP_ANGLE = 150;
+        public static final double AIM_MOTOR_SPEAKER_ANGLE = 0;
         
         //motor controllers ids
         public static final int RIGHT_SHOOT_MOTOR_ID = 0;

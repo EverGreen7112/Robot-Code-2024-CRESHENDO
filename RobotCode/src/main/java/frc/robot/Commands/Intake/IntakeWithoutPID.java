@@ -10,7 +10,7 @@ public class IntakeWithoutPID extends Command implements Consts {
 
     private double m_speed;
 
-    public IntakeWithoutPID(double speed,Supplier<Boolean>IsPressed){
+    public IntakeWithoutPID(double speed){
         this.m_speed = speed;
     }
 

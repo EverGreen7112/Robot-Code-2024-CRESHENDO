@@ -17,14 +17,16 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Commands.Swerve.FollowRoute;
+import frc.robot.Commands.Intake.IntakeWithoutPID;
 import frc.robot.Commands.Swerve.DriveByJoysticks;
+import frc.robot.Subsystems.Intake;
 import frc.robot.Subsystems.Swerve;
 import frc.robot.Utils.Consts;
 import frc.robot.Utils.SwervePoint;
 
 public class RobotContainer implements Consts{
   public RobotContainer() {
-    configureBindings();
+   // configureBindings();
   }
 
   public static final XboxController chassis = new XboxController(JoystickValues.CHASSIS);
@@ -33,10 +35,8 @@ public class RobotContainer implements Consts{
 
   public static DriveByJoysticks teleop = new DriveByJoysticks(() -> chassis.getLeftX(), () -> chassis.getLeftY(),
       () -> chassis.getRightX(), () -> true, ChassisValues.USES_ABS_ENCODER);
-  
-  public static void resetPosList() {
-    posList.clear();
-  }
+
+
   private void configureBindings() {
 
     Trigger rotateRobotBy45 = new JoystickButton(chassis, XboxController.Button.kRightBumper.value).onTrue(new InstantCommand(() -> {
@@ -44,9 +44,11 @@ public class RobotContainer implements Consts{
     }));
 
     Trigger rotateRobotByMinus45 = new JoystickButton(chassis, XboxController.Button.kLeftBumper.value).onTrue(new InstantCommand(() -> {
-      Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).turnBy(-45);
-      ;
+      Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).turnBy(-45);;
     }));
+
+    Trigger intake = new JoystickButton(chassis, XboxController.Button.kA.value).whileTrue(new IntakeWithoutPID(IntakeValues.INTAKE_SPEED));
+
 
     // Trigger rotateRobot180 = new JoystickButton(chassis, XboxController.Axis.kRightTrigger.value).onTrue(new InstantCommand(() -> {
     //   Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).turnBy(180);
@@ -57,27 +59,24 @@ public class RobotContainer implements Consts{
     //   ;
     // }));
     
-    
-    Trigger FollowRoute = new JoystickButton(chassis, XboxController.Button.kStart.value).onTrue(
-      new SequentialCommandGroup(new FollowRoute(posList),   new DriveByJoysticks(() -> chassis.getLeftX(), () -> chassis.getLeftY(),
-      () -> chassis.getRightX(), () -> true, ChassisValues.USES_ABS_ENCODER)));
+    // Trigger FollowRoute = new JoystickButton(chassis, XboxController.Button.kStart.value).onTrue(
+    //   new SequentialCommandGroup(new FollowRoute(posList),   new DriveByJoysticks(() -> chassis.getLeftX(), () -> chassis.getLeftY(),
+    //   () -> chassis.getRightX(), () -> true, ChassisValues.USES_ABS_ENCODER)));
 
-    Trigger savePoint = new JoystickButton(chassis, XboxController.Button.kA.value).onTrue(new InstantCommand(() -> {
-      posList.add(new SwervePoint(Swerve.getInstance(Consts.ChassisValues.USES_ABS_ENCODER).getX(),
-                                  Swerve.getInstance(Consts.ChassisValues.USES_ABS_ENCODER).getY(),
-                                  Swerve.getInstance(Consts.ChassisValues.USES_ABS_ENCODER).getGyro().getAngle()));
-    }));
+    // Trigger savePoint = new JoystickButton(chassis, XboxController.Button.kA.value).onTrue(new InstantCommand(() -> {
+    //   posList.add(new SwervePoint(Swerve.getInstance(Consts.ChassisValues.USES_ABS_ENCODER).getX(),
+    //                               Swerve.getInstance(Consts.ChassisValues.USES_ABS_ENCODER).getY(),
+    //                               Swerve.getInstance(Consts.ChassisValues.USES_ABS_ENCODER).getGyro().getAngle()));
+    // }));
 
-    Trigger removePoints = new JoystickButton(chassis, XboxController.Button.kX.value).onTrue(new InstantCommand(()->{
-      resetPosList();
-    }));
+    // Trigger removePoints = new JoystickButton(chassis, XboxController.Button.kX.value).onTrue(new InstantCommand(()->{
+    //   resetPosList();
+    // }));
 
-    Trigger resetOdometry = new JoystickButton(chassis, XboxController.Button.kB.value).onTrue(new InstantCommand(() -> {
-      Swerve.getInstance(Consts.ChassisValues.USES_ABS_ENCODER).setOdometryVals(0, 0, 
-      Swerve.getInstance(Consts.ChassisValues.USES_ABS_ENCODER).getFieldOrientedAngle());
-    }));
-    // Trigger turnToZero = new JoystickButton(controller, 1).whileTrue(new TurnToPoint(0, 0)); 
-    // Trigger turnToPoint = new JoystickButton(controller, 4).whileTrue(new TurnToPoint(16, 5.6));
+    // Trigger resetOdometry = new JoystickButton(chassis, XboxController.Button.kB.value).onTrue(new InstantCommand(() -> {
+    //   Swerve.getInstance(Consts.ChassisValues.USES_ABS_ENCODER).setOdometryVals(0, 0, 
+    //   Swerve.getInstance(Consts.ChassisValues.USES_ABS_ENCODER).getFieldOrientedAngle());
+    // }));
     
     
 
@@ -85,5 +84,9 @@ public class RobotContainer implements Consts{
 
   public Command getAutonomousCommand() {
     return Commands.print("No autonomous command configured");
+  }
+  
+  public static void resetPosList() {
+    posList.clear();
   }
 }

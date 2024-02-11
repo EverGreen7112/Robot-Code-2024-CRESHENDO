@@ -82,26 +82,26 @@ public interface Consts {
         public static final boolean USES_ABS_ENCODER = true;
 
         // chassis motor ports
-        public static final int TOP_LEFT_DRIVE_PORT = 6;
-        public static final int TOP_RIGHT_DRIVE_PORT = 8;
-        public static final int DOWN_LEFT_DRIVE_PORT = 4;
-        public static final int DOWN_RIGHT_DRIVE_PORT = 10;
-        public static final int TOP_LEFT_STEERING_PORT = 7;
-        public static final int TOP_RIGHT_STEERING_PORT = 9;
-        public static final int DOWN_LEFT_STEERING_PORT = 5;
-        public static final int DOWN_RIGHT_STEERING_PORT = 11;
+        public static final int TOP_LEFT_DRIVE_PORT = 2;
+        public static final int TOP_RIGHT_DRIVE_PORT = 6;
+        public static final int DOWN_LEFT_DRIVE_PORT = 3;
+        public static final int DOWN_RIGHT_DRIVE_PORT = 9;
+        public static final int TOP_LEFT_STEERING_PORT = 1;
+        public static final int TOP_RIGHT_STEERING_PORT = 7;
+        public static final int DOWN_LEFT_STEERING_PORT = 2;
+        public static final int DOWN_RIGHT_STEERING_PORT = 8;
 
         // chassis encoders
-        public static final int TOP_LEFT_CANCODER = 1;
+        public static final int TOP_LEFT_CANCODER = 1;//4
         public static final int TOP_RIGHT_CANCODER = 4;
-        public static final int DOWN_LEFT_CANCODER = 5;
+        public static final int DOWN_LEFT_CANCODER = 5;//0
         public static final int DOWN_RIGHT_CANCODER = 0;
 
         //cancoder offsets
         public static final double TOP_RIGHT_CANCODER_OFFSET = 0.293212890625;
-        public static final double TOP_LEFT_CANCODER_OFFSET = 0.291748046875;
+        public static final double TOP_LEFT_CANCODER_OFFSET = 0.291748046875;// 0.291748046875
         public static final double DOWN_RIGHT_CANCODER_OFFSET = -0.1171875;
-        public static final double DOWN_LEFT_CANCODER_OFFSET = 0.310546875;
+        public static final double DOWN_LEFT_CANCODER_OFFSET = 0.310546875;//-0.1171875
 
         // chassis size
         public static final double FRONT_WHEEL_DIST_METERS = 0.57;
@@ -135,14 +135,14 @@ public interface Consts {
     }
 
     public class IntakeValues{
-        public static final int INTAKE_MOTOR_PORT = 1;
+        public static final int INTAKE_MOTOR_ID = 19;
+
+        public static final double INTAKE_SPEED = 0.5;
 
         public static final double INTAKE_MOTOR_KP = 0;
         public static final double INATKE_MOTOR_KI = 0;
         public static final double INATKE_MOTOR_KD = 0;
-        public static final double INTAKE_MOTOR_FF = 0;
-
-        
+        public static final double INTAKE_MOTOR_FF = 0;   
     }
 
     public class ShooterValues{
@@ -161,8 +161,8 @@ public interface Consts {
         public static final double AIM_MOTOR_SPEAKER_ANGLE = 0;
         
         //motor controllers ids
-        public static final int RIGHT_SHOOT_MOTOR_ID = 0;
-        public static final int LEFT_SHOOT_MOTOR_ID = 0;
+        public static final int RIGHT_SHOOT_MOTOR_ID = 5;
+        public static final int LEFT_SHOOT_MOTOR_ID = 4;
         public static final int CONTAINMENT_MOTOR_ID = 0;
         public static final int AIM_MOTOR_ID = 0;
 
@@ -175,7 +175,7 @@ public interface Consts {
 
         //inverted motors
         public static final boolean RIGHT_SHOOT_MOTOR_INVERTED = false;
-        public static final boolean LEFT_SHOOT_MOTOR_INVERTED = false;
+        public static final boolean LEFT_SHOOT_MOTOR_INVERTED = true;
         public static final boolean CONTAINMENT_MOTOR_INVERTED = false;
         public static final boolean AIM_MOTOR_INVERTED = false;
         

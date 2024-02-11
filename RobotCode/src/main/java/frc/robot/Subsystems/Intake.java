@@ -2,6 +2,7 @@ package frc.robot.Subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.ControlType;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -14,7 +15,7 @@ public class Intake extends SubsystemBase implements Consts {
     private CANSparkMax m_intakeMotor;
 
     public Intake(){
-        m_intakeMotor = new CANSparkMax(IntakeValues.INTAKE_MOTOR_PORT, MotorType.kBrushless);
+        m_intakeMotor = new CANSparkMax(IntakeValues.INTAKE_MOTOR_ID, MotorType.kBrushless);
 
         m_intakeMotor.restoreFactoryDefaults();
 

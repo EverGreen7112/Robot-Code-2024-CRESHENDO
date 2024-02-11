@@ -183,6 +183,11 @@ public class Shooter extends SubsystemBase implements Consts{
         m_leftShootMotor.getPIDController().setReference(speed, ControlType.kVelocity);
     }
 
+    public void testMotors(double speed){
+        m_rightShootMotor.set(speed);
+        m_leftShootMotor.set(speed);
+    }
+
     /**
      * Push the note to the shooter rollers 
      * @param speed - target speed in rpm

@@ -26,7 +26,7 @@ import frc.robot.Utils.SwervePoint;
 
 public class RobotContainer implements Consts{
   public RobotContainer() {
-   // configureBindings();
+   configureBindings();
   }
 
   public static final XboxController chassis = new XboxController(JoystickValues.CHASSIS);

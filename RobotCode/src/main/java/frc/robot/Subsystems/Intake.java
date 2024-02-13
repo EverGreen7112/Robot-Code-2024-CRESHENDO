@@ -23,7 +23,6 @@ public class Intake extends SubsystemBase implements Consts {
         m_intakeMotor.getPIDController().setI(IntakeValues.INATKE_MOTOR_KI);
         m_intakeMotor.getPIDController().setD(IntakeValues.INATKE_MOTOR_KD);
         m_intakeMotor.getPIDController().setFF(IntakeValues.INTAKE_MOTOR_FF);
-
     }
     
 

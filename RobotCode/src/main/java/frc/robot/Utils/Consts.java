@@ -82,26 +82,26 @@ public interface Consts {
         public static final boolean USES_ABS_ENCODER = true;
 
         // chassis motor ports
-        public static final int TOP_LEFT_DRIVE_PORT = 2;
+        public static final int TOP_LEFT_DRIVE_PORT = 1;
         public static final int TOP_RIGHT_DRIVE_PORT = 6;
         public static final int DOWN_LEFT_DRIVE_PORT = 3;
         public static final int DOWN_RIGHT_DRIVE_PORT = 9;
-        public static final int TOP_LEFT_STEERING_PORT = 1;
+        public static final int TOP_LEFT_STEERING_PORT = 62;
         public static final int TOP_RIGHT_STEERING_PORT = 7;
         public static final int DOWN_LEFT_STEERING_PORT = 2;
         public static final int DOWN_RIGHT_STEERING_PORT = 8;
 
         // chassis encoders
-        public static final int TOP_LEFT_CANCODER = 1;//4
-        public static final int TOP_RIGHT_CANCODER = 4;
-        public static final int DOWN_LEFT_CANCODER = 5;//0
-        public static final int DOWN_RIGHT_CANCODER = 0;
+        public static final int TOP_LEFT_CANCODER = 4;
+        public static final int TOP_RIGHT_CANCODER = 5;
+        public static final int DOWN_LEFT_CANCODER = 0;
+        public static final int DOWN_RIGHT_CANCODER = 1;
 
         //cancoder offsets
-        public static final double TOP_RIGHT_CANCODER_OFFSET = 0.293212890625;
-        public static final double TOP_LEFT_CANCODER_OFFSET = 0.291748046875;// 0.291748046875
-        public static final double DOWN_RIGHT_CANCODER_OFFSET = -0.1171875;
-        public static final double DOWN_LEFT_CANCODER_OFFSET = 0.310546875;//-0.1171875
+        public static final double TOP_RIGHT_CANCODER_OFFSET = -0.187500 - 2;
+        public static final double TOP_LEFT_CANCODER_OFFSET = -1.966553;
+        public static final double DOWN_RIGHT_CANCODER_OFFSET = -0.205078;
+        public static final double DOWN_LEFT_CANCODER_OFFSET = -0.205078 -1.669434 ;
 
         // chassis size
         public static final double FRONT_WHEEL_DIST_METERS = 0.57;
@@ -137,7 +137,7 @@ public interface Consts {
     public class IntakeValues{
         public static final int INTAKE_MOTOR_ID = 19;
 
-        public static final double INTAKE_SPEED = 0.5;
+        public static final double INTAKE_SPEED = 0.7;
 
         public static final double INTAKE_MOTOR_KP = 0;
         public static final double INATKE_MOTOR_KI = 0;

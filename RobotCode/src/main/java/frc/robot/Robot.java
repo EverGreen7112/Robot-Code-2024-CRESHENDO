@@ -19,17 +19,17 @@ import frc.robot.Utils.Consts;
 import frc.robot.Utils.Vision;
 
 public class Robot extends TimedRobot implements Consts{
-  // private Swerve m_swerveInstance;
+  private Swerve m_swerveInstance;
   private Field2d m_field;
   private Vision m_vision;
   
   @Override
   public void robotInit() {
-    // m_swerveInstance = Swerve.getInstance(ChassisValues.USES_ABS_ENCODER);
+    m_swerveInstance = Swerve.getInstance(ChassisValues.USES_ABS_ENCODER);
     new RobotContainer();
     SmartDashboard.putNumber("max drive speed", 1);
     SmartDashboard.putNumber("max angular speed", 200);
-    // m_swerveInstance.zeroModulesAngles();
+    m_swerveInstance.zeroModulesAngles();
     //create and add robot field data to dashboard
     m_field = new Field2d();
     SmartDashboard.putData(m_field);
@@ -39,17 +39,18 @@ public class Robot extends TimedRobot implements Consts{
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-    //get current position and rotation of robot 
-    // double xCurrent = m_swerveInstance.getX();
-    // double yCurrent = m_swerveInstance.getY();
-    // double headingCurrent = m_swerveInstance.getFieldOrientedAngle();
+   // get current position and rotation of robot 
+    double xCurrent = m_swerveInstance.getX();
+    double yCurrent = m_swerveInstance.getY();
+    double headingCurrent = m_swerveInstance.getFieldOrientedAngle();
+
     //update the robot position of dashboard
-    // m_field.setRobotPose(xCurrent, yCurrent, new Rotation2d(Math.toRadians(-headingCurrent + 90)));
+    m_field.setRobotPose(xCurrent, yCurrent, new Rotation2d(Math.toRadians(-headingCurrent + 90)));
   }
 
   @Override
   public void disabledInit() {
-    // m_swerveInstance.stop();
+    m_swerveInstance.stop();
   }
 
   @Override
@@ -75,10 +76,11 @@ public class Robot extends TimedRobot implements Consts{
   @Override
   public void teleopInit() {
     CommandScheduler.getInstance().cancelAll();
-    // m_swerveInstance.initSwerve();
-    // RobotContainer.teleop.schedule();
+    m_swerveInstance.initSwerve();
+    RobotContainer.teleop.schedule();
     
   }
+  
 
   @Override
   public void teleopPeriodic() {
@@ -92,7 +94,7 @@ public class Robot extends TimedRobot implements Consts{
 
   @Override
   public void testInit() {
-    // m_swerveInstance.zeroYaw();
+    m_swerveInstance.zeroYaw();
     CommandScheduler.getInstance().cancelAll();
     // RobotContainer.teleop.schedule();
   }

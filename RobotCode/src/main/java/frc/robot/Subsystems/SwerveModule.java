@@ -89,6 +89,10 @@ public class SwerveModule extends SubsystemBase implements Consts{
         setModulesToAbs();
     }
 
+    @Override
+    public void periodic() {
+    }
+
     /**
      * set the speeds of motors to 0
      */
@@ -96,7 +100,7 @@ public class SwerveModule extends SubsystemBase implements Consts{
         this.m_steeringMotor.set(0);
         this.m_driveMotor.set(0);
     }
-
+    
     /**
      * put the current position of the can coder in the rotation motor's integrated
      * encoder
@@ -110,10 +114,17 @@ public class SwerveModule extends SubsystemBase implements Consts{
     }
 
     /*
-     * get current absolute position of module
+     * get current absolute position of module in degrees
      */
     public double getCoderPos() {
         return Funcs.convertRotationsToDegrees(m_coder.getPosition().getValue());
+    }
+
+      /*
+     * get current absolute position of module in rotations
+     */
+    public double getCoderPosInRots() {
+        return m_coder.getPosition().getValue();
     }
 
     public double getAngle() {

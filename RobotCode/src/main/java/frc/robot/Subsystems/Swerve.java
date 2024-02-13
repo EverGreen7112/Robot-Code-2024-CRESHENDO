@@ -92,6 +92,11 @@ public class Swerve extends SubsystemBase implements Consts {
                 -ms_max_angular_speed, ms_max_angular_speed);
         // calculate odometry
         odometry();
+
+        SmartDashboard.putNumber("top left cancoder", m_modules[0].getVelocity());
+        SmartDashboard.putNumber("top right cancoder", m_modules[1].getVelocity());
+        SmartDashboard.putNumber("down left cancoder", m_modules[2].getVelocity());
+        SmartDashboard.putNumber("down right cancoder", m_modules[3].getVelocity());
     }
 
     /**
@@ -120,7 +125,6 @@ public class Swerve extends SubsystemBase implements Consts {
      * DO NOT USE THIS FUNCTION ACCIDENTLY INSTEAD OF {@link #driveFieldOrientedAngle(Vector2d) driveFieldOrientedAngle},
      * this function is not trully field oriented as the angle is relative to the robots starting point AND NOT THE FIELDS ACTUAL 0!!!
      * this function is usefull for driving in real time BUT SHOULD NOT BE USED FOR AUTONOMOUS OR ANYTHING OF THIS SORT!!!
-     * 
      * 
      * see math on pdf document for more information on the how this function works
      * 

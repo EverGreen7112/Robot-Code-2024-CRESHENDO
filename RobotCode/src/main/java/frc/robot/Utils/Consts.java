@@ -146,6 +146,10 @@ public interface Consts {
     }
 
     public class ShooterValues{
+        //speaker
+        public static final Vector3d RED_SPAKER_POS = new Vector3d(652.67 * 0.0254, 2.1 , 218.42 * 0.0254);
+        public static final Vector3d BLUE_SPAKER_POS = new Vector3d(-1.5 * 0.0254, 2.1 , 218.41 * 0.0254);
+
         //gear ratio
         public static final double AIM_MOTOR_GEAR_RATIO = 1 / 30.0;
 
@@ -161,10 +165,10 @@ public interface Consts {
         public static final double AIM_MOTOR_SPEAKER_ANGLE = 0;
         
         //motor controllers ids
-        public static final int RIGHT_SHOOT_MOTOR_ID = 5;
-        public static final int LEFT_SHOOT_MOTOR_ID = 4;
-        public static final int CONTAINMENT_MOTOR_ID = 0;
-        public static final int AIM_MOTOR_ID = 0;
+        public static final int RIGHT_SHOOT_MOTOR_ID = 6;
+        public static final int LEFT_SHOOT_MOTOR_ID = 1;
+        public static final int CONTAINMENT_MOTOR_ID = 7;
+        public static final int AIM_MOTOR_ID = 9;
 
         //limit switches ids
         public static final int TOP_LIMIT_SWITCH_ID = 0;

@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Utils.Consts;
 import frc.robot.Utils.Vector2d;
+import frc.robot.Utils.Vector3d;
 
 public class Shooter extends SubsystemBase implements Consts{
 
@@ -135,19 +136,19 @@ public class Shooter extends SubsystemBase implements Consts{
      * @return the angle the shooter needs to be at
      */
     public double getAngleToSpeaker(){
-        //get current position
-        Vector2d currentPos = Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).getPos();
-        Vector2d speakerPos = new Vector2d(0, 0);
+        Vector2d currentPos2d = Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).getPos();
+        Vector3d currentPos = new Vector3d(currentPos2d.x, 0, currentPos2d.y);
+        Vector3d speakerPos = new Vector3d();
         //get position of speaker according to the alliance
         if(DriverStation.getAlliance().get() == Alliance.Blue){
-            speakerPos = new Vector2d(0, 0);
+            speakerPos = ShooterValues.BLUE_SPAKER_POS;
         }
         else if(DriverStation.getAlliance().get() == Alliance.Red){
-            speakerPos = new Vector2d(0, 0);
+            speakerPos = ShooterValues.RED_SPAKER_POS;
         }
         //calculate the vector between them
-        Vector2d delta = currentPos.subtract(speakerPos);
-        return ShooterValues.DISTANCE_TO_ANGLE_M * delta.mag() + ShooterValues.DISTANCE_TO_ANGLE_B;
+        Vector3d delta = currentPos.subtract(speakerPos);
+        return delta.getPitch();
     }
 
 

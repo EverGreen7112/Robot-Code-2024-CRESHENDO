@@ -12,48 +12,52 @@ import frc.robot.Utils.Consts;
 public class Climber extends SubsystemBase implements Consts {
     
     private static Climber m_instance;
-    public CANSparkMax m_climberMotorOne, m_climberMotorTwo;
-    public DigitalInput m_climberLimitSwitchOne, m_climberLimitSwitchTwo;
+    private CANSparkMax m_climberRightMotor, m_climberLeftMotor;
+    private DigitalInput m_climberRightLimitSwitch, m_climberLeftLimitSwitch;
+
+    public static enum ClimberSide{
+        CLIMB_WITH_RIGHT_SIDE,
+        CLIMB_WITH_LEFT_SIDE,
+        CLIMB_WITH_BOTH_SIDES;
+    }
+
 
     public Climber() {
 
-        m_climberLimitSwitchOne = new DigitalInput(ClimberValues.CLIMBER_LIMIT_SWITCH_ONE_PORT);
-        m_climberLimitSwitchTwo = new DigitalInput(ClimberValues.CLIMBER_LIMIT_SWITCH_TWO_PORT);
+        m_climberRightLimitSwitch = new DigitalInput(ClimberValues.CLIMBER_LIMIT_SWITCH_ONE_PORT);
+        m_climberLeftLimitSwitch = new DigitalInput(ClimberValues.CLIMBER_LIMIT_SWITCH_TWO_PORT);
 
-        m_climberMotorOne = new CANSparkMax(ClimberValues.CLIMBER_MOTOR_ONE_PORT, MotorType.kBrushless);
-        m_climberMotorTwo = new CANSparkMax(ClimberValues.CLIMBER_MOTOR_TWO_PORT, MotorType.kBrushless);
+        m_climberRightMotor = new CANSparkMax(ClimberValues.CLIMBER_MOTOR_ONE_PORT, MotorType.kBrushless);
+        m_climberLeftMotor = new CANSparkMax(ClimberValues.CLIMBER_MOTOR_TWO_PORT, MotorType.kBrushless);
 
         // restore factory defults
-
-        m_climberMotorOne.restoreFactoryDefaults();
-        m_climberMotorOne.restoreFactoryDefaults();
+        m_climberRightMotor.restoreFactoryDefaults();
+        m_climberRightMotor.restoreFactoryDefaults();
 
         // set gear ratio
-
-        m_climberMotorOne.getEncoder().setVelocityConversionFactor(ClimberValues.CLIMBER_MOTOR_ONE_GEAR_RATIO);
-        m_climberMotorTwo.getEncoder().setVelocityConversionFactor(ClimberValues.CLIMBER_MOTOR_TWO_GEAR_RATIO);
+        m_climberRightMotor.getEncoder().setVelocityConversionFactor(ClimberValues.CLIMBER_MOTOR_ONE_GEAR_RATIO);
+        m_climberLeftMotor.getEncoder().setVelocityConversionFactor(ClimberValues.CLIMBER_MOTOR_TWO_GEAR_RATIO);
 
         // set pid values
+        m_climberRightMotor.getPIDController().setP(ClimberValues.CLIMBER_MOTOR_ONE_KP);
+        m_climberRightMotor.getPIDController().setI(ClimberValues.CLIMBER_MOTOR_ONE_KI);
+        m_climberRightMotor.getPIDController().setD(ClimberValues.CLIMBER_MOTOR_ONE_KD);
+        m_climberRightMotor.getPIDController().setFF(ClimberValues.CLIMBER_MOTOR_ONE_FF);
 
-        m_climberMotorOne.getPIDController().setP(ClimberValues.CLIMBER_MOTOR_ONE_KP);
-        m_climberMotorOne.getPIDController().setI(ClimberValues.CLIMBER_MOTOR_ONE_KI);
-        m_climberMotorOne.getPIDController().setD(ClimberValues.CLIMBER_MOTOR_ONE_KD);
-        m_climberMotorOne.getPIDController().setFF(ClimberValues.CLIMBER_MOTOR_ONE_FF);
-
-        m_climberMotorTwo.getPIDController().setP(ClimberValues.CLIMBER_MOTOR_TWO_KP);
-        m_climberMotorTwo.getPIDController().setI(ClimberValues.CLIMBER_MOTOR_TWO_KI);
-        m_climberMotorTwo.getPIDController().setD(ClimberValues.CLIMBER_MOTOR_TWO_KD);
-        m_climberMotorTwo.getPIDController().setFF(ClimberValues.CLIMBER_MOTOR_TWO_FF);
+        m_climberLeftMotor.getPIDController().setP(ClimberValues.CLIMBER_MOTOR_TWO_KP);
+        m_climberLeftMotor.getPIDController().setI(ClimberValues.CLIMBER_MOTOR_TWO_KI);
+        m_climberLeftMotor.getPIDController().setD(ClimberValues.CLIMBER_MOTOR_TWO_KD);
+        m_climberLeftMotor.getPIDController().setFF(ClimberValues.CLIMBER_MOTOR_TWO_FF);
 
         // invert motors if necessary
 
-        m_climberMotorOne.setInverted(ClimberValues.IS_MOTOR_ONE_INVERTED);
-        m_climberMotorTwo.setInverted(ClimberValues.IS_MOTOR_TWO_INVERTED);
+        m_climberRightMotor.setInverted(ClimberValues.IS_MOTOR_ONE_INVERTED);
+        m_climberLeftMotor.setInverted(ClimberValues.IS_MOTOR_TWO_INVERTED);
 
         // put motors on brake
 
-        m_climberMotorOne.setIdleMode(IdleMode.kBrake);
-        m_climberMotorTwo.setIdleMode(IdleMode.kBrake);
+        m_climberRightMotor.setIdleMode(IdleMode.kBrake);
+        m_climberLeftMotor.setIdleMode(IdleMode.kBrake);
 
     }
 
@@ -70,25 +74,30 @@ public class Climber extends SubsystemBase implements Consts {
     @Override
     public void periodic(){
 
-        if(Climber.getInstance().m_climberLimitSwitchOne.get()){
-            Climber.getInstance().m_climberMotorOne.stopMotor();
-            Climber.getInstance().m_climberMotorOne.setIdleMode(IdleMode.kBrake);
-        }
+        if(Climber.getInstance().m_climberRightLimitSwitch.get())
+            Climber.getInstance().m_climberRightMotor.stopMotor();
         
-        if(Climber.getInstance().m_climberLimitSwitchTwo.get()){
-            Climber.getInstance().m_climberMotorTwo.stopMotor();
-            Climber.getInstance().m_climberMotorTwo.setIdleMode(IdleMode.kBrake);
-        }
+        if(Climber.getInstance().m_climberLeftLimitSwitch.get())
+            Climber.getInstance().m_climberLeftMotor.stopMotor();
+        
         
     }
 
     /**
      * Stop both climber motors.
      */
-    public void stopClimberMotor() {
-        m_climberMotorOne.stopMotor();
-        m_climberMotorTwo.stopMotor();
+    public void stopClimberMotors() {
+        m_climberRightMotor.stopMotor();
+        m_climberLeftMotor.stopMotor();
 
+    }
+
+    public DigitalInput getRightLimitSwitch(){
+        return m_climberRightLimitSwitch;
+    }
+
+    public DigitalInput getLeftLimitSwitch(){
+        return m_climberLeftLimitSwitch;
     }
 
     /**
@@ -96,17 +105,31 @@ public class Climber extends SubsystemBase implements Consts {
      * @param Mode Set both climb motors to give Idle mode(Brake/Coast).
      */
     public void setMode(IdleMode Mode) {
-        m_climberMotorOne.setIdleMode(Mode);
-        m_climberMotorTwo.setIdleMode(Mode);
+        m_climberRightMotor.setIdleMode(Mode);
+        m_climberLeftMotor.setIdleMode(Mode);
     }
 
     /**
      * 
      * @param speed Moves both climb motors at the given speed without pid
      */
-    public void climbWithoutPID(double speed) {
-        m_climberMotorOne.set(speed);
-        m_climberMotorTwo.set(speed);
+    public void climbRightSideWithoutPid(double speed) {
+        m_climberRightMotor.set(speed);
+    }
+        /**
+     * 
+     * @param speed Moves both climb motors at the given speed without pid
+     */
+    public void climbLeftSideWithoutPid(double speed) {
+        m_climberLeftMotor.set(speed);
+    }
+        /**
+     * 
+     * @param speed Moves both climb motors at the given speed without pid
+     */
+    public void climbBothSidesWithoutPid(double speed) {
+        m_climberRightMotor.set(speed);
+        m_climberLeftMotor.set(speed);
     }
 
     /**
@@ -114,10 +137,25 @@ public class Climber extends SubsystemBase implements Consts {
      * 
      * @param rpm move the motors at the given rpm.
      */
-    public void climbWithPID(double rpm) {
-        m_climberMotorOne.getPIDController().setReference(rpm, ControlType.kVelocity);
-        m_climberMotorOne.getPIDController().setReference(rpm, ControlType.kVelocity);
-
+    public void climbRightWithPID(double rpm) {
+        m_climberRightMotor.getPIDController().setReference(rpm, ControlType.kVelocity);
+    }
+        /**
+     * the function moves the motors at the given rpm using pid.
+     * 
+     * @param rpm move the motors at the given rpm.
+     */
+    public void climbLeftWithPID(double rpm) {
+        m_climberLeftMotor.getPIDController().setReference(rpm, ControlType.kVelocity);
+    }
+        /**
+     * the function moves the motors at the given rpm using pid.
+     * 
+     * @param rpm move the motors at the given rpm.
+     */
+    public void climbBothWithPID(double rpm) {
+        m_climberRightMotor.getPIDController().setReference(rpm, ControlType.kVelocity);
+        m_climberLeftMotor.getPIDController().setReference(rpm, ControlType.kVelocity);
     }
 
 }

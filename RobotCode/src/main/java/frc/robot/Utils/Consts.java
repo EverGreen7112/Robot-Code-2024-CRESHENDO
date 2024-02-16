@@ -88,11 +88,14 @@ public interface Consts {
         public static final int CLIMBER_MOTOR_ONE_PORT = 7;
         public static final int CLIMBER_MOTOR_TWO_PORT = 8;
 
+        public static final double CLIMBER_SPEED = 0.5;
+        public static final double CLIMBER_RPM = 0;
+
         public static final int CLIMBER_LIMIT_SWITCH_ONE_PORT = 0;
         public static final int CLIMBER_LIMIT_SWITCH_TWO_PORT = 0;
 
-        public static final double CLIMBER_MOTOR_ONE_GEAR_RATIO = 1 / 45;
-        public static final double CLIMBER_MOTOR_TWO_GEAR_RATIO = 1 / 45;
+        public static final double CLIMBER_MOTOR_ONE_GEAR_RATIO = 1.0 / 45.0;
+        public static final double CLIMBER_MOTOR_TWO_GEAR_RATIO = 1.0 / 45.0;
 
         public static final double CLIMBER_MOTOR_ONE_KP = 0;
         public static final double CLIMBER_MOTOR_ONE_KI = 0;

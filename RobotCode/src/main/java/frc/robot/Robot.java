@@ -7,6 +7,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Commands.ClimbWithoutPID;
+import frc.robot.Subsystems.Climber.ClimberSide;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
@@ -52,6 +54,9 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+    //test climber
+    (new ClimbWithoutPID(0.5, ClimberSide.CLIMB_WITH_BOTH_SIDES)).schedule();
   }
 
   @Override

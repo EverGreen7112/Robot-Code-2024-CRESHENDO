@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
+import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -32,9 +33,9 @@ public class Shooter extends SubsystemBase implements Consts{
     //controls the angle of the shooter
     private CANSparkMax m_aimMotor;
     //sends signal when the shooter is at the top angle
-    private DigitalInput m_topLimitSwitch;
+    // private DigitalInput m_topLimitSwitch;
     //sends signal when the shooter is at the bottom angle
-    private DigitalInput m_bottomLimitSwitch;
+    // private DigitalInput m_bottomLimitSwitch;
     //detect when the note is inside to shooter 
     private ColorSensorV3 m_colorSensor;
     private ColorMatch m_colorMatcher;
@@ -47,8 +48,8 @@ public class Shooter extends SubsystemBase implements Consts{
         m_aimMotor = new CANSparkMax(ShooterValues.AIM_MOTOR_ID, MotorType.kBrushless);
         
         //create limit switches objects
-        m_topLimitSwitch = new DigitalInput(ShooterValues.TOP_LIMIT_SWITCH_ID);
-        m_bottomLimitSwitch = new DigitalInput(ShooterValues.BOTTOM_LIMIT_SWITCH_ID);
+        // m_topLimitSwitch = new DigitalInput(ShooterValues.TOP_LIMIT_SWITCH_ID);
+        // m_bottomLimitSwitch = new DigitalInput(ShooterValues.BOTTOM_LIMIT_SWITCH_ID);
 
         //create color sensor object 
         m_colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
@@ -118,10 +119,10 @@ public class Shooter extends SubsystemBase implements Consts{
         SmartDashboard.putNumber("left rollers speed", getLeftRollerSpeed());
         
         //set encoder position value when touches limit switches
-        if(m_topLimitSwitch.get())
-            m_aimMotor.getEncoder().setPosition(ShooterValues.AIM_MOTOR_MAX_ANGLE);
-        if(m_bottomLimitSwitch.get())
-            m_aimMotor.getEncoder().setPosition(ShooterValues.AIM_MOTOR_MIN_ANGLE);    
+        // if(m_topLimitSwitch.get())
+        //     m_aimMotor.getEncoder().setPosition(ShooterValues.AIM_MOTOR_MAX_ANGLE);
+        // if(m_bottomLimitSwitch.get())
+        //     m_aimMotor.getEncoder().setPosition(ShooterValues.AIM_MOTOR_MIN_ANGLE);    
 
         //start spining rollers if note is inside the shooter 
         ColorMatchResult result = m_colorMatcher.matchColor(m_colorSensor.getColor());
@@ -159,10 +160,10 @@ public class Shooter extends SubsystemBase implements Consts{
     public void turnToAngle(double angle){
         //clamp value to make sure bad input won't break the robot
         angle = MathUtil.clamp(angle, ShooterValues.AIM_MOTOR_MIN_ANGLE, ShooterValues.AIM_MOTOR_MAX_ANGLE);
-        //scale kf according to the shooter's angle(watch the sinus function graph inorder to understand why its here)
-        m_aimMotor.getPIDController().setFF(Math.sin(Math.toRadians(angle)) * PIDValues.SHOOTER_ANGLE_KF);
+        //scale kf according to the shooter's angle(watch the cosinus function graph inorder to understand why its here)
+        double ff = Math.cos(Math.toRadians(angle)) * PIDValues.SHOOTER_ANGLE_KF;
         //activate pid
-        m_aimMotor.getPIDController().setReference(angle, ControlType.kPosition);
+        m_aimMotor.getPIDController().setReference(angle, ControlType.kPosition, 0, ff, SparkMaxPIDController.ArbFFUnits.kPercentOut);
     }
 
     /**

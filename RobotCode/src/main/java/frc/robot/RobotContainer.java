@@ -17,10 +17,13 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Commands.Swerve.FollowRoute;
+import frc.robot.Commands.ClimbWithoutPID;
 import frc.robot.Commands.Intake.IntakeWithoutPID;
 import frc.robot.Commands.Swerve.DriveByJoysticks;
 import frc.robot.Subsystems.Intake;
+import frc.robot.Subsystems.Shooter;
 import frc.robot.Subsystems.Swerve;
+import frc.robot.Subsystems.Climber.ClimberSide;
 import frc.robot.Utils.Consts;
 import frc.robot.Utils.SwervePoint;
 
@@ -29,7 +32,6 @@ public class RobotContainer implements Consts{
    configureBindings();
   }
 
-<<<<<<< HEAD
   public static final XboxController chassis = new XboxController(JoystickValues.CHASSIS);
   public static final XboxController operator = new XboxController(JoystickValues.OPERATOR);
   private static final ArrayList<SwervePoint> posList = new ArrayList<SwervePoint>();
@@ -45,12 +47,38 @@ public class RobotContainer implements Consts{
     }));
 
     Trigger rotateRobotByMinus45 = new JoystickButton(chassis, XboxController.Button.kLeftBumper.value).onTrue(new InstantCommand(() -> {
-      Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).turnBy(-45);;
+      Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).turnBy(-45);
     }));
 
-    Trigger intake = new JoystickButton(chassis, XboxController.Button.kA.value).whileTrue(new IntakeWithoutPID(IntakeValues.INTAKE_SPEED));
+     Trigger r30 = new JoystickButton(chassis, XboxController.Button.kA.value).onTrue(new InstantCommand(() -> {
+        Shooter.getInstance().turnToAngle(30);
+    }));
 
+    Trigger r40 = new JoystickButton(chassis, XboxController.Button.kB.value).onTrue(new InstantCommand(() -> {
+        Shooter.getInstance().turnToAngle(40);
+    }));
 
+     Trigger r45 = new JoystickButton(chassis, XboxController.Button.kY.value).onTrue(new InstantCommand(() -> {
+      Shooter.getInstance().turnToAngle(45);
+    }));
+
+     Trigger r60 = new JoystickButton(chassis, XboxController.Button.kX.value).onTrue(new InstantCommand(() -> {
+      Shooter.getInstance().turnToAngle(60);
+    }));
+
+     Trigger deg = new JoystickButton(chassis, XboxController.Button.kStart.value).onTrue(new InstantCommand(() -> {
+      Shooter.getInstance().turnToAngle(Shooter.getInstance().getShooterAngle() + 1.0);
+    }));
+
+    // Trigger intake = new JoystickButton(chassis, XboxController.Button.kA.value).whileTrue(new IntakeWithoutPID(IntakeValues.INTAKE_SPEED));
+
+    // Trigger leftClimbUp = new JoystickButton(chassis, XboxController.Button.kA.value).whileTrue(new ClimbWithoutPID(ClimberValues.CLIMBER_SPEED, ClimberSide.CLIMB_WITH_LEFT_SIDE));
+    // Trigger leftClimbDown = new JoystickButton(chassis, XboxController.Button.kB.value).whileTrue(new ClimbWithoutPID(-ClimberValues.CLIMBER_SPEED, ClimberSide.
+    // CLIMB_WITH_LEFT_SIDE));
+    // Trigger rightClimbUp = new JoystickButton(chassis, XboxController.Button.kX.value).whileTrue(new ClimbWithoutPID(ClimberValues.CLIMBER_SPEED, ClimberSide.CLIMB_WITH_RIGHT_SIDE));
+    // Trigger rightClimbDown = new JoystickButton(chassis, XboxController.Button.kY.value).whileTrue(new ClimbWithoutPID(-ClimberValues.CLIMBER_SPEED, ClimberSide.CLIMB_WITH_RIGHT_SIDE));
+    
+    
     // Trigger rotateRobot180 = new JoystickButton(chassis, XboxController.Axis.kRightTrigger.value).onTrue(new InstantCommand(() -> {
     //   Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).turnBy(180);
     // }));
@@ -77,16 +105,8 @@ public class RobotContainer implements Consts{
     // Trigger resetOdometry = new JoystickButton(chassis, XboxController.Button.kB.value).onTrue(new InstantCommand(() -> {
     //   Swerve.getInstance(Consts.ChassisValues.USES_ABS_ENCODER).setOdometryVals(0, 0, 
     //   Swerve.getInstance(Consts.ChassisValues.USES_ABS_ENCODER).getFieldOrientedAngle());
-    // }));
-    
-    
-
-=======
-  private void configureBindings() {
-    
->>>>>>> origin/ClimberSubsystem
-  }
-
+    // })); 
+    }
   public Command getAutonomousCommand() {
     return Commands.print("No autonomous command configured");
   }

@@ -15,7 +15,7 @@ public interface Consts {
         public static final double WHEEL_ANGLE_KD = 0.0;
 
         //wheel velocity pid
-        public static final double WHEEL_VELOCITY_KP = 0.05;
+        public static final double WHEEL_VELOCITY_KP = 0.1;
         public static final double WHEEL_VELOCITY_KI = 0;
         public static final double WHEEL_VELOCITY_KD = 0;
         public static final double WHEEL_VELOCITY_KF = 0.75 / 2.81;
@@ -29,17 +29,18 @@ public interface Consts {
         public static final double Y_TOLERANCE = 0.05;
 
         //speed values
-        public static final double HEADING_KP = 0.03;
+        public static final double HEADING_KP = 0.05;
         public static final double HEADING_KI = 0;
         public static final double HEADING_KD = 0;
         public static final double HEADING_TOLERANCE = 3;
         
         //shooter angle
-        public static final double SHOOTER_ANGLE_KP = 0;
-        public static final double SHOOTER_ANGLE_KI = 0;
-        public static final double SHOOTER_ANGLE_KD = 0;
-        public static final double SHOOTER_ANGLE_KF = 0;
+        public static final double SHOOTER_ANGLE_KP = 0.0085;//0.007
+        public static final double SHOOTER_ANGLE_KI = 0.00000045;//0.0000003
+        public static final double SHOOTER_ANGLE_KD = 0.03;//0.03
+        public static final double SHOOTER_ANGLE_KF = 0.054 / 2;//0.057 / 2
         
+
         //right rollers speed
         public static final double RIGHT_ROLLERS_SPEED_KP = 0;
         public static final double RIGHT_ROLLERS_SPEED_KI = 0;
@@ -82,12 +83,12 @@ public interface Consts {
         public static final boolean USES_ABS_ENCODER = true;
 
         // chassis motor ports
-        public static final int TOP_LEFT_DRIVE_PORT = 1;
-        public static final int TOP_RIGHT_DRIVE_PORT = 6;
+        public static final int TOP_LEFT_DRIVE_PORT = 18;
+        public static final int TOP_RIGHT_DRIVE_PORT = 17;
         public static final int DOWN_LEFT_DRIVE_PORT = 3;
-        public static final int DOWN_RIGHT_DRIVE_PORT = 9;
+        public static final int DOWN_RIGHT_DRIVE_PORT = 27;
         public static final int TOP_LEFT_STEERING_PORT = 62;
-        public static final int TOP_RIGHT_STEERING_PORT = 7;
+        public static final int TOP_RIGHT_STEERING_PORT = 13;
         public static final int DOWN_LEFT_STEERING_PORT = 2;
         public static final int DOWN_RIGHT_STEERING_PORT = 8;
 
@@ -131,33 +132,27 @@ public interface Consts {
     }
 
     public class ClimberValues{
-        public static final int CLIMBER_MOTOR_ONE_PORT = 7;
-        public static final int CLIMBER_MOTOR_TWO_PORT = 8;
+        public static final int CLIMBER_MOTOR_RIGHT_PORT = 15;
+        public static final int CLIMBER_MOTOR_LEFT_PORT = 61;
 
         public static final double CLIMBER_SPEED = 0.5;
         public static final double CLIMBER_RPM = 0;
 
-        public static final int CLIMBER_LIMIT_SWITCH_ONE_PORT = 0;
-        public static final int CLIMBER_LIMIT_SWITCH_TWO_PORT = 0;
+        public static final int CLIMBER_LIMIT_SWITCH_RIGHT_PORT = 0;
+        public static final int CLIMBER_LIMIT_SWITCH_LEFT_PORT = 0;
 
-        public static final double CLIMBER_MOTOR_ONE_GEAR_RATIO = 1.0 / 45.0;
-        public static final double CLIMBER_MOTOR_TWO_GEAR_RATIO = 1.0 / 45.0;
+        public static final double CLIMBER_GEAR_RATIO = 1.0 / 45.0;
 
-        public static final double CLIMBER_MOTOR_ONE_KP = 0;
-        public static final double CLIMBER_MOTOR_ONE_KI = 0;
-        public static final double CLIMBER_MOTOR_ONE_KD = 0;
-        public static final double CLIMBER_MOTOR_ONE_FF = 0;
+        public static final double CLIMBER_KP = 0;
+        public static final double CLIMBER_KI = 0;
+        public static final double CLIMBER_KD = 0;
+        public static final double CLIMBER_FF = 0;
 
-        public static final double CLIMBER_MOTOR_TWO_KP = 0;
-        public static final double CLIMBER_MOTOR_TWO_KI = 0;
-        public static final double CLIMBER_MOTOR_TWO_KD = 0;
-        public static final double CLIMBER_MOTOR_TWO_FF = 0;
-        public static final boolean IS_MOTOR_ONE_INVERTED = false;       
-        public static final boolean IS_MOTOR_TWO_INVERTED = false;
+        public static final boolean IS_MOTOR_RIGHT_INVERTED = false;       
+        public static final boolean IS_MOTOR_LEFT_INVERTED = false;
     }
 
     public class IntakeValues{
-<<<<<<< HEAD
         public static final int INTAKE_MOTOR_ID = 19;
 
         public static final double INTAKE_SPEED = 0.7;
@@ -166,11 +161,6 @@ public interface Consts {
         public static final double INATKE_MOTOR_KI = 0;
         public static final double INATKE_MOTOR_KD = 0;
         public static final double INTAKE_MOTOR_FF = 0;   
-=======
-        public static final int INTAKE_MOTOR_PORT = 1;
-
-        public static final double INTAKE_SPEED = 0;
->>>>>>> origin/ClimberSubsystem
     }
 
     public class ShooterValues{
@@ -188,7 +178,7 @@ public interface Consts {
         
         //shooter angles
         public static final double AIM_MOTOR_MAX_ANGLE = 180;
-        public static final double AIM_MOTOR_MIN_ANGLE = -42;
+        public static final double AIM_MOTOR_MIN_ANGLE = -52 - (-1.714345) - (-1.428566);
         public static final double AIM_MOTOR_AMP_ANGLE = 150;
         public static final double AIM_MOTOR_SPEAKER_ANGLE = 0;
         
@@ -209,7 +199,7 @@ public interface Consts {
         public static final boolean RIGHT_SHOOT_MOTOR_INVERTED = false;
         public static final boolean LEFT_SHOOT_MOTOR_INVERTED = true;
         public static final boolean CONTAINMENT_MOTOR_INVERTED = false;
-        public static final boolean AIM_MOTOR_INVERTED = false;
+        public static final boolean AIM_MOTOR_INVERTED = true;
         
         //motors idle mode
         public static final IdleMode RIGHT_SHOOT_IDLE_MODE = IdleMode.kBrake;

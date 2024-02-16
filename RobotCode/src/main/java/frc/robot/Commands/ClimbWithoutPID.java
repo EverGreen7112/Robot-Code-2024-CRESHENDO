@@ -17,7 +17,6 @@ public class ClimbWithoutPID extends Command implements Consts {
 
     @Override
     public void initialize(){
-        addRequirements(Climber.getInstance());
          switch(climbSide){
             case CLIMB_WITH_RIGHT_SIDE:
                 Climber.getInstance().climbRightSideWithoutPid(speed);

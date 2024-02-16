@@ -29,6 +29,7 @@ public class RobotContainer implements Consts{
    configureBindings();
   }
 
+<<<<<<< HEAD
   public static final XboxController chassis = new XboxController(JoystickValues.CHASSIS);
   public static final XboxController operator = new XboxController(JoystickValues.OPERATOR);
   private static final ArrayList<SwervePoint> posList = new ArrayList<SwervePoint>();
@@ -80,6 +81,10 @@ public class RobotContainer implements Consts{
     
     
 
+=======
+  private void configureBindings() {
+    
+>>>>>>> origin/ClimberSubsystem
   }
 
   public Command getAutonomousCommand() {

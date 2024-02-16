@@ -131,10 +131,33 @@ public interface Consts {
     }
 
     public class ClimberValues{
+        public static final int CLIMBER_MOTOR_ONE_PORT = 7;
+        public static final int CLIMBER_MOTOR_TWO_PORT = 8;
 
+        public static final double CLIMBER_SPEED = 0.5;
+        public static final double CLIMBER_RPM = 0;
+
+        public static final int CLIMBER_LIMIT_SWITCH_ONE_PORT = 0;
+        public static final int CLIMBER_LIMIT_SWITCH_TWO_PORT = 0;
+
+        public static final double CLIMBER_MOTOR_ONE_GEAR_RATIO = 1.0 / 45.0;
+        public static final double CLIMBER_MOTOR_TWO_GEAR_RATIO = 1.0 / 45.0;
+
+        public static final double CLIMBER_MOTOR_ONE_KP = 0;
+        public static final double CLIMBER_MOTOR_ONE_KI = 0;
+        public static final double CLIMBER_MOTOR_ONE_KD = 0;
+        public static final double CLIMBER_MOTOR_ONE_FF = 0;
+
+        public static final double CLIMBER_MOTOR_TWO_KP = 0;
+        public static final double CLIMBER_MOTOR_TWO_KI = 0;
+        public static final double CLIMBER_MOTOR_TWO_KD = 0;
+        public static final double CLIMBER_MOTOR_TWO_FF = 0;
+        public static final boolean IS_MOTOR_ONE_INVERTED = false;       
+        public static final boolean IS_MOTOR_TWO_INVERTED = false;
     }
 
     public class IntakeValues{
+<<<<<<< HEAD
         public static final int INTAKE_MOTOR_ID = 19;
 
         public static final double INTAKE_SPEED = 0.7;
@@ -143,6 +166,11 @@ public interface Consts {
         public static final double INATKE_MOTOR_KI = 0;
         public static final double INATKE_MOTOR_KD = 0;
         public static final double INTAKE_MOTOR_FF = 0;   
+=======
+        public static final int INTAKE_MOTOR_PORT = 1;
+
+        public static final double INTAKE_SPEED = 0;
+>>>>>>> origin/ClimberSubsystem
     }
 
     public class ShooterValues{

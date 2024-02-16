@@ -12,11 +12,16 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+<<<<<<< HEAD
 import frc.robot.Subsystems.Intake;
 import frc.robot.Subsystems.Shooter;
 import frc.robot.Subsystems.Swerve;
 import frc.robot.Utils.Consts;
 import frc.robot.Utils.Vision;
+=======
+import frc.robot.Commands.ClimbWithoutPID;
+import frc.robot.Subsystems.Climber.ClimberSide;
+>>>>>>> origin/ClimberSubsystem
 
 public class Robot extends TimedRobot implements Consts{
   private Swerve m_swerveInstance;
@@ -75,6 +80,7 @@ public class Robot extends TimedRobot implements Consts{
 
   @Override
   public void teleopInit() {
+<<<<<<< HEAD
     CommandScheduler.getInstance().cancelAll();
     m_swerveInstance.initSwerve();
     RobotContainer.teleop.schedule();
@@ -85,6 +91,14 @@ public class Robot extends TimedRobot implements Consts{
   @Override
   public void teleopPeriodic() {
    
+=======
+    if (m_autonomousCommand != null) {
+      m_autonomousCommand.cancel();
+    }
+
+    //test climber
+    (new ClimbWithoutPID(0.5, ClimberSide.CLIMB_WITH_BOTH_SIDES)).schedule();
+>>>>>>> origin/ClimberSubsystem
   }
 
   @Override

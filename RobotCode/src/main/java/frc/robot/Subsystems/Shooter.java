@@ -136,10 +136,12 @@ public class Shooter extends SubsystemBase implements Consts{
      * (func was created using excel)
      * @return the angle the shooter needs to be at
      */
-    public double getAngleToSpeaker(){
+    public double getShooterAngleToSpeaker(){
+       
         Vector2d currentPos2d = Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).getPos();
         Vector3d currentPos = new Vector3d(currentPos2d.x, 0, currentPos2d.y);
         Vector3d speakerPos = new Vector3d();
+       
         //get position of speaker according to the alliance
         if(DriverStation.getAlliance().get() == Alliance.Blue){
             speakerPos = ShooterValues.BLUE_SPAKER_POS;
@@ -147,9 +149,10 @@ public class Shooter extends SubsystemBase implements Consts{
         else if(DriverStation.getAlliance().get() == Alliance.Red){
             speakerPos = ShooterValues.RED_SPAKER_POS;
         }
+
         //calculate the vector between them
         Vector3d delta = currentPos.subtract(speakerPos);
-        return delta.getPitch();
+        return Math.toDegrees(delta.getPitch());
     }
 
 
@@ -185,11 +188,6 @@ public class Shooter extends SubsystemBase implements Consts{
         m_leftShootMotor.getPIDController().setReference(speed, ControlType.kVelocity);
     }
 
-    public void testMotors(double speed){
-        m_rightShootMotor.set(speed);
-        m_leftShootMotor.set(speed);
-    }
-
     /**
      * Push the note to the shooter rollers 
      * @param speed - target speed in rpm
@@ -215,6 +213,14 @@ public class Shooter extends SubsystemBase implements Consts{
     }
 
     /**
+     * 
+     * @return current speed of the containment roller
+     */
+    public double getContainmentSpeed(){
+        return m_containmentMotor.getEncoder().getVelocity();
+    }
+
+    /**
      * Pull the note into shooter 
      * @param speed - containment speed in rpm
      */
@@ -225,6 +231,12 @@ public class Shooter extends SubsystemBase implements Consts{
         m_leftShootMotor.getPIDController().setReference(speed, ControlType.kVelocity);
         //activate velocity pid on containment roller motor controller
         m_containmentMotor.getPIDController().setReference(speed, ControlType.kVelocity);
+    }
+
+    public void testMotors(double speed){
+        m_rightShootMotor.set(speed);
+        m_leftShootMotor.set(speed);
+        m_containmentMotor.set(speed);
     }
 
     /**

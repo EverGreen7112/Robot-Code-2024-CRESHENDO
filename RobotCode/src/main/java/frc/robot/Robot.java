@@ -52,7 +52,7 @@ public class Robot extends TimedRobot implements Consts{
     m_field.setRobotPose(xCurrent, yCurrent, new Rotation2d(Math.toRadians(-headingCurrent + 90)));
 
    SmartDashboard.putNumber("shooter angle", Shooter.getInstance().getShooterAngle()); 
-   
+ 
   }
 
   @Override
@@ -84,7 +84,7 @@ public class Robot extends TimedRobot implements Consts{
   public void teleopInit() {
     CommandScheduler.getInstance().cancelAll();
     m_swerveInstance.initSwerve();
-    // RobotContainer.teleop.schedule();
+    RobotContainer.teleop.schedule();
   }
   
 
@@ -95,7 +95,8 @@ public class Robot extends TimedRobot implements Consts{
 
   @Override
   public void teleopExit() {
-    // m_swerveInstance.stop();
+    m_swerveInstance.stop();
+    CommandScheduler.getInstance().cancelAll();
   }
 
   @Override

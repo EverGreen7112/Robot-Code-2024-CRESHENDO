@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.simulation.XboxControllerSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -50,27 +51,37 @@ public class RobotContainer implements Consts{
       Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).turnBy(-45);
     }));
 
-     Trigger r30 = new JoystickButton(chassis, XboxController.Button.kA.value).onTrue(new InstantCommand(() -> {
-        Shooter.getInstance().turnToAngle(30);
+    //  Trigger r30 = new JoystickButton(chassis, XboxController.Button.kA.value).onTrue(new InstantCommand(() -> {
+    //     Shooter.getInstance().turnToAngle(30);
+    //  }));
+
+    // Trigger r40 = new JoystickButton(chassis, XboxController.Button.kB.value).onTrue(new InstantCommand(() -> {
+    //     Shooter.getInstance().turnToAngle(40);
+    // }));
+
+    // Trigger r45 = new JoystickButton(chassis, XboxController.Button.kY.value).onTrue(new InstantCommand(() -> {
+    //   Shooter.getInstance().turnToAngle(45);
+    // }));
+
+    // Trigger r60 = new JoystickButton(chassis, XboxController.Button.kX.value).onTrue(new InstantCommand(() -> {
+    //   Shooter.getInstance().turnToAngle(60);
+    // }));
+
+    // Trigger deg = new JoystickButton(chassis, XboxController.Button.kStart.value).onTrue(new InstantCommand(() -> {
+    //   Shooter.getInstance().turnToAngle(Shooter.getInstance().getShooterAngle() + 1.0);
+    // }));
+
+    Trigger intake = new JoystickButton(chassis, XboxController.Button.kA.value).whileTrue(new ParallelCommandGroup(new IntakeWithoutPID(IntakeValues.INTAKE_SPEED), new InstantCommand(() ->{
+      Shooter.getInstance().testMotors(0.5);
+    }))).onFalse(new InstantCommand(() ->{
+      Shooter.getInstance().testMotors(0);
     }));
 
-    Trigger r40 = new JoystickButton(chassis, XboxController.Button.kB.value).onTrue(new InstantCommand(() -> {
-        Shooter.getInstance().turnToAngle(40);
+    Trigger shootTest = new JoystickButton(chassis, XboxController.Button.kB.value).whileTrue(new InstantCommand(() -> {
+      Shooter.getInstance().shootNote(ShooterValues.AMP_SHOOT_SPEED);
+    })).onFalse(new InstantCommand(() -> {
+      Shooter.getInstance().testMotors(0);
     }));
-
-     Trigger r45 = new JoystickButton(chassis, XboxController.Button.kY.value).onTrue(new InstantCommand(() -> {
-      Shooter.getInstance().turnToAngle(45);
-    }));
-
-     Trigger r60 = new JoystickButton(chassis, XboxController.Button.kX.value).onTrue(new InstantCommand(() -> {
-      Shooter.getInstance().turnToAngle(60);
-    }));
-
-     Trigger deg = new JoystickButton(chassis, XboxController.Button.kStart.value).onTrue(new InstantCommand(() -> {
-      Shooter.getInstance().turnToAngle(Shooter.getInstance().getShooterAngle() + 1.0);
-    }));
-
-    // Trigger intake = new JoystickButton(chassis, XboxController.Button.kA.value).whileTrue(new IntakeWithoutPID(IntakeValues.INTAKE_SPEED));
 
     // Trigger leftClimbUp = new JoystickButton(chassis, XboxController.Button.kA.value).whileTrue(new ClimbWithoutPID(ClimberValues.CLIMBER_SPEED, ClimberSide.CLIMB_WITH_LEFT_SIDE));
     // Trigger leftClimbDown = new JoystickButton(chassis, XboxController.Button.kB.value).whileTrue(new ClimbWithoutPID(-ClimberValues.CLIMBER_SPEED, ClimberSide.

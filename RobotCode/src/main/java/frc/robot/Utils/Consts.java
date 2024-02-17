@@ -29,7 +29,7 @@ public interface Consts {
         public static final double Y_TOLERANCE = 0.05;
 
         //speed values
-        public static final double HEADING_KP = 0.05;
+        public static final double HEADING_KP = 0.03;
         public static final double HEADING_KI = 0;
         public static final double HEADING_KD = 0;
         public static final double HEADING_TOLERANCE = 3;
@@ -42,22 +42,22 @@ public interface Consts {
         
 
         //right rollers speed
-        public static final double RIGHT_ROLLERS_SPEED_KP = 0;
-        public static final double RIGHT_ROLLERS_SPEED_KI = 0;
-        public static final double RIGHT_ROLLERS_SPEED_KD = 0;
-        public static final double RIGHT_ROLLERS_SPEED_KF = 0;
+        public static final double RIGHT_ROLLERS_SPEED_KP = 0.0006 * 0.9;
+        public static final double RIGHT_ROLLERS_SPEED_KI = 0.0000003 * 0.9;
+        public static final double RIGHT_ROLLERS_SPEED_KD = 0.00001;
+        public static final double RIGHT_ROLLERS_SPEED_KF = 0.00001;
         
         //left rollers speed
-        public static final double LEFT_ROLLERS_SPEED_KP = 0;
-        public static final double LEFT_ROLLERS_SPEED_KI = 0;
-        public static final double LEFT_ROLLERS_SPEED_KD = 0;
-        public static final double LEFT_ROLLERS_SPEED_KF = 0;
+        public static final double LEFT_ROLLERS_SPEED_KP = 0.0003 * 0.9;
+        public static final double LEFT_ROLLERS_SPEED_KI = 0.0000006 * 0.9;
+        public static final double LEFT_ROLLERS_SPEED_KD = 0.000001;
+        public static final double LEFT_ROLLERS_SPEED_KF = 0.000002;
         
         //containment speed
-        public static final double CONTAINMENT_SPEED_KP = 0;
+        public static final double CONTAINMENT_SPEED_KP = 0.000;
         public static final double CONTAINMENT_SPEED_KI = 0;
         public static final double CONTAINMENT_SPEED_KD = 0;
-        public static final double CONTAINMENT_SPEED_KF = 0;
+        public static final double CONTAINMENT_SPEED_KF = 0.000;
         
     }
 
@@ -135,7 +135,7 @@ public interface Consts {
         public static final int CLIMBER_MOTOR_RIGHT_PORT = 15;
         public static final int CLIMBER_MOTOR_LEFT_PORT = 61;
 
-        public static final double CLIMBER_SPEED = 0.5;
+        public static final double CLIMBER_SPEED = 1;
         public static final double CLIMBER_RPM = 0;
 
         public static final int CLIMBER_LIMIT_SWITCH_RIGHT_PORT = 0;
@@ -169,12 +169,12 @@ public interface Consts {
         public static final Vector3d BLUE_SPAKER_POS = new Vector3d(-1.5 * 0.0254, 2.1 , 218.41 * 0.0254);
 
         //gear ratio
-        public static final double AIM_MOTOR_GEAR_RATIO = 1 / 30.0;
+        public static final double AIM_MOTOR_GEAR_RATIO = 1 / 50.0;
 
         //shooter speeds(in rpm)
         public static final double SPEAKER_SHOOT_SPEED = 0;
-        public static final double AMP_SHOOT_SPEED = 0;
-        public static final double CONTAINMENT_SPEED = 0;
+        public static final double AMP_SHOOT_SPEED = 1000;
+        public static final double CONTAINMENT_SPEED = 100;
         
         //shooter angles
         public static final double AIM_MOTOR_MAX_ANGLE = 180;
@@ -206,10 +206,6 @@ public interface Consts {
         public static final IdleMode LEFT_SHOOT_IDLE_MODE = IdleMode.kBrake;
         public static final IdleMode CONTAINMENT_IDLE_MODE = IdleMode.kBrake;
         public static final IdleMode AIM_IDLE_MODE = IdleMode.kBrake;
-
-        //distance to angle func values
-        public static final double DISTANCE_TO_ANGLE_M = 0;
-        public static final double DISTANCE_TO_ANGLE_B = 0;
     }    
 
     public class JoystickValues {

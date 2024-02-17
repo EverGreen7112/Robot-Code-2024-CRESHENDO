@@ -12,7 +12,7 @@ public class TurnShooterToSpeaker extends Command{
 
     @Override
     public void execute() {
-        Shooter.getInstance().turnToAngle(Shooter.getInstance().getAngleToSpeaker());
+        Shooter.getInstance().turnToAngle(Shooter.getInstance().getShooterAngleToSpeaker());
     }
 
     @Override

@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Commands.Swerve.FollowRoute;
 import frc.robot.Commands.ClimbWithoutPID;
 import frc.robot.Commands.Intake.IntakeWithoutPID;
+import frc.robot.Commands.Shooter.ShootToSpeaker;
 import frc.robot.Commands.Swerve.DriveByJoysticks;
 import frc.robot.Subsystems.Intake;
 import frc.robot.Subsystems.Shooter;
@@ -43,25 +44,30 @@ public class RobotContainer implements Consts{
 
   private void configureBindings() {
 
-    Trigger rotateRobotBy45 = new JoystickButton(chassis, XboxController.Button.kRightBumper.value).onTrue(new InstantCommand(() -> {
-      Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).turnBy(45);
-    }));
-
-    Trigger rotateRobotByMinus45 = new JoystickButton(chassis, XboxController.Button.kLeftBumper.value).onTrue(new InstantCommand(() -> {
-      Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).turnBy(-45);
-    }));
-
-    //  Trigger r30 = new JoystickButton(chassis, XboxController.Button.kA.value).onTrue(new InstantCommand(() -> {
-    //     Shooter.getInstance().turnToAngle(30);
-    //  }));
-
-    // Trigger r40 = new JoystickButton(chassis, XboxController.Button.kB.value).onTrue(new InstantCommand(() -> {
-    //     Shooter.getInstance().turnToAngle(40);
+    // Trigger rotateRobotBy45 = new JoystickButton(chassis, XboxController.Button.kRightBumper.value).onTrue(new InstantCommand(() -> {
+    //   Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).turnBy(45);
     // }));
 
-    // Trigger r45 = new JoystickButton(chassis, XboxController.Button.kY.value).onTrue(new InstantCommand(() -> {
-    //   Shooter.getInstance().turnToAngle(45);
+    // Trigger rotateRobotByMinus45 = new JoystickButton(chassis, XboxController.Button.kLeftBumper.value).onTrue(new InstantCommand(() -> {
+    //   Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).turnBy(-45);
     // }));
+
+     Trigger r30 = new JoystickButton(chassis, XboxController.Button.kRightBumper.value).onTrue(new InstantCommand(() -> {
+        Shooter.getInstance().turnToAngle(30);
+     }));
+
+    Trigger r40 = new JoystickButton(chassis, XboxController.Button.kLeftBumper.value).onTrue(new InstantCommand(() -> {
+        Shooter.getInstance().turnToAngle(35);
+    }));
+
+    Trigger r45 = new JoystickButton(chassis, XboxController.Button.kX.value).onTrue(new InstantCommand(() -> {
+      Shooter.getInstance().turnToAngle(Shooter.getInstance().getShooterAngleToSpeaker());
+    }));
+     Trigger d = new JoystickButton(chassis, XboxController.Button.kB.value).whileTrue(new InstantCommand(() -> {
+      Shooter.getInstance().pushNoteToRollers(ShooterValues.CONTAINMENT_SPEED);
+    })).onFalse(new InstantCommand(() -> {
+      Shooter.getInstance().pushNoteToRollers(0);
+    }));
 
     // Trigger r60 = new JoystickButton(chassis, XboxController.Button.kX.value).onTrue(new InstantCommand(() -> {
     //   Shooter.getInstance().turnToAngle(60);
@@ -72,16 +78,17 @@ public class RobotContainer implements Consts{
     // }));
 
     Trigger intake = new JoystickButton(chassis, XboxController.Button.kA.value).whileTrue(new ParallelCommandGroup(new IntakeWithoutPID(IntakeValues.INTAKE_SPEED), new InstantCommand(() ->{
-      Shooter.getInstance().testMotors(0.5);
+      Shooter.getInstance().testMotors(-0.5);
     }))).onFalse(new InstantCommand(() ->{
       Shooter.getInstance().testMotors(0);
     }));
 
-    Trigger shootTest = new JoystickButton(chassis, XboxController.Button.kB.value).whileTrue(new InstantCommand(() -> {
-      Shooter.getInstance().shootNote(ShooterValues.AMP_SHOOT_SPEED);
+    Trigger shootTest = new JoystickButton(chassis, XboxController.Button.kY.value).whileTrue(new InstantCommand(() -> {
+      Shooter.getInstance().setShootSpeed(ShooterValues.SPEAKER_SHOOT_SPEED);
     })).onFalse(new InstantCommand(() -> {
       Shooter.getInstance().testMotors(0);
     }));
+
 
     // Trigger leftClimbUp = new JoystickButton(chassis, XboxController.Button.kA.value).whileTrue(new ClimbWithoutPID(ClimberValues.CLIMBER_SPEED, ClimberSide.CLIMB_WITH_LEFT_SIDE));
     // Trigger leftClimbDown = new JoystickButton(chassis, XboxController.Button.kB.value).whileTrue(new ClimbWithoutPID(-ClimberValues.CLIMBER_SPEED, ClimberSide.

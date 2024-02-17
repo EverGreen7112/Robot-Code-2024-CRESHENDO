@@ -35,28 +35,28 @@ public interface Consts {
         public static final double HEADING_TOLERANCE = 3;
         
         //shooter angle
-        public static final double SHOOTER_ANGLE_KP = 0.0085;//0.007
-        public static final double SHOOTER_ANGLE_KI = 0.00000045;//0.0000003
+        public static final double SHOOTER_ANGLE_KP = 0.0093;//0.007
+        public static final double SHOOTER_ANGLE_KI = 0.0000023;//0.0000003
         public static final double SHOOTER_ANGLE_KD = 0.03;//0.03
-        public static final double SHOOTER_ANGLE_KF = 0.054 / 2;//0.057 / 2
+        public static final double SHOOTER_ANGLE_KF = 0;//0.054 / 2;//0.057 / 2
         
 
         //right rollers speed
-        public static final double RIGHT_ROLLERS_SPEED_KP = 0.0006 * 0.9;
-        public static final double RIGHT_ROLLERS_SPEED_KI = 0.0000003 * 0.9;
-        public static final double RIGHT_ROLLERS_SPEED_KD = 0.00001;
-        public static final double RIGHT_ROLLERS_SPEED_KF = 0.00001;
+        public static final double RIGHT_ROLLERS_SPEED_KP = 0.00009;// 0.0006 * 0.9;
+        public static final double RIGHT_ROLLERS_SPEED_KI = 0.00000074;// 0.0000003 * 0.9;
+        public static final double RIGHT_ROLLERS_SPEED_KD = 0.001;// 0.00001;
+        public static final double RIGHT_ROLLERS_SPEED_KF = 0;// 0.00001;
         
         //left rollers speed
-        public static final double LEFT_ROLLERS_SPEED_KP = 0.0003 * 0.9;
-        public static final double LEFT_ROLLERS_SPEED_KI = 0.0000006 * 0.9;
-        public static final double LEFT_ROLLERS_SPEED_KD = 0.000001;
-        public static final double LEFT_ROLLERS_SPEED_KF = 0.000002;
+        public static final double LEFT_ROLLERS_SPEED_KP = 0.00009;//0.0003 * 0.9;
+        public static final double LEFT_ROLLERS_SPEED_KI = 0.00000074;//0.0000006 * 0.9;
+        public static final double LEFT_ROLLERS_SPEED_KD = 0.001;//0.000001;
+        public static final double LEFT_ROLLERS_SPEED_KF = 0;//0.000002;
         
         //containment speed
-        public static final double CONTAINMENT_SPEED_KP = 0.000;
-        public static final double CONTAINMENT_SPEED_KI = 0;
-        public static final double CONTAINMENT_SPEED_KD = 0;
+        public static final double CONTAINMENT_SPEED_KP = 0.00009;
+        public static final double CONTAINMENT_SPEED_KI = 0.00000069;
+        public static final double CONTAINMENT_SPEED_KD = 0.001;
         public static final double CONTAINMENT_SPEED_KF = 0.000;
         
     }
@@ -172,9 +172,9 @@ public interface Consts {
         public static final double AIM_MOTOR_GEAR_RATIO = 1 / 50.0;
 
         //shooter speeds(in rpm)
-        public static final double SPEAKER_SHOOT_SPEED = 0;
+        public static final double SPEAKER_SHOOT_SPEED = 6000;
         public static final double AMP_SHOOT_SPEED = 1000;
-        public static final double CONTAINMENT_SPEED = 100;
+        public static final double CONTAINMENT_SPEED = 6000;
         
         //shooter angles
         public static final double AIM_MOTOR_MAX_ANGLE = 180;

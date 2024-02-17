@@ -93,8 +93,8 @@ public class Shooter extends SubsystemBase implements Consts{
         m_aimMotor.getPIDController().setD(PIDValues.SHOOTER_ANGLE_KD);
 
         //set idle mode
-        m_rightShootMotor.setIdleMode(IdleMode.kBrake);
-        m_leftShootMotor.setIdleMode(IdleMode.kBrake);
+        m_rightShootMotor.setIdleMode(IdleMode.kCoast);
+        m_leftShootMotor.setIdleMode(IdleMode.kCoast);
 
         //gear ratio
         m_aimMotor.getEncoder().setPositionConversionFactor(ShooterValues.AIM_MOTOR_GEAR_RATIO * 360); //convert to degrees
@@ -127,7 +127,7 @@ public class Shooter extends SubsystemBase implements Consts{
         //start spining rollers if note is inside the shooter 
         ColorMatchResult result = m_colorMatcher.matchColor(m_colorSensor.getColor());
         if(result != null && result.confidence >= ShooterValues.COLOR_SENSOR_CONFIDENCE)
-            shootNote(getLeftRollerSpeed());
+            setShootSpeed(getLeftRollerSpeed());
             
     }
     
@@ -181,7 +181,7 @@ public class Shooter extends SubsystemBase implements Consts{
      * Shoot note
      * @param speed - target shoot speed in rpm
      */
-    public void shootNote(double speed){
+    public void setShootSpeed(double speed){
         //activate velocity pid on right rollers
         m_rightShootMotor.getPIDController().setReference(speed, ControlType.kVelocity);
         //activate velocity pid on left roller

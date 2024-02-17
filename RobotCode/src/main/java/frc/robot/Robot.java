@@ -51,7 +51,7 @@ public class Robot extends TimedRobot implements Consts{
     //update the robot position of dashboard
     m_field.setRobotPose(xCurrent, yCurrent, new Rotation2d(Math.toRadians(-headingCurrent + 90)));
 
-   SmartDashboard.putNumber("shooter angle", Shooter.getInstance().getShooterAngle()); 
+  //  SmartDashboard.putNumber("shooter angle", Shooter.getInstance().getShooterAngle()); 
  
   }
 

@@ -53,15 +53,15 @@ public class RobotContainer implements Consts{
     // }));
 
      Trigger r30 = new JoystickButton(chassis, XboxController.Button.kRightBumper.value).onTrue(new InstantCommand(() -> {
-        Shooter.getInstance().turnToAngle(30);
+        Shooter.getInstance().turnToAngle(Shooter.getInstance().getShooterAngle() + 2);
      }));
 
     Trigger r40 = new JoystickButton(chassis, XboxController.Button.kLeftBumper.value).onTrue(new InstantCommand(() -> {
-        Shooter.getInstance().turnToAngle(35);
+        Shooter.getInstance().turnToAngle(Shooter.getInstance().getShooterAngle() - 2);
     }));
 
     Trigger r45 = new JoystickButton(chassis, XboxController.Button.kX.value).onTrue(new InstantCommand(() -> {
-      Shooter.getInstance().turnToAngle(Shooter.getInstance().getShooterAngleToSpeaker());
+      Shooter.getInstance().turnToAngle(ShooterValues.AIM_MOTOR_AMP_ANGLE);
     }));
      Trigger d = new JoystickButton(chassis, XboxController.Button.kB.value).whileTrue(new InstantCommand(() -> {
       Shooter.getInstance().pushNoteToRollers(ShooterValues.CONTAINMENT_SPEED);
@@ -77,14 +77,15 @@ public class RobotContainer implements Consts{
     //   Shooter.getInstance().turnToAngle(Shooter.getInstance().getShooterAngle() + 1.0);
     // }));
 
-    Trigger intake = new JoystickButton(chassis, XboxController.Button.kA.value).whileTrue(new ParallelCommandGroup(new IntakeWithoutPID(IntakeValues.INTAKE_SPEED), new InstantCommand(() ->{
+    Trigger intake = new JoystickButton(chassis, XboxController.Button.kA.value).whileTrue(
+      new ParallelCommandGroup(new InstantCommand(() ->{ Shooter.getInstance().turnToAngle(ShooterValues.AIM_MOTOR_MIN_ANGLE);}), new IntakeWithoutPID(IntakeValues.INTAKE_SPEED), new InstantCommand(() ->{
       Shooter.getInstance().testMotors(-0.5);
     }))).onFalse(new InstantCommand(() ->{
       Shooter.getInstance().testMotors(0);
     }));
 
     Trigger shootTest = new JoystickButton(chassis, XboxController.Button.kY.value).whileTrue(new InstantCommand(() -> {
-      Shooter.getInstance().setShootSpeed(ShooterValues.SPEAKER_SHOOT_SPEED);
+      Shooter.getInstance().setShootSpeed(ShooterValues.AMP_SHOOT_SPEED);
     })).onFalse(new InstantCommand(() -> {
       Shooter.getInstance().testMotors(0);
     }));

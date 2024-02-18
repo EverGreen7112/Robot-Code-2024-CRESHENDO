@@ -35,9 +35,9 @@ public interface Consts {
         public static final double HEADING_TOLERANCE = 3;
         
         //shooter angle
-        public static final double SHOOTER_ANGLE_KP = 0.0093;//0.007
-        public static final double SHOOTER_ANGLE_KI = 0.0000023;//0.0000003
-        public static final double SHOOTER_ANGLE_KD = 0.03;//0.03
+        public static final double SHOOTER_ANGLE_KP = 0.008;//0.007
+        public static final double SHOOTER_ANGLE_KI = 0.00000072; //0.0000003
+        public static final double SHOOTER_ANGLE_KD = 0.099;//0.03
         public static final double SHOOTER_ANGLE_KF = 0;//0.054 / 2;//0.057 / 2
         
 
@@ -173,13 +173,13 @@ public interface Consts {
 
         //shooter speeds(in rpm)
         public static final double SPEAKER_SHOOT_SPEED = 6000;
-        public static final double AMP_SHOOT_SPEED = 1000;
+        public static final double AMP_SHOOT_SPEED = 2000;
         public static final double CONTAINMENT_SPEED = 6000;
         
         //shooter angles
         public static final double AIM_MOTOR_MAX_ANGLE = 180;
-        public static final double AIM_MOTOR_MIN_ANGLE = -52 - (-1.714345) - (-1.428566);
-        public static final double AIM_MOTOR_AMP_ANGLE = 150;
+        public static final double AIM_MOTOR_MIN_ANGLE = -49.4;
+        public static final double AIM_MOTOR_AMP_ANGLE = 130;
         public static final double AIM_MOTOR_SPEAKER_ANGLE = 0;
         
         //motor controllers ids
@@ -190,7 +190,7 @@ public interface Consts {
 
         //limit switches ids
         public static final int TOP_LIMIT_SWITCH_ID = 0;
-        public static final int BOTTOM_LIMIT_SWITCH_ID = 0;
+        public static final int BOTTOM_LIMIT_SWITCH_ID = 9;
 
         //color min confidence
         public static final double COLOR_SENSOR_CONFIDENCE = 0.5;
@@ -202,8 +202,8 @@ public interface Consts {
         public static final boolean AIM_MOTOR_INVERTED = true;
         
         //motors idle mode
-        public static final IdleMode RIGHT_SHOOT_IDLE_MODE = IdleMode.kBrake;
-        public static final IdleMode LEFT_SHOOT_IDLE_MODE = IdleMode.kBrake;
+        public static final IdleMode RIGHT_SHOOT_IDLE_MODE = IdleMode.kCoast;
+        public static final IdleMode LEFT_SHOOT_IDLE_MODE = IdleMode.kCoast;
         public static final IdleMode CONTAINMENT_IDLE_MODE = IdleMode.kBrake;
         public static final IdleMode AIM_IDLE_MODE = IdleMode.kBrake;
     }    

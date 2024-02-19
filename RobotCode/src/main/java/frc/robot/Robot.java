@@ -6,11 +6,13 @@ package frc.robot;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.ColorSensorV3.RawColor;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Commands.ClimbWithoutPID;
 import frc.robot.Commands.Shooter.TurnShooterToAngle;
@@ -50,9 +52,13 @@ public class Robot extends TimedRobot implements Consts{
 
     //update the robot position of dashboard
     m_field.setRobotPose(xCurrent, yCurrent, new Rotation2d(Math.toRadians(-headingCurrent + 90)));
-
-   SmartDashboard.putNumber("shooter angle", Shooter.getInstance().getShooterAngle()); 
  
+   SmartDashboard.putBoolean("is_note_in", Shooter.getInstance().isNoteIn());
+
+   Color color = Shooter.getInstance().getColor();
+   SmartDashboard.putNumber("red", color.red);
+   SmartDashboard.putNumber("green", color.green);
+   SmartDashboard.putNumber("blue", color.blue);
   }
 
   @Override

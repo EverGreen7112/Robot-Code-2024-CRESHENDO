@@ -36,7 +36,7 @@ public interface Consts {
         
         //shooter angle
         public static final double SHOOTER_ANGLE_KP = 0.008;//0.007
-        public static final double SHOOTER_ANGLE_KI = 0.00000072; //0.0000003
+        public static final double SHOOTER_ANGLE_KI = 0.00000031; //0.0000003
         public static final double SHOOTER_ANGLE_KD = 0.099;//0.03
         public static final double SHOOTER_ANGLE_KF = 0;//0.054 / 2;//0.057 / 2
         
@@ -169,7 +169,7 @@ public interface Consts {
         public static final Vector3d BLUE_SPAKER_POS = new Vector3d(-1.5 * 0.0254, 2.1 , 218.41 * 0.0254);
 
         //gear ratio
-        public static final double AIM_MOTOR_GEAR_RATIO = 1 / 50.0;
+        public static final double AIM_MOTOR_GEAR_RATIO = 1 / (45.0);
 
         //shooter speeds(in rpm)
         public static final double SPEAKER_SHOOT_SPEED = 6000;
@@ -181,6 +181,8 @@ public interface Consts {
         public static final double AIM_MOTOR_MIN_ANGLE = -49.4;
         public static final double AIM_MOTOR_AMP_ANGLE = 130;
         public static final double AIM_MOTOR_SPEAKER_ANGLE = 0;
+        public static final int AIM_MOTOR_CURRENT_LIMIT = 20;
+        public static final double AIM_MOTOR_VOLTAGE_LIMIT = 0.15;
         
         //motor controllers ids
         public static final int RIGHT_SHOOT_MOTOR_ID = 6;
@@ -193,7 +195,7 @@ public interface Consts {
         public static final int BOTTOM_LIMIT_SWITCH_ID = 9;
 
         //color min confidence
-        public static final double COLOR_SENSOR_CONFIDENCE = 0.5;
+        public static final double COLOR_SENSOR_CONFIDENCE = 1;
 
         //inverted motors
         public static final boolean RIGHT_SHOOT_MOTOR_INVERTED = false;

@@ -58,7 +58,7 @@ public class Swerve extends SubsystemBase implements Consts {
         }
         m_instance = null;
         m_headingPidController = new PIDController(PIDValues.HEADING_KP, PIDValues.HEADING_KI, PIDValues.HEADING_KD);
-        m_gyro = new AHRS(SerialPort.Port.kMXP);
+        m_gyro = new AHRS(SerialPort.Port.kMXP); // kMXP
         m_headingTargetAngle = m_gyro.getAngle();
         m_headingPidController.setTolerance(PIDValues.HEADING_TOLERANCE);
         m_rotationSpeed = 0;

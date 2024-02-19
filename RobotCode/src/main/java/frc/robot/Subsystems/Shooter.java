@@ -2,6 +2,7 @@ package frc.robot.Subsystems;
 
 import org.opencv.core.Mat;
 
+import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorMatchResult;
@@ -10,11 +11,16 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.ColorSensorV3.ColorSensorMeasurementRate;
+import com.revrobotics.ColorSensorV3.ColorSensorResolution;
+import com.revrobotics.ColorSensorV3.GainFactor;
+import com.revrobotics.ColorSensorV3.RawColor;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
@@ -42,6 +48,7 @@ public class Shooter extends SubsystemBase implements Consts{
     //detect when the note is inside to shooter 
     private ColorSensorV3 m_colorSensor;
     private ColorMatch m_colorMatcher;
+    private AHRS m_gyro;
 
     private Shooter(){
         //create motor controller objects
@@ -56,12 +63,24 @@ public class Shooter extends SubsystemBase implements Consts{
 
         //create color sensor object 
         m_colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
+        
+        
+        m_aimMotor.getPIDController().setOutputRange(-ShooterValues.AIM_MOTOR_VOLTAGE_LIMIT, 
+        ShooterValues.AIM_MOTOR_VOLTAGE_LIMIT);
+        m_aimMotor.setSmartCurrentLimit(ShooterValues.AIM_MOTOR_CURRENT_LIMIT);
+        m_aimMotor.burnFlash();
+
+        m_gyro = new AHRS(SerialPort.Port.kUSB1);
+        
+        
 
         //create color matcher object 
         m_colorMatcher = new ColorMatch();
         m_colorMatcher.addColorMatch(Color.kOrange);
         m_colorMatcher.addColorMatch(Color.kOrangeRed);
         m_colorMatcher.addColorMatch(Color.kDarkOrange);
+        m_colorMatcher.setConfidenceThreshold(ShooterValues.COLOR_SENSOR_CONFIDENCE);
+        
 
         //reset factory defaults
         m_rightShootMotor.restoreFactoryDefaults();
@@ -98,6 +117,8 @@ public class Shooter extends SubsystemBase implements Consts{
         //set idle mode
         m_rightShootMotor.setIdleMode(ShooterValues.RIGHT_SHOOT_IDLE_MODE);
         m_leftShootMotor.setIdleMode(ShooterValues.LEFT_SHOOT_IDLE_MODE);
+        m_aimMotor.setIdleMode(IdleMode.kBrake);
+        
 
         //gear ratio
         m_aimMotor.getEncoder().setPositionConversionFactor(ShooterValues.AIM_MOTOR_GEAR_RATIO * 360); //convert to degrees
@@ -132,7 +153,12 @@ public class Shooter extends SubsystemBase implements Consts{
         ColorMatchResult result = m_colorMatcher.matchColor(m_colorSensor.getColor());
         if(result != null && result.confidence >= ShooterValues.COLOR_SENSOR_CONFIDENCE)
             setShootSpeed(getLeftRollerSpeed());
+        resetToAbsoluteAngle();
             
+    }
+
+    public void resetToAbsoluteAngle(){
+        m_aimMotor.getEncoder().setPosition(-m_gyro.getRoll());
     }
     
     /**
@@ -186,6 +212,8 @@ public class Shooter extends SubsystemBase implements Consts{
      * @return current shooter angle
      */
     public double getShooterAngle(){
+        // return m_gyro.getRoll();
+        resetToAbsoluteAngle();
         return m_aimMotor.getEncoder().getPosition();
     }
 
@@ -265,6 +293,26 @@ public class Shooter extends SubsystemBase implements Consts{
      */
     public void stopAimMotor(){
         m_aimMotor.stopMotor();
+    }
+
+    /**
+     * tells if note is in
+     */
+    public boolean isNoteIn(){
+        ColorMatchResult result = m_colorMatcher.matchColor(m_colorSensor.getColor());
+        return result != null;
+        // if (result == null) {
+        //     return false;
+        // }
+
+        // return result.confidence  >= ShooterValues.COLOR_SENSOR_CONFIDENCE;
+    }
+
+
+    public Color getColor(){
+        SmartDashboard.putBoolean("check",  m_colorSensor.isConnected());
+      
+        return m_colorSensor.getColor();
     }
 
 

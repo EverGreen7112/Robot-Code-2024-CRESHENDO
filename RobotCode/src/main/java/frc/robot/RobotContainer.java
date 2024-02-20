@@ -53,11 +53,11 @@ public class RobotContainer implements Consts{
     // }));
 
      Trigger r30 = new JoystickButton(chassis, XboxController.Button.kRightBumper.value).onTrue(new InstantCommand(() -> {
-        Shooter.getInstance().turnToAngle(Shooter.getInstance().getShooterAngle() + 2);
+        Shooter.getInstance().turnToAngle(Shooter.getInstance().getTargetShooterAngle() + 1);
      }));
 
     Trigger r40 = new JoystickButton(chassis, XboxController.Button.kLeftBumper.value).onTrue(new InstantCommand(() -> {
-        Shooter.getInstance().turnToAngle(Shooter.getInstance().getShooterAngle() - 2);
+        Shooter.getInstance().turnToAngle(Shooter.getInstance().getTargetShooterAngle() - 1);
     }));
 
     Trigger r45 = new JoystickButton(chassis, XboxController.Button.kX.value).onTrue(new InstantCommand(() -> {

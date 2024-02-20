@@ -35,9 +35,9 @@ public interface Consts {
         public static final double HEADING_TOLERANCE = 3;
         
         //shooter angle
-        public static final double SHOOTER_ANGLE_KP = 0.008;//0.007
-        public static final double SHOOTER_ANGLE_KI = 0.00000031; //0.0000003
-        public static final double SHOOTER_ANGLE_KD = 0.099;//0.03
+        public static final double SHOOTER_ANGLE_KP = 0.01;//0.007
+        public static final double SHOOTER_ANGLE_KI = 0.0000019; //0.0000003
+        public static final double SHOOTER_ANGLE_KD = 0.00015;//0.03
         public static final double SHOOTER_ANGLE_KF = 0;//0.054 / 2;//0.057 / 2
         
 
@@ -178,11 +178,13 @@ public interface Consts {
         
         //shooter angles
         public static final double AIM_MOTOR_MAX_ANGLE = 180;
-        public static final double AIM_MOTOR_MIN_ANGLE = -49.4;
+        public static final double AIM_MOTOR_MIN_ANGLE = -50.9;
         public static final double AIM_MOTOR_AMP_ANGLE = 130;
         public static final double AIM_MOTOR_SPEAKER_ANGLE = 0;
         public static final int AIM_MOTOR_CURRENT_LIMIT = 20;
-        public static final double AIM_MOTOR_VOLTAGE_LIMIT = 0.15;
+        public static final double AIM_MOTOR_RATE_LIMIT = 1/9.0;
+        public static final double AIM_MOTOR_SPEED_LIMIT = 0.2;
+        public static final double AIM_MOTOR_MIN_SPEED = 0.0001;
         
         //motor controllers ids
         public static final int RIGHT_SHOOT_MOTOR_ID = 6;
@@ -208,6 +210,9 @@ public interface Consts {
         public static final IdleMode LEFT_SHOOT_IDLE_MODE = IdleMode.kCoast;
         public static final IdleMode CONTAINMENT_IDLE_MODE = IdleMode.kBrake;
         public static final IdleMode AIM_IDLE_MODE = IdleMode.kBrake;
+
+        // physical constants
+        public static final double SHOOTER_HEIGHT_METERS = 0.38287; // distance between the shooter axis of rotation to the ground
     }    
 
     public class JoystickValues {

@@ -17,6 +17,7 @@ import com.revrobotics.ColorSensorV3.GainFactor;
 import com.revrobotics.ColorSensorV3.RawColor;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
@@ -26,6 +27,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Utils.Consts;
+import frc.robot.Utils.Funcs;
 import frc.robot.Utils.Vector2d;
 import frc.robot.Utils.Vector3d;
 
@@ -40,7 +42,7 @@ public class Shooter extends SubsystemBase implements Consts{
     private CANSparkMax m_containmentMotor;
     //controls the angle of the shooter
     private CANSparkMax m_aimMotor;
-    private double m_targetShooterAngle;
+    private double m_targetShooterAngle = ShooterValues.AIM_MOTOR_MIN_ANGLE;
     //sends signal when the shooter is at the top angle
     // private DigitalInput m_topLimitSwitch;
     //sends signal when the shooter is at the bottom angle
@@ -49,6 +51,8 @@ public class Shooter extends SubsystemBase implements Consts{
     private ColorSensorV3 m_colorSensor;
     private ColorMatch m_colorMatcher;
     private AHRS m_gyro;
+    private double m_angleOffset = 0; // the offset between the gyro angle and the real angle, checked when limit switch is pressed
+    private PIDController m_shooterAnglePID;
 
     private Shooter(){
         //create motor controller objects
@@ -57,37 +61,18 @@ public class Shooter extends SubsystemBase implements Consts{
         m_containmentMotor = new CANSparkMax(ShooterValues.CONTAINMENT_MOTOR_ID, MotorType.kBrushless);
         m_aimMotor = new CANSparkMax(ShooterValues.AIM_MOTOR_ID, MotorType.kBrushless);
         
-        //create limit switches objects
-        // m_topLimitSwitch = new DigitalInput(ShooterValues.TOP_LIMIT_SWITCH_ID);
-        m_bottomLimitSwitch = new DigitalInput(ShooterValues.BOTTOM_LIMIT_SWITCH_ID);
-
-        //create color sensor object 
-        m_colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
-        
-        
-        m_aimMotor.getPIDController().setOutputRange(-ShooterValues.AIM_MOTOR_VOLTAGE_LIMIT, 
-        ShooterValues.AIM_MOTOR_VOLTAGE_LIMIT);
-        m_aimMotor.setSmartCurrentLimit(ShooterValues.AIM_MOTOR_CURRENT_LIMIT);
-        m_aimMotor.burnFlash();
-
-        m_gyro = new AHRS(SerialPort.Port.kUSB1);
-        
-        
-
-        //create color matcher object 
-        m_colorMatcher = new ColorMatch();
-        m_colorMatcher.addColorMatch(Color.kOrange);
-        m_colorMatcher.addColorMatch(Color.kOrangeRed);
-        m_colorMatcher.addColorMatch(Color.kDarkOrange);
-        m_colorMatcher.setConfidenceThreshold(ShooterValues.COLOR_SENSOR_CONFIDENCE);
-        
 
         //reset factory defaults
         m_rightShootMotor.restoreFactoryDefaults();
         m_leftShootMotor.restoreFactoryDefaults();
         m_containmentMotor.restoreFactoryDefaults();
         m_aimMotor.restoreFactoryDefaults();
-
+        
+        
+        // m_aimMotor.getPIDController().setOutputRange(-ShooterValues.AIM_MOTOR_VOLTAGE_LIMIT, 
+        // ShooterValues.AIM_MOTOR_VOLTAGE_LIMIT);
+        m_aimMotor.setSmartCurrentLimit(ShooterValues.AIM_MOTOR_CURRENT_LIMIT);
+        m_aimMotor.setOpenLoopRampRate(ShooterValues.AIM_MOTOR_RATE_LIMIT);
         //set inverted
         m_rightShootMotor.setInverted(ShooterValues.RIGHT_SHOOT_MOTOR_INVERTED);
         m_leftShootMotor.setInverted(ShooterValues.LEFT_SHOOT_MOTOR_INVERTED);
@@ -110,21 +95,45 @@ public class Shooter extends SubsystemBase implements Consts{
         m_containmentMotor.getPIDController().setD(PIDValues.CONTAINMENT_SPEED_KD);
         m_containmentMotor.getPIDController().setFF(PIDValues.CONTAINMENT_SPEED_KF);
 
-        m_aimMotor.getPIDController().setP(PIDValues.SHOOTER_ANGLE_KP);
-        m_aimMotor.getPIDController().setI(PIDValues.SHOOTER_ANGLE_KI);
-        m_aimMotor.getPIDController().setD(PIDValues.SHOOTER_ANGLE_KD);
+        // m_aimMotor.getPIDController().setP(PIDValues.SHOOTER_ANGLE_KP);
+        // m_aimMotor.getPIDController().setI(PIDValues.SHOOTER_ANGLE_KI);
+        // m_aimMotor.getPIDController().setD(PIDValues.SHOOTER_ANGLE_KD);
 
         //set idle mode
         m_rightShootMotor.setIdleMode(ShooterValues.RIGHT_SHOOT_IDLE_MODE);
         m_leftShootMotor.setIdleMode(ShooterValues.LEFT_SHOOT_IDLE_MODE);
-        m_aimMotor.setIdleMode(IdleMode.kBrake);
+        m_aimMotor.setIdleMode(ShooterValues.AIM_IDLE_MODE);
         
 
         //gear ratio
-        m_aimMotor.getEncoder().setPositionConversionFactor(ShooterValues.AIM_MOTOR_GEAR_RATIO * 360); //convert to degrees
+        // m_aimMotor.getEncoder().setPositionConversionFactor(ShooterValues.AIM_MOTOR_GEAR_RATIO * 360); //convert to degrees
 
-        //initialize position in aim motor
-        m_aimMotor.getEncoder().setPosition(Consts.ShooterValues.AIM_MOTOR_MIN_ANGLE);
+        // //initialize position in aim motor
+        // m_aimMotor.getEncoder().setPosition(Consts.ShooterValues.AIM_MOTOR_MIN_ANGLE);
+
+        m_gyro = new AHRS(SerialPort.Port.kUSB1);
+        
+        // m_targetShooterAngle = getShooterAngle();
+        
+
+        m_shooterAnglePID = new PIDController(PIDValues.SHOOTER_ANGLE_KP,
+                            PIDValues.SHOOTER_ANGLE_KI, PIDValues.SHOOTER_ANGLE_KD);
+        m_shooterAnglePID.setSetpoint(m_targetShooterAngle);
+        
+        //create limit switches objects
+        // m_topLimitSwitch = new DigitalInput(ShooterValues.TOP_LIMIT_SWITCH_ID);
+        m_bottomLimitSwitch = new DigitalInput(ShooterValues.BOTTOM_LIMIT_SWITCH_ID);
+
+        //create color sensor object 
+        m_colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
+        //create color matcher object 
+        m_colorMatcher = new ColorMatch();
+        m_colorMatcher.addColorMatch(Color.kOrange);
+        m_colorMatcher.addColorMatch(Color.kOrangeRed);
+        m_colorMatcher.addColorMatch(Color.kDarkOrange);
+        m_colorMatcher.setConfidenceThreshold(ShooterValues.COLOR_SENSOR_CONFIDENCE);
+        
+
     }
 
     /**
@@ -138,29 +147,45 @@ public class Shooter extends SubsystemBase implements Consts{
 
     @Override
     public void periodic() {
+        SmartDashboard.putNumber("target shooter angle", m_targetShooterAngle);
         SmartDashboard.putNumber("shooter angle", getShooterAngle());
+        SmartDashboard.putNumber("shooter pitch", m_gyro.getPitch());
+        SmartDashboard.putNumber("shooter yaw", m_gyro.getYaw());
+        SmartDashboard.putNumber("shooter roll", m_gyro.getRoll());
+        SmartDashboard.putNumber("shooter z speed", m_gyro.getRawGyroZ());
+        SmartDashboard.putNumber("shooter x speed", m_gyro.getRawGyroX());
+        SmartDashboard.putNumber("shooter y speed", m_gyro.getRawGyroY());
+        
+
         SmartDashboard.putNumber("right rollers speed", getRightRollersSpeed());
         SmartDashboard.putNumber("left rollers speed", getLeftRollerSpeed());
         
         //set encoder position value when touches limit switches
         // if(m_topLimitSwitch.get())
         //     m_aimMotor.getEncoder().setPosition(ShooterValues.AIM_MOTOR_MAX_ANGLE);
-        // if(m_bottomLimitSwitch.get())
-        //     m_aimMotor.getEncoder().setPosition(ShooterValues.AIM_MOTOR_MIN_ANGLE);    
+        if(!m_bottomLimitSwitch.get())
+        {
+            m_angleOffset = ShooterValues.AIM_MOTOR_MIN_ANGLE - getRawShooterAngle();   
+        }
+            
         SmartDashboard.putBoolean("limit switch", m_bottomLimitSwitch.get());
 
         //start spining rollers if note is inside the shooter 
         ColorMatchResult result = m_colorMatcher.matchColor(m_colorSensor.getColor());
         if(result != null && result.confidence >= ShooterValues.COLOR_SENSOR_CONFIDENCE)
             setShootSpeed(getLeftRollerSpeed());
-        resetToAbsoluteAngle();
-            
-    }
 
-    public void resetToAbsoluteAngle(){
-        m_aimMotor.getEncoder().setPosition(-m_gyro.getRoll());
+        m_shooterAnglePID.setSetpoint(m_targetShooterAngle);
+        
+        double output = m_shooterAnglePID.calculate(getShooterAngle());
+        output = MathUtil.clamp(output, -ShooterValues.AIM_MOTOR_SPEED_LIMIT, ShooterValues.AIM_MOTOR_SPEED_LIMIT);
+        if (Math.abs(output) >= ShooterValues.AIM_MOTOR_MIN_SPEED){
+            m_aimMotor.set(output);
+            
+
+        }
+        
     }
-    
     /**
      * calculate the angle the shooter needs to be at according to the current distance from the speaker
      * (func was created using excel)
@@ -169,7 +194,7 @@ public class Shooter extends SubsystemBase implements Consts{
     public double getShooterAngleToSpeaker(){
        
         Vector2d currentPos2d = Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).getPos();
-        Vector3d currentPos = new Vector3d(currentPos2d.x, 0, currentPos2d.y);
+        Vector3d currentPos = new Vector3d(currentPos2d.x, ShooterValues.SHOOTER_HEIGHT_METERS, currentPos2d.y);
         Vector3d speakerPos = new Vector3d();
        
         //get position of speaker according to the alliance
@@ -196,11 +221,12 @@ public class Shooter extends SubsystemBase implements Consts{
 
         // this makes sure that the accumelated integral from before will not ruin the results if we switch directions
         if (Math.signum(angle - getShooterAngle()) != Math.signum(m_targetShooterAngle - getShooterAngle())) {
-            m_aimMotor.getPIDController().setIAccum(0);
+            // m_aimMotor.getPIDController().setIAccum(0);
+            m_shooterAnglePID.reset();
         }
         m_targetShooterAngle = angle;
-
-         m_aimMotor.getPIDController().setReference(angle, ControlType.kPosition);
+        m_shooterAnglePID.setSetpoint(angle);
+        //  m_aimMotor.getPIDController().setReference(angle, ControlType.kPosition);
         // //scale kf according to the shooter's angle(watch the cosinus function graph inorder to understand why its here)
         // double ff = Math.cos(Math.toRadians(angle)) * PIDValues.SHOOTER_ANGLE_KF;
         // //activate pid
@@ -212,9 +238,22 @@ public class Shooter extends SubsystemBase implements Consts{
      * @return current shooter angle
      */
     public double getShooterAngle(){
-        // return m_gyro.getRoll();
-        resetToAbsoluteAngle();
-        return m_aimMotor.getEncoder().getPosition();
+        return getRawShooterAngle() + m_angleOffset;
+    }
+
+    public double getTargetShooterAngle(){
+        return m_targetShooterAngle;
+    }
+
+    /**
+     * 
+     * @return the shooters angle with no offset
+     */
+    private double getRawShooterAngle(){
+        // m_gyro.zeroYaw();
+        return (((Funcs.modulo(m_gyro.getRoll() - 90, 360.0)) <= 180) 
+        ? (180 - m_gyro.getPitch()) : (m_gyro.getPitch())); 
+        //return Funcs.convertRotationsToDegrees(m_gyro.getRotation3d().getX() / (2*Math.PI));
     }
 
     /**

@@ -55,10 +55,10 @@ public class Robot extends TimedRobot implements Consts{
  
    SmartDashboard.putBoolean("is_note_in", Shooter.getInstance().isNoteIn());
 
-   Color color = Shooter.getInstance().getColor();
-   SmartDashboard.putNumber("red", color.red);
-   SmartDashboard.putNumber("green", color.green);
-   SmartDashboard.putNumber("blue", color.blue);
+  //  Color color = Shooter.getInstance().getColor();
+  //  SmartDashboard.putNumber("red", color.red);
+  //  SmartDashboard.putNumber("green", color.green);
+  //  SmartDashboard.putNumber("blue", color.blue);
   }
 
   @Override

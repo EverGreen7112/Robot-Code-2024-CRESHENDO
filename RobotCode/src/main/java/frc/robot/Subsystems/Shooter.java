@@ -1,8 +1,11 @@
 package frc.robot.Subsystems;
 
+import java.io.IOException;
+
 import org.opencv.core.Mat;
 
 import com.kauailabs.navx.frc.AHRS;
+import com.kauailabs.navx.frc.AHRS.SerialDataType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorMatchResult;
@@ -40,6 +43,7 @@ public class Shooter extends SubsystemBase implements Consts{
     private CANSparkMax m_leftShootMotor;
     //controls the motor that puts note inside
     private CANSparkMax m_containmentMotor;
+    private Thread m_thread;
     //controls the angle of the shooter
     private CANSparkMax m_aimMotor;
     private double m_targetShooterAngle = ShooterValues.AIM_MOTOR_MIN_ANGLE;
@@ -104,6 +108,7 @@ public class Shooter extends SubsystemBase implements Consts{
         m_leftShootMotor.setIdleMode(ShooterValues.LEFT_SHOOT_IDLE_MODE);
         m_aimMotor.setIdleMode(ShooterValues.AIM_IDLE_MODE);
         
+        
 
         //gear ratio
         // m_aimMotor.getEncoder().setPositionConversionFactor(ShooterValues.AIM_MOTOR_GEAR_RATIO * 360); //convert to degrees
@@ -111,7 +116,20 @@ public class Shooter extends SubsystemBase implements Consts{
         // //initialize position in aim motor
         // m_aimMotor.getEncoder().setPosition(Consts.ShooterValues.AIM_MOTOR_MIN_ANGLE);
 
-        m_gyro = new AHRS(SerialPort.Port.kUSB1);
+        m_gyro = new AHRS(I2C.Port.kOnboard);
+        m_thread = new Thread(()->{
+            while (true) {
+                try {
+                    m_gyro.setAngleAdjustment((Swerve.getInstance(true).getGyro().getYaw()));
+                }
+                catch (Exception e) {
+                }
+                
+            }
+        });
+        m_thread.setDaemon(true);
+        m_thread.start();
+        // m_gyro = new AHRS(SerialPort.Port.kUSB1);
         
         // m_targetShooterAngle = getShooterAngle();
         
@@ -125,7 +143,7 @@ public class Shooter extends SubsystemBase implements Consts{
         m_bottomLimitSwitch = new DigitalInput(ShooterValues.BOTTOM_LIMIT_SWITCH_ID);
 
         //create color sensor object 
-        m_colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
+        // m_colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
         //create color matcher object 
         m_colorMatcher = new ColorMatch();
         m_colorMatcher.addColorMatch(Color.kOrange);
@@ -150,11 +168,13 @@ public class Shooter extends SubsystemBase implements Consts{
         SmartDashboard.putNumber("target shooter angle", m_targetShooterAngle);
         SmartDashboard.putNumber("shooter angle", getShooterAngle());
         SmartDashboard.putNumber("shooter pitch", m_gyro.getPitch());
-        SmartDashboard.putNumber("shooter yaw", m_gyro.getYaw());
+        SmartDashboard.putNumber("shooter yaw", m_gyro.getAngle());
         SmartDashboard.putNumber("shooter roll", m_gyro.getRoll());
-        SmartDashboard.putNumber("shooter z speed", m_gyro.getRawGyroZ());
-        SmartDashboard.putNumber("shooter x speed", m_gyro.getRawGyroX());
-        SmartDashboard.putNumber("shooter y speed", m_gyro.getRawGyroY());
+        SmartDashboard.putNumber("yaw ruin", (180/Math.PI)*Math.atan2(Math.cos((Math.PI/180)*m_gyro.getRoll()), Math.sin((Math.PI/180)*m_gyro.getPitch())));
+         SmartDashboard.putNumber("yaw fix2", m_gyro.getRoll() + m_gyro.getPitch());
+        // SmartDashboard.putNumber("shooter z speed", m_gyro.getRawGyroZ());
+        // SmartDashboard.putNumber("shooter x speed", m_gyro.getRawGyroX());
+        // SmartDashboard.putNumber("shooter y speed", m_gyro.getRawGyroY());
         
 
         SmartDashboard.putNumber("right rollers speed", getRightRollersSpeed());
@@ -171,20 +191,26 @@ public class Shooter extends SubsystemBase implements Consts{
         SmartDashboard.putBoolean("limit switch", m_bottomLimitSwitch.get());
 
         //start spining rollers if note is inside the shooter 
-        ColorMatchResult result = m_colorMatcher.matchColor(m_colorSensor.getColor());
-        if(result != null && result.confidence >= ShooterValues.COLOR_SENSOR_CONFIDENCE)
-            setShootSpeed(getLeftRollerSpeed());
+        // ColorMatchResult result = m_colorMatcher.matchColor(m_colorSensor.getColor());
+        // if(result != null && result.confidence >= ShooterValues.COLOR_SENSOR_CONFIDENCE)
+        //     setShootSpeed(getLeftRollerSpeed());
 
         m_shooterAnglePID.setSetpoint(m_targetShooterAngle);
         
         double output = m_shooterAnglePID.calculate(getShooterAngle());
         output = MathUtil.clamp(output, -ShooterValues.AIM_MOTOR_SPEED_LIMIT, ShooterValues.AIM_MOTOR_SPEED_LIMIT);
-        if (Math.abs(output) >= ShooterValues.AIM_MOTOR_MIN_SPEED){
-            m_aimMotor.set(output);
-            
-
+        if (m_targetShooterAngle == ShooterValues.AIM_MOTOR_MIN_ANGLE && m_bottomLimitSwitch.get()){
+            m_aimMotor.set(-Math.max(0.1, Math.abs(output)));
         }
-        
+            else {
+            if (Math.abs(output) >= ShooterValues.AIM_MOTOR_MIN_SPEED){
+                m_aimMotor.set(output);
+            }
+            else {
+                m_aimMotor.set(0);
+            }
+        }  
+
     }
     /**
      * calculate the angle the shooter needs to be at according to the current distance from the speaker
@@ -194,6 +220,7 @@ public class Shooter extends SubsystemBase implements Consts{
     public double getShooterAngleToSpeaker(){
        
         Vector2d currentPos2d = Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).getPos();
+        //get position of shooter (NOT ROBOT)
         Vector3d currentPos = new Vector3d(currentPos2d.x, ShooterValues.SHOOTER_HEIGHT_METERS, currentPos2d.y);
         Vector3d speakerPos = new Vector3d();
        
@@ -207,7 +234,7 @@ public class Shooter extends SubsystemBase implements Consts{
 
         //calculate the vector between them
         Vector3d delta = currentPos.subtract(speakerPos);
-        return Math.toDegrees(delta.getPitch());
+        return -Math.toDegrees(delta.getPitch());
     }
 
 
@@ -238,6 +265,7 @@ public class Shooter extends SubsystemBase implements Consts{
      * @return current shooter angle
      */
     public double getShooterAngle(){
+        // m_gyro.zeroYaw();
         return getRawShooterAngle() + m_angleOffset;
     }
 
@@ -251,8 +279,9 @@ public class Shooter extends SubsystemBase implements Consts{
      */
     private double getRawShooterAngle(){
         // m_gyro.zeroYaw();
-        return (((Funcs.modulo(m_gyro.getRoll() - 90, 360.0)) <= 180) 
-        ? (180 - m_gyro.getPitch()) : (m_gyro.getPitch())); 
+        return -Funcs.modulo(m_gyro.getRoll(), 360);
+        // (((Funcs.modulo(m_gyro.getRoll() - 90, 360.0)) <= 180) 
+        // ? (180 - m_gyro.getPitch()) : (m_gyro.getPitch())); 
         //return Funcs.convertRotationsToDegrees(m_gyro.getRotation3d().getX() / (2*Math.PI));
     }
 
@@ -338,8 +367,9 @@ public class Shooter extends SubsystemBase implements Consts{
      * tells if note is in
      */
     public boolean isNoteIn(){
-        ColorMatchResult result = m_colorMatcher.matchColor(m_colorSensor.getColor());
-        return result != null;
+        // ColorMatchResult result = m_colorMatcher.matchColor(m_colorSensor.getColor());
+        // return result != null;
+        return false;
         // if (result == null) {
         //     return false;
         // }
@@ -348,11 +378,11 @@ public class Shooter extends SubsystemBase implements Consts{
     }
 
 
-    public Color getColor(){
-        SmartDashboard.putBoolean("check",  m_colorSensor.isConnected());
+    // public Color getColor(){
+    //     SmartDashboard.putBoolean("check",  m_colorSensor.isConnected());
       
-        return m_colorSensor.getColor();
-    }
+    //     return m_colorSensor.getColor();
+    // }
 
 
 }

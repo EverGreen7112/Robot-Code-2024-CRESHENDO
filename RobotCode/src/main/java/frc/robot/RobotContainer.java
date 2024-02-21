@@ -8,6 +8,8 @@ import java.util.ArrayList;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.simulation.XboxControllerSim;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -18,9 +20,11 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Commands.Swerve.FollowRoute;
+import frc.robot.Commands.Swerve.TurnToPoint;
 import frc.robot.Commands.ClimbWithoutPID;
 import frc.robot.Commands.Intake.IntakeWithoutPID;
 import frc.robot.Commands.Shooter.ShootToSpeaker;
+import frc.robot.Commands.Shooter.TurnShooterToSpeaker;
 import frc.robot.Commands.Swerve.DriveByJoysticks;
 import frc.robot.Subsystems.Intake;
 import frc.robot.Subsystems.Shooter;
@@ -28,6 +32,8 @@ import frc.robot.Subsystems.Swerve;
 import frc.robot.Subsystems.Climber.ClimberSide;
 import frc.robot.Utils.Consts;
 import frc.robot.Utils.SwervePoint;
+import frc.robot.Utils.Vector2d;
+import frc.robot.Utils.Vector3d;
 
 public class RobotContainer implements Consts{
   public RobotContainer() {
@@ -52,12 +58,25 @@ public class RobotContainer implements Consts{
     //   Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).turnBy(-45);
     // }));
 
-     Trigger r30 = new JoystickButton(chassis, XboxController.Button.kRightBumper.value).onTrue(new InstantCommand(() -> {
-        Shooter.getInstance().turnToAngle(Shooter.getInstance().getTargetShooterAngle() + 1);
-     }));
+    Vector3d speaker = new Vector3d();
+    if(DriverStation.getAlliance().get() == Alliance.Blue){
+        speaker = ShooterValues.BLUE_SPAKER_POS;
+    }
+    else if(DriverStation.getAlliance().get() == Alliance.Red){
+        speaker = ShooterValues.RED_SPAKER_POS;
+    }
+
+    Vector2d speaker2d = new Vector2d(speaker.m_x, speaker.m_z);
+
+     Trigger r30 = new JoystickButton(chassis, XboxController.Button.kRightBumper.value).whileTrue(new ParallelCommandGroup(new InstantCommand(() -> {
+        Shooter.getInstance().turnToAngle(Shooter.getInstance().getShooterAngleToSpeaker());
+          }),
+          new TurnToPoint(speaker2d)));
 
     Trigger r40 = new JoystickButton(chassis, XboxController.Button.kLeftBumper.value).onTrue(new InstantCommand(() -> {
-        Shooter.getInstance().turnToAngle(Shooter.getInstance().getTargetShooterAngle() - 1);
+        Shooter.getInstance().setShootSpeed(ShooterValues.SPEAKER_SHOOT_SPEED);
+    })).onFalse(new InstantCommand(() ->{
+      Shooter.getInstance().testMotors(0);
     }));
 
     Trigger r45 = new JoystickButton(chassis, XboxController.Button.kX.value).onTrue(new InstantCommand(() -> {
@@ -84,11 +103,13 @@ public class RobotContainer implements Consts{
       Shooter.getInstance().testMotors(0);
     }));
 
-    Trigger shootTest = new JoystickButton(chassis, XboxController.Button.kY.value).whileTrue(new InstantCommand(() -> {
+    Trigger shootAmpTest = new JoystickButton(chassis, XboxController.Button.kY.value).whileTrue(new InstantCommand(() -> {
       Shooter.getInstance().setShootSpeed(ShooterValues.AMP_SHOOT_SPEED);
     })).onFalse(new InstantCommand(() -> {
+
       Shooter.getInstance().testMotors(0);
     }));
+
 
 
     // Trigger leftClimbUp = new JoystickButton(chassis, XboxController.Button.kA.value).whileTrue(new ClimbWithoutPID(ClimberValues.CLIMBER_SPEED, ClimberSide.CLIMB_WITH_LEFT_SIDE));

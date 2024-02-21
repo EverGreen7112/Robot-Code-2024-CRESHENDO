@@ -35,7 +35,7 @@ public interface Consts {
         public static final double HEADING_TOLERANCE = 3;
         
         //shooter angle
-        public static final double SHOOTER_ANGLE_KP = 0.01;//0.007
+        public static final double SHOOTER_ANGLE_KP = 0.011;//0.007
         public static final double SHOOTER_ANGLE_KI = 0.0000019; //0.0000003
         public static final double SHOOTER_ANGLE_KD = 0.00015;//0.03
         public static final double SHOOTER_ANGLE_KF = 0;//0.054 / 2;//0.057 / 2
@@ -165,8 +165,8 @@ public interface Consts {
 
     public class ShooterValues{
         //speaker
-        public static final Vector3d RED_SPAKER_POS = new Vector3d(652.67 * 0.0254, 2.1 , 218.42 * 0.0254);
-        public static final Vector3d BLUE_SPAKER_POS = new Vector3d(-1.5 * 0.0254, 2.1 , 218.41 * 0.0254);
+        public static final Vector3d RED_SPAKER_POS = new Vector3d(652.67 * 0.0254 + 1, 4.2 , 218.42 * 0.0254 - 1);
+        public static final Vector3d BLUE_SPAKER_POS = new Vector3d(-1.5 * 0.0254 - 1, 4.2 , 218.41 * 0.0254 - 1);
 
         //gear ratio
         public static final double AIM_MOTOR_GEAR_RATIO = 1 / (45.0);
@@ -179,7 +179,7 @@ public interface Consts {
         //shooter angles
         public static final double AIM_MOTOR_MAX_ANGLE = 180;
         public static final double AIM_MOTOR_MIN_ANGLE = -50.9;
-        public static final double AIM_MOTOR_AMP_ANGLE = 130;
+        public static final double AIM_MOTOR_AMP_ANGLE = 140;
         public static final double AIM_MOTOR_SPEAKER_ANGLE = 0;
         public static final int AIM_MOTOR_CURRENT_LIMIT = 20;
         public static final double AIM_MOTOR_RATE_LIMIT = 1/9.0;

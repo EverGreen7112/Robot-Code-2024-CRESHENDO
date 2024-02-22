@@ -360,6 +360,11 @@ public class Shooter extends SubsystemBase implements Consts{
         m_aimMotor.stopMotor();
     }
 
+
+    public boolean isShooterReady(){
+        return (Math.abs(getShooterAngle() - getTargetShooterAngle()) <= ShooterValues.AIM_MOTOR_MIN_tolerance);
+    }
+
     /**
      * tells if note is in
      */

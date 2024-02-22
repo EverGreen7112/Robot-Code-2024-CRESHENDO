@@ -46,20 +46,12 @@ public class RobotContainer implements Consts {
   public static final XboxController chassis = new XboxController(JoystickValues.CHASSIS);
   public static final XboxController operator = new XboxController(JoystickValues.OPERATOR);
   private static final ArrayList<SwervePoint> posList = new ArrayList<SwervePoint>();
-
+  private static Vector2d m_speaker2d = new Vector2d(0,0);
   public static DriveByJoysticks teleop = new DriveByJoysticks(() -> chassis.getLeftX(), () -> chassis.getLeftY(),
       () -> chassis.getRightX(), () -> driveMode, ChassisValues.USES_ABS_ENCODER);
 
   private void configureBindings() {
 
-    Vector3d speaker = new Vector3d();
-    if (DriverStation.getAlliance().get() == Alliance.Blue) {
-      speaker = ShooterValues.BLUE_SPAKER_POS;
-    } else if (DriverStation.getAlliance().get() == Alliance.Red) {
-      speaker = ShooterValues.RED_SPAKER_POS;
-    }
-
-    Vector2d speaker2d = new Vector2d(speaker.m_x, speaker.m_z);
 
     //chassis driver buttons
 
@@ -77,12 +69,6 @@ public class RobotContainer implements Consts {
       XboxController.Button.kRightBumper.value).onTrue(new InstantCommand(() -> {
       Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).turnToOriginOriented(0);
     }));
-
-    Trigger turnToSpeaker = new JoystickButton(chassis, XboxController.Button.kA.value)
-        .whileTrue(new ParallelCommandGroup(new InstantCommand(() -> {
-          Shooter.getInstance().turnToAngle(Shooter.getInstance().getShooterAngleToSpeaker());
-        }),
-            new TurnToPoint(speaker2d)));
 
     Trigger changeDriveMode = new JoystickButton(chassis,
       XboxController.Button.kStart.value).onTrue(new InstantCommand(() -> {
@@ -121,44 +107,58 @@ public class RobotContainer implements Consts {
       };
     }));
 
-    // Trigger intake = new JoystickButton(chassis, XboxController.Button.kA.value).whileTrue(
-    //     new ParallelCommandGroup(new InstantCommand(() -> {
-    //       Shooter.getInstance().turnToAngle(ShooterValues.AIM_MOTOR_MIN_ANGLE);
-    //     }), new IntakeWithoutPID(IntakeValues.INTAKE_SPEED), new InstantCommand(() -> {
-    //       Shooter.getInstance().testMotors(-0.5);
-    //     }))).onFalse(new InstantCommand(() -> {
-    //       Shooter.getInstance().testMotors(0);
-    // }));
+     Vector3d speaker = new Vector3d();
+    if (DriverStation.getAlliance().get() == Alliance.Blue) {
+      speaker = ShooterValues.BLUE_SPAKER_POS;
+    } else if (DriverStation.getAlliance().get() == Alliance.Red) {
+      speaker = ShooterValues.RED_SPAKER_POS;
+    }
+    m_speaker2d = new Vector2d(speaker.m_x, speaker.m_z);
+    
+    Trigger turnRobotToSpeaker = new JoystickButton(chassis, XboxController.Button.kB.value).whileTrue(new SequentialCommandGroup(
+      new InstantCommand(() -> {
+      Vector3d speaker3d = new Vector3d();
+      if (DriverStation.getAlliance().get() == Alliance.Blue) {
+        speaker3d = ShooterValues.BLUE_SPAKER_POS;
+      } else if (DriverStation.getAlliance().get() == Alliance.Red) {
+        speaker3d = ShooterValues.RED_SPAKER_POS;
+      }
+      m_speaker2d = new Vector2d(speaker3d.m_x, speaker3d.m_z);
+      }), 
+      new TurnToPoint(m_speaker2d))).onFalse(teleop);
+
    Trigger intake = new JoystickButton(chassis, XboxController.Button.kA.value)
-        .toggleOnTrue(new ParallelCommandGroup(new InstantCommand(() -> {
-          Shooter.getInstance().turnToAngle(ShooterValues.AIM_MOTOR_MIN_ANGLE);
-        }), new IntakeWithoutPID(IntakeValues.INTAKE_SPEED), new InstantCommand(() -> {
-          Shooter.getInstance().testMotors(-0.5);
-        }
-    )))
+        .toggleOnTrue(
+          new InstantCommand(() -> {
+            Shooter.getInstance().turnToAngle(ShooterValues.AIM_MOTOR_MIN_ANGLE);
+            Intake.getInstance().intakeWithoutPID(IntakeValues.INTAKE_SPEED);
+            Shooter.getInstance().testMotors(-0.5);
+          }))          
         .toggleOnFalse(
           new InstantCommand(() ->{
             Shooter.getInstance().testMotors(0);
+            Intake.getInstance().intakeWithoutPID(0);
           })
         );
+
+      
     //operator buttons
-
-    Trigger shootToSpeaker = new JoystickButton(operator, XboxController.Button.kLeftBumper.value)
+      Trigger turnToSpeaker = new JoystickButton(operator, XboxController.Button.kA.value)
         .whileTrue(new InstantCommand(() -> {
+          Shooter.getInstance().turnToAngle(Shooter.getInstance().getShooterAngleToSpeaker());
           Shooter.getInstance().shoot(ShooterValues.SPEAKER_SHOOT_SPEED);
-        })).onFalse(new InstantCommand(() -> {
-          Shooter.getInstance().testMotors(0);
+        }
+        )).onFalse(new InstantCommand(() -> {
+          Shooter.getInstance().shoot(0);
+        }));
+
+  
+    Trigger shootToAmp = new JoystickButton(operator, XboxController.Button.kX.value).onTrue(new InstantCommand(() -> {
+            Shooter.getInstance().turnToAngle(ShooterValues.AIM_MOTOR_AMP_ANGLE);
+            Shooter.getInstance().shoot(ShooterValues.AMP_SHOOT_SPEED);
+
     }));
 
-    Trigger turnToAmp = new JoystickButton(operator, XboxController.Button.kX.value).onTrue(new InstantCommand(() -> {
-      Shooter.getInstance().turnToAngle(ShooterValues.AIM_MOTOR_AMP_ANGLE);
-    }));
-
-    Trigger shootAmp = new JoystickButton(operator, XboxController.Button.kY.value).whileTrue(new InstantCommand(() -> {
-      Shooter.getInstance().shoot(ShooterValues.AMP_SHOOT_SPEED);
-    })).onFalse(new InstantCommand(() -> {
-      Shooter.getInstance().testMotors(0);
-    }));
 
     Trigger pushNoteToRollers = new JoystickButton(operator, XboxController.Button.kB.value)
         .whileTrue(new InstantCommand(() -> {
@@ -167,21 +167,21 @@ public class RobotContainer implements Consts {
           Shooter.getInstance().pushNoteToRollers(0);
     }));
 
-    Trigger leftClimbUp = new JoystickButton(operator,
-        XboxController.Button.kLeftBumper.value)
-        .whileTrue(new ClimbWithoutPID(ClimberValues.CLIMBER_SPEED, ClimberSide.CLIMB_WITH_LEFT_SIDE));
+    // Trigger leftClimbUp = new JoystickButton(operator,
+    //     XboxController.Button.kLeftBumper.value)
+    //     .whileTrue(new ClimbWithoutPID(ClimberValues.CLIMBER_SPEED, ClimberSide.CLIMB_WITH_LEFT_SIDE));
 
-    Trigger leftClimbDown = new JoystickButton(operator,
-        XboxController.Axis.kLeftTrigger.value)
-        .whileTrue(new ClimbWithoutPID(-ClimberValues.CLIMBER_SPEED, ClimberSide.CLIMB_WITH_LEFT_SIDE));
+    // Trigger leftClimbDown = new JoystickButton(operator,
+    //     XboxController.Axis.kLeftTrigger.value)
+    //     .whileTrue(new ClimbWithoutPID(-ClimberValues.CLIMBER_SPEED, ClimberSide.CLIMB_WITH_LEFT_SIDE));
 
-    Trigger rightClimbUp = new JoystickButton(operator,
-        XboxController.Button.kRightBumper.value)
-        .whileTrue(new ClimbWithoutPID(ClimberValues.CLIMBER_SPEED, ClimberSide.CLIMB_WITH_RIGHT_SIDE));
+    // Trigger rightClimbUp = new JoystickButton(operator,
+    //     XboxController.Button.kRightBumper.value)
+    //     .whileTrue(new ClimbWithoutPID(ClimberValues.CLIMBER_SPEED, ClimberSide.CLIMB_WITH_RIGHT_SIDE));
 
-    Trigger rightClimbDown = new JoystickButton(operator,
-        XboxController.Axis.kRightTrigger.value)
-        .whileTrue(new ClimbWithoutPID(-ClimberValues.CLIMBER_SPEED, ClimberSide.CLIMB_WITH_RIGHT_SIDE));
+    // Trigger rightClimbDown = new JoystickButton(operator,
+    //     XboxController.Axis.kRightTrigger.value)
+    //     .whileTrue(new ClimbWithoutPID(-ClimberValues.CLIMBER_SPEED, ClimberSide.CLIMB_WITH_RIGHT_SIDE));
     
 
     // Trigger FollowRoute = new JoystickButton(chassis,

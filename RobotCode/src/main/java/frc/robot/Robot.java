@@ -33,7 +33,7 @@ public class Robot extends TimedRobot implements Consts{
   public void robotInit() {
     m_swerveInstance = Swerve.getInstance(ChassisValues.USES_ABS_ENCODER);
     new RobotContainer();
-    SmartDashboard.putNumber("max drive speed", 1);
+    SmartDashboard.putNumber("max drive speed", Consts.ChassisValues.DRIVE_SPEED);
     SmartDashboard.putNumber("max angular speed", 200);
     m_swerveInstance.zeroModulesAngles();
     //create and add robot field data to dashboard

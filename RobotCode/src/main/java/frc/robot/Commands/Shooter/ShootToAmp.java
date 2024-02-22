@@ -8,7 +8,7 @@ public class ShootToAmp extends Command{
     
     @Override
     public void initialize() {
-        Shooter.getInstance().setShootSpeed(ShooterValues.AMP_SHOOT_SPEED);
+        Shooter.getInstance().shoot(ShooterValues.AMP_SHOOT_SPEED);
     }
 
     @Override

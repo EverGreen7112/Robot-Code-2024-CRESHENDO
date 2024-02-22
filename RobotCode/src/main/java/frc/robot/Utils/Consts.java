@@ -63,12 +63,15 @@ public interface Consts {
 
     public class ChassisValues{
         public static final double AUTONOMOUS_MAX_ANGULAR_SPEED = 0.5;
+        public static double DRIVE_SPEED = 2.5;
+        public static double SLOW_MODE_DRIVE_SPEED = 1;
+        public static double FAST_MODE_DRIVE_SPEED = 4;
 
         // max speed values in m/s
-        public static final Supplier<Double> MAX_SPEED = new Supplier<Double>() {
+        public static Supplier<Double> MAX_SPEED = new Supplier<Double>() {
             @Override
             public Double get() {
-                return SmartDashboard.getNumber("max drive speed", 1);
+                return SmartDashboard.getNumber("max drive speed", DRIVE_SPEED);
             }
         };
 

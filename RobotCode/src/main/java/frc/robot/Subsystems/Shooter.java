@@ -120,11 +120,10 @@ public class Shooter extends SubsystemBase implements Consts{
         m_thread = new Thread(()->{
             while (true) {
                 try {
-                    m_gyro.setAngleAdjustment((Swerve.getInstance(true).getGyro().getYaw()));
+                    m_gyro.setAngleAdjustment((Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).getGyro().getYaw()));
                 }
                 catch (Exception e) {
                 }
-                
             }
         });
         m_thread.setDaemon(true);
@@ -183,8 +182,7 @@ public class Shooter extends SubsystemBase implements Consts{
         //set encoder position value when touches limit switches
         // if(m_topLimitSwitch.get())
         //     m_aimMotor.getEncoder().setPosition(ShooterValues.AIM_MOTOR_MAX_ANGLE);
-        if(!m_bottomLimitSwitch.get())
-        {
+        if(!m_bottomLimitSwitch.get()){
             m_angleOffset = ShooterValues.AIM_MOTOR_MIN_ANGLE - getRawShooterAngle();   
         }
             
@@ -202,7 +200,7 @@ public class Shooter extends SubsystemBase implements Consts{
         if (m_targetShooterAngle == ShooterValues.AIM_MOTOR_MIN_ANGLE && m_bottomLimitSwitch.get()){
             m_aimMotor.set(-Math.max(0.1, Math.abs(output)));
         }
-            else {
+        else {
             if (Math.abs(output) >= ShooterValues.AIM_MOTOR_MIN_SPEED){
                 m_aimMotor.set(output);
             }
@@ -214,7 +212,6 @@ public class Shooter extends SubsystemBase implements Consts{
     }
     /**
      * calculate the angle the shooter needs to be at according to the current distance from the speaker
-     * (func was created using excel)
      * @return the angle the shooter needs to be at
      */
     public double getShooterAngleToSpeaker(){
@@ -289,7 +286,7 @@ public class Shooter extends SubsystemBase implements Consts{
      * Shoot note
      * @param speed - target shoot speed in rpm
      */
-    public void setShootSpeed(double speed){
+    public void shoot(double speed){
         //activate velocity pid on right rollers
         m_rightShootMotor.getPIDController().setReference(speed, ControlType.kVelocity);
         //activate velocity pid on left roller

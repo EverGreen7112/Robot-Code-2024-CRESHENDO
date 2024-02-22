@@ -167,21 +167,23 @@ public class RobotContainer implements Consts {
           Shooter.getInstance().pushNoteToRollers(0);
     }));
 
-    // Trigger leftClimbUp = new JoystickButton(operator,
-    //     XboxController.Button.kLeftBumper.value)
-    //     .whileTrue(new ClimbWithoutPID(ClimberValues.CLIMBER_SPEED, ClimberSide.CLIMB_WITH_LEFT_SIDE));
+    Trigger leftClimbUp = new JoystickButton(operator,
+        XboxController.Button.kLeftBumper.value)
+        .whileTrue(new InstantCommand(() -> {
+          
+        }));
 
-    // Trigger leftClimbDown = new JoystickButton(operator,
-    //     XboxController.Axis.kLeftTrigger.value)
-    //     .whileTrue(new ClimbWithoutPID(-ClimberValues.CLIMBER_SPEED, ClimberSide.CLIMB_WITH_LEFT_SIDE));
+    Trigger leftClimbDown = new JoystickButton(operator,
+        XboxController.Axis.kLeftTrigger.value)
+        .whileTrue(new ClimbWithoutPID(-ClimberValues.CLIMBER_SPEED, ClimberSide.CLIMB_WITH_LEFT_SIDE));
 
-    // Trigger rightClimbUp = new JoystickButton(operator,
-    //     XboxController.Button.kRightBumper.value)
-    //     .whileTrue(new ClimbWithoutPID(ClimberValues.CLIMBER_SPEED, ClimberSide.CLIMB_WITH_RIGHT_SIDE));
+    Trigger rightClimbUp = new JoystickButton(operator,
+        XboxController.Button.kRightBumper.value)
+        .whileTrue(new ClimbWithoutPID(ClimberValues.CLIMBER_SPEED, ClimberSide.CLIMB_WITH_RIGHT_SIDE));
 
-    // Trigger rightClimbDown = new JoystickButton(operator,
-    //     XboxController.Axis.kRightTrigger.value)
-    //     .whileTrue(new ClimbWithoutPID(-ClimberValues.CLIMBER_SPEED, ClimberSide.CLIMB_WITH_RIGHT_SIDE));
+    Trigger rightClimbDown = new JoystickButton(operator,
+        XboxController.Axis.kRightTrigger.value)
+        .whileTrue(new ClimbWithoutPID(-ClimberValues.CLIMBER_SPEED, ClimberSide.CLIMB_WITH_RIGHT_SIDE));
     
 
     // Trigger FollowRoute = new JoystickButton(chassis,

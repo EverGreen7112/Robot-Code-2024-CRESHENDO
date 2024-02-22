@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.util.function.Supplier;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.ColorSensorV3.RawColor;
@@ -28,6 +30,8 @@ public class Robot extends TimedRobot implements Consts{
   private Swerve m_swerveInstance;
   private Field2d m_field;
   private Vision m_vision;
+  public static Supplier<Double> m_leftClimbSpeed, m_rightClimbSpeed;
+
   
   @Override
   public void robotInit() {
@@ -40,6 +44,20 @@ public class Robot extends TimedRobot implements Consts{
     m_field = new Field2d();
     SmartDashboard.putData(m_field);
     m_vision = new Vision(VisionValues.LOCALIZATION_VISION_PORT);
+
+    m_leftClimbSpeed = new Supplier<Double>() {
+      @Override
+      public Double get() {
+        return 0.0;
+      }
+    };
+
+    m_rightClimbSpeed = new Supplier<Double>() {
+      @Override
+      public Double get() {
+        return 0.0;
+      }
+    };
   }
 
   @Override
@@ -91,6 +109,8 @@ public class Robot extends TimedRobot implements Consts{
     CommandScheduler.getInstance().cancelAll();
     m_swerveInstance.initSwerve();
     RobotContainer.teleop.schedule();
+    new ClimbWithoutPID(m_leftClimbSpeed, ClimberSide.CLIMB_WITH_LEFT_SIDE).schedule();
+    new ClimbWithoutPID(m_rightClimbSpeed, ClimberSide.CLIMB_WITH_RIGHT_SIDE).schedule();
   }
   
 

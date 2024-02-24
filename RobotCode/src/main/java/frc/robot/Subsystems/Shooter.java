@@ -28,7 +28,7 @@ public class Shooter extends SubsystemBase implements Consts{
     //controls the angle of the shooter
     private CANSparkMax m_aimMotor;
     //external aim motor encoder
-    private DutyCycleEncoder m_aimEncoder;
+    public DutyCycleEncoder m_aimEncoder;
     //aim motor pid controller
     private PIDController m_aimPidController;
     //sends signal when the shooter is at the bottom angle
@@ -37,6 +37,7 @@ public class Shooter extends SubsystemBase implements Consts{
     private double m_targetAngle;
     //pid controller ff
     private double m_aimFF;
+
 
     private Shooter(){
         //create motor controller objects
@@ -81,17 +82,14 @@ public class Shooter extends SubsystemBase implements Consts{
         m_leftShootMotor.setIdleMode(ShooterValues.LEFT_SHOOT_IDLE_MODE);
         m_aimMotor.setIdleMode(ShooterValues.AIM_IDLE_MODE);
         
-        //gear ratio
-        m_aimMotor.getEncoder().setPositionConversionFactor(ShooterValues.AIM_MOTOR_GEAR_RATIO * 360); //convert to degrees
-
-        //convert rotations in encoder to degrees
-        m_aimEncoder.setDistancePerRotation(360.0);
-        // m_aimEncoder.
+        //create external encoder instance
+        m_aimEncoder = new DutyCycleEncoder(ShooterValues.EXTERNAL_AIM_MOTOR_ENCODER_ID);
+        m_aimEncoder.setPositionOffset(ShooterValues.EXTERNAL_ENCODER_OFFSET);
+        m_aimEncoder.setDistancePerRotation(-360);
+        
         m_targetAngle = ShooterValues.AIM_MOTOR_MIN_ANGLE;
         //create limit switch
         m_bottomLimitSwitch = new DigitalInput(ShooterValues.BOTTOM_LIMIT_SWITCH_ID);
-        //create external encoder instance
-        m_aimEncoder = new DutyCycleEncoder(ShooterValues.EXTERNAL_AIM_MOTOR_ENCODER_ID);
         //create pid controller
         m_aimPidController = new PIDController(PIDValues.SHOOTER_ANGLE_KP, PIDValues.SHOOTER_ANGLE_KI, PIDValues.SHOOTER_ANGLE_KD);
     }
@@ -110,17 +108,20 @@ public class Shooter extends SubsystemBase implements Consts{
         SmartDashboard.putNumber("shooter angle", getShooterAngle());
         SmartDashboard.putNumber("right rollers speed", getRightRollersSpeed());
         SmartDashboard.putNumber("left rollers speed", getLeftRollerSpeed());
+        SmartDashboard.putNumber("target", m_targetAngle);
+    
         
         //set encoder position value when touches limit switches
-       
         if(!m_bottomLimitSwitch.get())
             m_aimMotor.getEncoder().setPosition(ShooterValues.AIM_MOTOR_MIN_ANGLE);   
         
         
+        m_aimPidController.setSetpoint(m_targetAngle);
         //calculate current output
-        double output = m_aimPidController.calculate(m_aimEncoder.get());
+        double output = MathUtil.clamp(m_aimPidController.calculate(m_aimEncoder.getDistance()), -0.3, 0.3);//put this in consts i dont have time
         //activate motor with ff
-        m_aimMotor.set(output + Math.signum(output) * m_aimFF);
+        m_aimMotor.set(output + m_aimFF * Math.signum(output));
+        SmartDashboard.putNumber("output", output);
     }
 
     /**
@@ -164,14 +165,14 @@ public class Shooter extends SubsystemBase implements Consts{
         m_aimFF = Math.cos(Math.toRadians(m_targetAngle)) * PIDValues.SHOOTER_ANGLE_KF;
         //set target angle
         m_aimPidController.setSetpoint(m_targetAngle);
+
     }
 
     /**
-     * 
      * @return current shooter angle
      */
     public double getShooterAngle(){
-        return m_aimMotor.getEncoder().getPosition();
+        return m_aimEncoder.getDistance(); 
     }
 
     /**

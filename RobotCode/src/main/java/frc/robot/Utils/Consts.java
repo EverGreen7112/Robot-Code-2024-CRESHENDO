@@ -35,7 +35,7 @@ public interface Consts {
         public static final double HEADING_TOLERANCE = 3;
         
         //shooter angle
-        public static final double SHOOTER_ANGLE_KP = 0.011;//0.007
+        public static final double SHOOTER_ANGLE_KP = 0.011;//0.011
         public static final double SHOOTER_ANGLE_KI = 0.0000019; //0.0000003
         public static final double SHOOTER_ANGLE_KD = 0.00015;//0.03
         public static final double SHOOTER_ANGLE_KF = 0;//0.054 / 2;//0.057 / 2
@@ -168,8 +168,8 @@ public interface Consts {
 
     public class ShooterValues{
         //speaker
-        public static final Vector3d RED_SPAKER_POS = new Vector3d(652.67 * 0.0254 + 1, 3.9 , 218.42 * 0.0254 - 1);
-        public static final Vector3d BLUE_SPAKER_POS = new Vector3d(-1.5 * 0.0254 - 1, 3.9 , 218.41 * 0.0254);
+        public static final Vector3d RED_SPAKER_POS = new Vector3d(652.67 * 0.0254, 3.45, 218.42 * 0.0254);
+        public static final Vector3d BLUE_SPAKER_POS = new Vector3d(-1.5 * 0.0254, 3.45 , 218.41 * 0.0254);
 
         //gear ratio
         public static final double AIM_MOTOR_GEAR_RATIO = 1 / (45.0);
@@ -218,6 +218,8 @@ public interface Consts {
 
         // physical constants
         public static final double SHOOTER_HEIGHT_METERS = 0.38287; // distance between the shooter axis of rotation to the ground
+
+        public static final double EXTERNAL_ENCODER_OFFSET = 0.222401380560035;
     }    
 
     public class JoystickValues {

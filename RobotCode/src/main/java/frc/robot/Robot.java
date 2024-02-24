@@ -31,7 +31,6 @@ public class Robot extends TimedRobot implements Consts{
   private Swerve m_swerveInstance;
   private Field2d m_field;
   private Vision m_vision;
-  private DutyCycleEncoder encoder = new DutyCycleEncoder(0);
 
   
   @Override
@@ -59,9 +58,7 @@ public class Robot extends TimedRobot implements Consts{
 
       //update the robot position of dashboard
       m_field.setRobotPose(xCurrent, yCurrent, new Rotation2d(Math.toRadians(-headingCurrent + 90)));
-      SmartDashboard.putNumber("encoder pos", encoder.get() * 360);
-      SmartDashboard.putBoolean("is connected",encoder.isConnected());
-    }
+     }
 
   @Override
   public void disabledInit() {

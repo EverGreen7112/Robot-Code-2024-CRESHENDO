@@ -8,7 +8,7 @@ public class ShootToSpeaker extends Command{
     
     @Override
     public void initialize() {
-        Shooter.getInstance().pullNote(ShooterValues.SPEAKER_SHOOT_SPEED);
+        Shooter.getInstance().pullNote(ShooterValues.CONTAINMENT_SPEED);
     }
 
     @Override

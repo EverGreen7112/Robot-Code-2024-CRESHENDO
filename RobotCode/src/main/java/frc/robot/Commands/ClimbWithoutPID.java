@@ -11,28 +11,31 @@ import frc.robot.Utils.Consts;
 public class ClimbWithoutPID extends Command implements Consts {
 
     private ClimberSide m_climbSide;
-    private Supplier<Double> m_speed;
+    private double m_speed;
     
-    public ClimbWithoutPID(Supplier<Double> speed, ClimberSide climberSide){
+    public ClimbWithoutPID(double speed, ClimberSide climberSide){
         this.m_speed = speed;
         this.m_climbSide = climberSide;
     }
 
     @Override
-    public void initialize(){} 
+    public void initialize(){
+        switch(m_climbSide){
+            case CLIMB_WITH_RIGHT_SIDE:
+                Climber.getInstance().climbRightSideWithoutPid(MathUtil.applyDeadband(m_speed, JoystickValues.JOYSTICK_DEADZONE));
+                break;
+            case CLIMB_WITH_LEFT_SIDE:
+                Climber.getInstance().climbLeftSideWithoutPid(MathUtil.applyDeadband(m_speed, JoystickValues.JOYSTICK_DEADZONE));
+                break;
+            case CLIMB_WITH_BOTH_SIDES:
+                Climber.getInstance().climbBothSidesWithoutPid(MathUtil.applyDeadband(m_speed, JoystickValues.JOYSTICK_DEADZONE));
+                break;
+        }
+    } 
     
     @Override
     public void execute(){
-           switch(m_climbSide){
-            case CLIMB_WITH_RIGHT_SIDE:
-                Climber.getInstance().climbRightSideWithoutPid(MathUtil.applyDeadband(m_speed.get(), JoystickValues.JOYSTICK_DEADZONE));
-                break;
-            case CLIMB_WITH_LEFT_SIDE:
-                Climber.getInstance().climbLeftSideWithoutPid(MathUtil.applyDeadband(m_speed.get(), JoystickValues.JOYSTICK_DEADZONE));
-                break;
-            case CLIMB_WITH_BOTH_SIDES:
-                Climber.getInstance().climbBothSidesWithoutPid(MathUtil.applyDeadband(m_speed.get(), JoystickValues.JOYSTICK_DEADZONE));
-        }
+         
     } 
 
     @Override

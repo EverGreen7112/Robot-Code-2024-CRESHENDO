@@ -11,6 +11,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.ColorSensorV3.RawColor;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -30,7 +31,7 @@ public class Robot extends TimedRobot implements Consts{
   private Swerve m_swerveInstance;
   private Field2d m_field;
   private Vision m_vision;
-  public static Supplier<Double> m_leftClimbSpeed, m_rightClimbSpeed;
+  private DutyCycleEncoder encoder = new DutyCycleEncoder(0);
 
   
   @Override
@@ -43,41 +44,24 @@ public class Robot extends TimedRobot implements Consts{
     //create and add robot field data to dashboard
     m_field = new Field2d();
     SmartDashboard.putData(m_field);
+    //start vision
     m_vision = new Vision(VisionValues.LOCALIZATION_VISION_PORT);
 
-    m_leftClimbSpeed = new Supplier<Double>() {
-      @Override
-      public Double get() {
-        return 0.0;
-      }
-    };
-
-    m_rightClimbSpeed = new Supplier<Double>() {
-      @Override
-      public Double get() {
-        return 0.0;
-      }
-    };
   }
 
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-   // get current position and rotation of robot 
-    double xCurrent = m_swerveInstance.getX();
-    double yCurrent = m_swerveInstance.getY();
-    double headingCurrent = m_swerveInstance.getFieldOrientedAngle();
+    //get current position and rotation of robot 
+      double xCurrent = m_swerveInstance.getX();
+      double yCurrent = m_swerveInstance.getY();
+      double headingCurrent = m_swerveInstance.getFieldOrientedAngle();
 
-    //update the robot position of dashboard
-    m_field.setRobotPose(xCurrent, yCurrent, new Rotation2d(Math.toRadians(-headingCurrent + 90)));
- 
-   SmartDashboard.putBoolean("is_note_in", Shooter.getInstance().isNoteIn());
-
-  //  Color color = Shooter.getInstance().getColor();
-  //  SmartDashboard.putNumber("red", color.red);
-  //  SmartDashboard.putNumber("green", color.green);
-  //  SmartDashboard.putNumber("blue", color.blue);
-  }
+      //update the robot position of dashboard
+      m_field.setRobotPose(xCurrent, yCurrent, new Rotation2d(Math.toRadians(-headingCurrent + 90)));
+      SmartDashboard.putNumber("encoder pos", encoder.get() * 360);
+      SmartDashboard.putBoolean("is connected",encoder.isConnected());
+    }
 
   @Override
   public void disabledInit() {
@@ -109,8 +93,6 @@ public class Robot extends TimedRobot implements Consts{
     CommandScheduler.getInstance().cancelAll();
     m_swerveInstance.initSwerve();
     RobotContainer.teleop.schedule();
-    new ClimbWithoutPID(m_leftClimbSpeed, ClimberSide.CLIMB_WITH_LEFT_SIDE).schedule();
-    new ClimbWithoutPID(m_rightClimbSpeed, ClimberSide.CLIMB_WITH_RIGHT_SIDE).schedule();
   }
   
 
@@ -129,7 +111,6 @@ public class Robot extends TimedRobot implements Consts{
   public void testInit() {
     m_swerveInstance.zeroYaw();
     CommandScheduler.getInstance().cancelAll();
-    // RobotContainer.teleop.schedule();
     
 
   }
@@ -140,6 +121,5 @@ public class Robot extends TimedRobot implements Consts{
 
   @Override
   public void testExit() {
-    // m_swerveInstance.stop();
   }
 }

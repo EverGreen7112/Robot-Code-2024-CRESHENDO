@@ -8,7 +8,7 @@ public class ContainNote extends Command{
     
     @Override
     public void initialize() {
-        Shooter.getInstance().pullNote(ShooterValues.CONTAINMENT_SPEED);
+        Shooter.getInstance().pullNoteWithoutPID(ShooterValues.CONTAINMENT_SPEED);
     }
     
     @Override

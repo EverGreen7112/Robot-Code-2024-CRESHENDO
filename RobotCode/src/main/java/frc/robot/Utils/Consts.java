@@ -64,8 +64,8 @@ public interface Consts {
     public class ChassisValues{
         public static final double AUTONOMOUS_MAX_ANGULAR_SPEED = 0.5;
         public static double DRIVE_SPEED = 1;
-        public static double SLOW_MODE_DRIVE_SPEED = 0.8;
-        public static double FAST_MODE_DRIVE_SPEED = 4;
+        public static double SLOW_MODE_DRIVE_SPEED = 0.5;
+        public static double FAST_MODE_DRIVE_SPEED = 2;
 
         // max speed values in m/s
         public static Supplier<Double> MAX_SPEED = new Supplier<Double>() {
@@ -189,7 +189,8 @@ public interface Consts {
         public static final double AIM_MOTOR_RATE_LIMIT = 1/9.0;
         public static final double AIM_MOTOR_SPEED_LIMIT = 0.2;
         public static final double AIM_MOTOR_MIN_SPEED = 0.0001;
-        public static final double AIM_MOTOR_MIN_tolerance = 2.0;
+        public static final double AIM_MOTOR_MIN_TOLERANCE = 2.0;
+
         //motor controllers ids
         public static final int RIGHT_SHOOT_MOTOR_ID = 6;
         public static final int LEFT_SHOOT_MOTOR_ID = 1;
@@ -200,8 +201,8 @@ public interface Consts {
         public static final int TOP_LIMIT_SWITCH_ID = 0;
         public static final int BOTTOM_LIMIT_SWITCH_ID = 9;
 
-        //color min confidence
-        public static final double COLOR_SENSOR_CONFIDENCE = 1;
+        //encoder
+        public static final int EXTERNAL_AIM_MOTOR_ENCODER_ID = 0;//connected to the DIO
 
         //inverted motors
         public static final boolean RIGHT_SHOOT_MOTOR_INVERTED = false;

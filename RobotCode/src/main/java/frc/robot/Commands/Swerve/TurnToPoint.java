@@ -25,4 +25,8 @@ public class TurnToPoint extends Command implements Consts{
         // turn swerve to point
         Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).turnToFieldOriented(targetAngle);
     }
+
+    protected void setTarget(Vector2d target){
+        this.m_target = target;
+    }
 }

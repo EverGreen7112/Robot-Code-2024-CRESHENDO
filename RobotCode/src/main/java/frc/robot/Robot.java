@@ -13,6 +13,8 @@ import com.revrobotics.ColorSensorV3.RawColor;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
@@ -45,7 +47,7 @@ public class Robot extends TimedRobot implements Consts{
     SmartDashboard.putData(m_field);
     //start vision
     m_vision = new Vision(VisionValues.LOCALIZATION_VISION_PORT);
-
+    Shooter shooter = Shooter.getInstance();
   }
 
   @Override
@@ -118,5 +120,10 @@ public class Robot extends TimedRobot implements Consts{
 
   @Override
   public void testExit() {
+  }
+
+
+  public static Alliance getAlliance(){
+    return DriverStation.getAlliance().get();
   }
 }

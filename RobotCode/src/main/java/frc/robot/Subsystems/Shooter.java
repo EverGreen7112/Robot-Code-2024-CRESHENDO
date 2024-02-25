@@ -6,12 +6,14 @@ import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 import frc.robot.Utils.Consts;
 import frc.robot.Utils.Vector2d;
 import frc.robot.Utils.Vector3d;
@@ -37,6 +39,10 @@ public class Shooter extends SubsystemBase implements Consts{
     private double m_targetAngle;
     //pid controller ff
     private double m_aimFF;
+    //target shoot speed
+    private double m_targetShootSpeed;
+    // sensor to determine if note is in
+    private AnalogInput m_noteSensor;
 
 
     private Shooter(){
@@ -88,10 +94,12 @@ public class Shooter extends SubsystemBase implements Consts{
         m_aimEncoder.setDistancePerRotation(-360);
         
         m_targetAngle = ShooterValues.AIM_MOTOR_MIN_ANGLE;
+        m_targetShootSpeed = 0;
         //create limit switch
         m_bottomLimitSwitch = new DigitalInput(ShooterValues.BOTTOM_LIMIT_SWITCH_ID);
         //create pid controller
         m_aimPidController = new PIDController(PIDValues.SHOOTER_ANGLE_KP, PIDValues.SHOOTER_ANGLE_KI, PIDValues.SHOOTER_ANGLE_KD);
+        m_noteSensor = new AnalogInput(ShooterValues.NOTE_SENSOR_PORT);
     }
 
     /**
@@ -109,11 +117,15 @@ public class Shooter extends SubsystemBase implements Consts{
         SmartDashboard.putNumber("right rollers speed", getRightRollersSpeed());
         SmartDashboard.putNumber("left rollers speed", getLeftRollerSpeed());
         SmartDashboard.putNumber("target", m_targetAngle);
+        SmartDashboard.putBoolean("is note in", isNoteIn());
+        SmartDashboard.putNumber("is sensor connected", (Math.pow(m_noteSensor.getAverageVoltage(), -1.2045) * 27.726));
     
         
         //set encoder position value when touches limit switches
-        if(!m_bottomLimitSwitch.get())
-            m_aimMotor.getEncoder().setPosition(ShooterValues.AIM_MOTOR_MIN_ANGLE);   
+        // if(!m_bottomLimitSwitch.get())
+        //     m_aimEncoder.setPositionOffset((ShooterValues.AIM_MOTOR_MIN_ANGLE - m_aimEncoder.getDistance()) / (-360));
+            // m_aimMotor.getEncoder().setPosition(ShooterValues.AIM_MOTOR_MIN_ANGLE); 
+              
         
         
         m_aimPidController.setSetpoint(m_targetAngle);
@@ -136,10 +148,10 @@ public class Shooter extends SubsystemBase implements Consts{
         Vector3d speakerPos = new Vector3d();
        
         //get position of speaker according to the alliance
-        if(DriverStation.getAlliance().get() == Alliance.Blue){
+        if(Robot.getAlliance() == Alliance.Blue){
             speakerPos = ShooterValues.BLUE_SPAKER_POS;
         }
-        else if(DriverStation.getAlliance().get() == Alliance.Red){
+        else if(Robot.getAlliance() == Alliance.Red){
             speakerPos = ShooterValues.RED_SPAKER_POS;
         }
 
@@ -156,8 +168,8 @@ public class Shooter extends SubsystemBase implements Consts{
     public void turnToAngle(double angle){
         //clamp value to make sure bad input won't break the robot
         angle = MathUtil.clamp(angle, ShooterValues.AIM_MOTOR_MIN_ANGLE, ShooterValues.AIM_MOTOR_MAX_ANGLE);
-        //reset accumalted I after changing target angles
-        if(angle != m_targetAngle)
+        //reset accumalted I after changing target angles direction
+        if(Math.signum(angle - getShooterAngle()) != Math.signum(m_targetAngle - getShooterAngle()))
             m_aimPidController.reset();
 
         m_targetAngle = angle;
@@ -179,7 +191,8 @@ public class Shooter extends SubsystemBase implements Consts{
      * Shoot note
      * @param speed - target shoot speed in rpm
      */
-    public void shoot(double speed){
+    public void setShootSpeed(double speed){
+        m_targetShootSpeed = speed;
         //activate velocity pid on right rollers
         m_rightShootMotor.getPIDController().setReference(speed, ControlType.kVelocity);
         //activate velocity pid on left roller
@@ -223,6 +236,7 @@ public class Shooter extends SubsystemBase implements Consts{
      * @param speed - containment speed in rpm
      */
     public void pullNote(double speed){
+        m_targetShootSpeed = speed;
         //activate velocity pid on right rollers motor controller
         m_rightShootMotor.getPIDController().setReference(speed, ControlType.kVelocity);
         //activate velocity pid on left rollers motor controller
@@ -255,6 +269,7 @@ public class Shooter extends SubsystemBase implements Consts{
      * stop spining rollers 
      */
     public void stopRollers(){
+        m_targetShootSpeed = 0;
         m_leftShootMotor.set(0);
         m_rightShootMotor.set(0);
         m_containmentMotor.set(0);
@@ -265,6 +280,29 @@ public class Shooter extends SubsystemBase implements Consts{
      */
     public void stopAimMotor(){
         m_aimMotor.stopMotor();
+    }
+
+    /**
+     * checks if the shooter is ready to shoot
+     * @return true if ready to shoot, else false
+     */
+    public boolean isReadyToShoot() {
+        return ((Math.abs(getShooterAngle() - m_targetAngle) <= ShooterValues.AIM_MOTOR_MIN_TOLERANCE) &&
+        (Math.abs(getLeftRollerSpeed() - m_targetShootSpeed) <= ShooterValues.SHOOT_SPEED_TOLERANCE)   &&
+        (Math.abs(getRightRollersSpeed() - m_targetShootSpeed) <= ShooterValues.SHOOT_SPEED_TOLERANCE));
+    }
+
+    /**
+     * checks if ready to collect
+     * @return true if ready to collect else false
+     */
+    public boolean isReadyToCollect(){
+        return !(m_bottomLimitSwitch.get());
+    }
+
+    public boolean isNoteIn(){
+        // this random function with the weird magic numbers is taken directly from WPILIB to convert voltage to cm
+        return (Math.pow(m_noteSensor.getAverageVoltage(), -1.2045) * 27.726) <= ShooterValues.MIN_NOTE_DISTANCE;
     }
 
 }

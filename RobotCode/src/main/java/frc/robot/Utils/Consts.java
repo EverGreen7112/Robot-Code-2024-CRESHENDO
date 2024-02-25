@@ -196,6 +196,7 @@ public interface Consts {
         public static final int LEFT_SHOOT_MOTOR_ID = 1;
         public static final int CONTAINMENT_MOTOR_ID = 7;
         public static final int AIM_MOTOR_ID = 9;
+        public static final int NOTE_SENSOR_PORT = 3;
 
         //limit switches ids
         public static final int TOP_LIMIT_SWITCH_ID = 0;
@@ -220,6 +221,8 @@ public interface Consts {
         public static final double SHOOTER_HEIGHT_METERS = 0.38287; // distance between the shooter axis of rotation to the ground
 
         public static final double EXTERNAL_ENCODER_OFFSET = 0.222401380560035;
+
+        public static final double MIN_NOTE_DISTANCE = 3.0;
     }    
 
     public class JoystickValues {

@@ -15,7 +15,9 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Commands.Swerve.TurnToPoint;
+import frc.robot.Commands.Swerve.TurnToSpeaker;
 import frc.robot.Commands.ClimbWithoutPID;
+import frc.robot.Commands.Intake.IntakeWithoutPID;
 import frc.robot.Commands.Shooter.ShootToAmp;
 import frc.robot.Commands.Shooter.TurnShooterToAmp;
 import frc.robot.Commands.Shooter.TurnShooterToSpeaker;
@@ -56,19 +58,7 @@ public class RobotContainer implements Consts {
     chassis.leftBumper().onTrue(new InstantCommand(() -> {Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).turnBy(-90);}));
     chassis.rightStick().onTrue(new InstantCommand(() -> {Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).turnToOriginOriented(0);}));
     //turn chassis to speaker
-    chassis.a().whileTrue(new SequentialCommandGroup(
-      new InstantCommand(() -> {
-        Vector3d speaker3d = new Vector3d();
-        if (DriverStation.getAlliance().get() == Alliance.Blue) {
-          speaker3d = ShooterValues.BLUE_SPAKER_POS;
-        } 
-        else if (DriverStation.getAlliance().get() == Alliance.Red) {
-          speaker3d = ShooterValues.RED_SPAKER_POS;
-        }
-      m_speaker2d = new Vector2d(speaker3d.m_x, speaker3d.m_z);
-      }),
-
-      new TurnToPoint(m_speaker2d))).onFalse(teleop);
+    chassis.a().whileTrue(new TurnToSpeaker()).onFalse(teleop);
 
     //switch between origin and robot oriented
     chassis.start().onTrue(teleop).onTrue(new InstantCommand(() -> {m_driveMode = !m_driveMode;}));
@@ -83,11 +73,13 @@ public class RobotContainer implements Consts {
 
     //intake
     operator.a().whileTrue(
-          new InstantCommand(() -> {
-            Shooter.getInstance().turnToAngle(ShooterValues.AIM_MOTOR_MIN_ANGLE);
-            Intake.getInstance().intakeWithoutPID(IntakeValues.INTAKE_SPEED);
-            Shooter.getInstance().pullNoteWithoutPID(-0.5);
-          }))          
+          // new InstantCommand(() -> {
+          //   Shooter.getInstance().turnToAngle(ShooterValues.AIM_MOTOR_MIN_ANGLE);
+          //   Intake.getInstance().intakeWithoutPID(IntakeValues.INTAKE_SPEED);
+          //   Shooter.getInstance().pullNoteWithoutPID(-0.5);
+          // })
+          new IntakeWithoutPID(IntakeValues.INTAKE_SPEED)
+          )          
         .onFalse(
           new InstantCommand(() ->{
             Shooter.getInstance().pullNoteWithoutPID(0);
@@ -97,11 +89,11 @@ public class RobotContainer implements Consts {
     
     //amp
     operator.x().whileTrue(new ParallelCommandGroup(new TurnShooterToAmp(), new ShootToAmp()))
-                .onFalse(new InstantCommand(() -> {Shooter.getInstance().shoot(0);}));
+                .onFalse(new InstantCommand(() -> {Shooter.getInstance().setShootSpeed(0);}));
 
     //speaker
-    operator.y().whileTrue(new ParallelCommandGroup(new TurnShooterToSpeaker(), new InstantCommand(() -> {Shooter.getInstance().shoot(ShooterValues.SPEAKER_SHOOT_SPEED);})))
-                .onFalse(new InstantCommand(() -> {Shooter.getInstance().shoot(0);}));
+    operator.y().whileTrue(new ParallelCommandGroup(new TurnShooterToSpeaker(), new InstantCommand(() -> {Shooter.getInstance().setShootSpeed(ShooterValues.SPEAKER_SHOOT_SPEED);})))
+                .onFalse(new InstantCommand(() -> {Shooter.getInstance().setShootSpeed(0);}));
 
     //push note to rollers
     operator.b()

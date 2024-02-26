@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.util.function.Supplier;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -13,13 +15,17 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.Commands.Autonomous.DriveAndShoot;
 import frc.robot.Commands.Shooter.TurnShooterToSpeaker;
+import frc.robot.Commands.Swerve.DriveByJoysticks;
 import frc.robot.Commands.Swerve.TurnToSpeaker;
 import frc.robot.Subsystems.Shooter;
 import frc.robot.Subsystems.Swerve;
 import frc.robot.Utils.Consts;
 import frc.robot.Utils.Vector2d;
+import frc.robot.Utils.Vector3d;
 import frc.robot.Utils.Vision;
 
 
@@ -78,12 +84,9 @@ public class Robot extends TimedRobot implements Consts{
 
   @Override
   public void autonomousInit() {
-    new InstantCommand(()->{m_swerveInstance.driveOriginOriented(new Vector2d(0, 1), false);})
-    .andThen(new WaitCommand(1))
-    .andThen(new InstantCommand(() -> {m_swerveInstance.stop();}))
-    .andThen(new InstantCommand(() -> {m_swerveInstance.turnBy(180);}))
-    .andThen(new ParallelCommandGroup(new TurnToSpeaker(), new TurnShooterToSpeaker()));
-
+    m_swerveInstance.initSwerve();
+    new DriveAndShoot().schedule();
+    // .andThen(new ParallelCommandGroup(new TurnToSpeaker(), new TurnShooterToSpeaker())).schedule();;
 
   }
 
@@ -133,5 +136,16 @@ public class Robot extends TimedRobot implements Consts{
 
   public static Alliance getAlliance(){
     return m_allianceChooser.getSelected();
+  }
+
+  public static Vector2d getSpeaker2d(){
+    Vector3d speaker3d = new Vector3d();
+        if (Robot.getAlliance() == Alliance.Blue) {
+          speaker3d = ShooterValues.BLUE_SPAKER_POS;
+        } 
+        else if (Robot.getAlliance() == Alliance.Red) {
+          speaker3d = ShooterValues.RED_SPAKER_POS;
+        }
+        return new Vector2d(speaker3d.m_x, speaker3d.m_z);
   }
 }

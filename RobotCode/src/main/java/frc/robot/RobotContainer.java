@@ -42,13 +42,12 @@ public class RobotContainer implements Consts {
   public static final CommandXboxController operator = new CommandXboxController(JoystickValues.OPERATOR);
 
   //command values
-  private static boolean m_driveMode = true;
   private static final ArrayList<SwervePoint> posList = new ArrayList<SwervePoint>();
   private static Vector2d m_speaker2d = new Vector2d(0,0);
   
   //command instances
   public static DriveByJoysticks teleop = new DriveByJoysticks(() -> chassis.getLeftX(), () -> chassis.getLeftY(),
-      () -> chassis.getRightX(), () -> m_driveMode, ChassisValues.USES_ABS_ENCODER);
+      () -> chassis.getRightX(), () -> true, ChassisValues.USES_ABS_ENCODER);
 
   private void configureBindings() {
     
@@ -60,8 +59,7 @@ public class RobotContainer implements Consts {
     //turn chassis to speaker
     chassis.a().whileTrue(new TurnToSpeaker()).onFalse(teleop);
 
-    //switch between origin and robot oriented
-    chassis.start().onTrue(teleop).onTrue(new InstantCommand(() -> {m_driveMode = !m_driveMode;}));
+    chassis.start().onTrue(new InstantCommand(() -> {Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).zeroYaw();}));
     //change drive speeds
     chassis.rightTrigger().whileTrue(new InstantCommand(() -> {SmartDashboard.putNumber("max drive speed", ChassisValues.FAST_MODE_DRIVE_SPEED);})).
                           onFalse(new InstantCommand(() -> {SmartDashboard.putNumber("max drive speed", ChassisValues.DRIVE_SPEED);}));
@@ -83,11 +81,11 @@ public class RobotContainer implements Consts {
     
     //amp
     operator.x().whileTrue(new ParallelCommandGroup(new TurnShooterToAmp(), new ShootToAmp()))
-                .onFalse(new InstantCommand(() -> {Shooter.getInstance().setShootSpeed(0);}));
+                .onFalse(new InstantCommand(() -> {Shooter.getInstance().stopRollers();}));
 
     //speaker
     operator.y().whileTrue(new ParallelCommandGroup(new TurnShooterToSpeaker(), new InstantCommand(() -> {Shooter.getInstance().setShootSpeed(ShooterValues.SPEAKER_SHOOT_SPEED);})))
-                .onFalse(new InstantCommand(() -> {Shooter.getInstance().setShootSpeed(0);}));
+                .onFalse(new InstantCommand(() -> {Shooter.getInstance().stopRollers();}));
 
     //push note to rollers
     operator.b()
@@ -98,7 +96,7 @@ public class RobotContainer implements Consts {
     }));    
 
     operator.start().whileTrue(new ParallelCommandGroup(new InstantCommand(() -> {Shooter.getInstance().turnToAngle(53.02325832558163);}), new InstantCommand(()->{Shooter.getInstance().setShootSpeed(ShooterValues.SPEAKER_SHOOT_SPEED);})))
-                .onFalse(new InstantCommand(() -> {Shooter.getInstance().setShootSpeed(0);}));
+                .onFalse(new InstantCommand(() -> {Shooter.getInstance().stopRollers();}));
 
     
     //climb

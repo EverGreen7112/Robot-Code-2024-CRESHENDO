@@ -178,18 +178,18 @@ public interface Consts {
         public static final double SPEAKER_SHOOT_SPEED = 6000;
         public static final double AMP_SHOOT_SPEED = 2000;
         public static final double CONTAINMENT_SPEED = 6000;
-        public static final double SHOOT_SPEED_TOLERANCE = 500;
+        public static final double SHOOT_SPEED_TOLERANCE = 700;
         
         //shooter angles
         public static final double AIM_MOTOR_MAX_ANGLE = 180;
         public static final double AIM_MOTOR_MIN_ANGLE = -50.9;
-        public static final double AIM_MOTOR_AMP_ANGLE = 140;
+        public static final double AIM_MOTOR_AMP_ANGLE = 130;
         public static final double AIM_MOTOR_SPEAKER_ANGLE = 0;
         public static final int AIM_MOTOR_CURRENT_LIMIT = 20;
         public static final double AIM_MOTOR_RATE_LIMIT = 1/9.0;
         public static final double AIM_MOTOR_SPEED_LIMIT = 0.2;
         public static final double AIM_MOTOR_MIN_SPEED = 0.0001;
-        public static final double AIM_MOTOR_MIN_TOLERANCE = 2.0;
+        public static final double AIM_MOTOR_MIN_TOLERANCE = 4.0;
 
         //motor controllers ids
         public static final int RIGHT_SHOOT_MOTOR_ID = 6;
@@ -222,7 +222,7 @@ public interface Consts {
 
         public static final double EXTERNAL_ENCODER_OFFSET = 0.222401380560035;
 
-        public static final double MIN_NOTE_DISTANCE = 3.0;
+        public static final double MIN_NOTE_DISTANCE = 20.0;
     }    
 
     public class JoystickValues {

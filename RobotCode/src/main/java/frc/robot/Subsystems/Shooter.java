@@ -116,6 +116,7 @@ public class Shooter extends SubsystemBase implements Consts{
         SmartDashboard.putNumber("shooter angle", getShooterAngle());
         SmartDashboard.putNumber("right rollers speed", getRightRollersSpeed());
         SmartDashboard.putNumber("left rollers speed", getLeftRollerSpeed());
+        SmartDashboard.putBoolean("is ready to shoot", isReadyToShoot());
         SmartDashboard.putNumber("target", m_targetAngle);
         SmartDashboard.putBoolean("is note in", isNoteIn());
         SmartDashboard.putNumber("is sensor connected", (Math.pow(m_noteSensor.getAverageVoltage(), -1.2045) * 27.726));
@@ -270,9 +271,9 @@ public class Shooter extends SubsystemBase implements Consts{
      */
     public void stopRollers(){
         m_targetShootSpeed = 0;
-        m_leftShootMotor.set(0);
-        m_rightShootMotor.set(0);
-        m_containmentMotor.set(0);
+        m_leftShootMotor.getPIDController().setReference(0, ControlType.kVelocity);
+        m_rightShootMotor.getPIDController().setReference(0, ControlType.kVelocity);
+        m_containmentMotor.getPIDController().setReference(0, ControlType.kVelocity);
     }
 
     /**
@@ -289,7 +290,9 @@ public class Shooter extends SubsystemBase implements Consts{
     public boolean isReadyToShoot() {
         return ((Math.abs(getShooterAngle() - m_targetAngle) <= ShooterValues.AIM_MOTOR_MIN_TOLERANCE) &&
         (Math.abs(getLeftRollerSpeed() - m_targetShootSpeed) <= ShooterValues.SHOOT_SPEED_TOLERANCE)   &&
-        (Math.abs(getRightRollersSpeed() - m_targetShootSpeed) <= ShooterValues.SHOOT_SPEED_TOLERANCE));
+        (Math.abs(getRightRollersSpeed() - m_targetShootSpeed) <= ShooterValues.SHOOT_SPEED_TOLERANCE))&&
+        (isNoteIn()) && 
+        (m_bottomLimitSwitch.get());
     }
 
     /**
@@ -297,7 +300,7 @@ public class Shooter extends SubsystemBase implements Consts{
      * @return true if ready to collect else false
      */
     public boolean isReadyToCollect(){
-        return !(m_bottomLimitSwitch.get());
+        return !(m_bottomLimitSwitch.get()) && !(isNoteIn());
     }
 
     public boolean isNoteIn(){

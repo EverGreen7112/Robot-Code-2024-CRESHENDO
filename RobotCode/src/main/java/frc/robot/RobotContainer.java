@@ -64,20 +64,14 @@ public class RobotContainer implements Consts {
     chassis.start().onTrue(teleop).onTrue(new InstantCommand(() -> {m_driveMode = !m_driveMode;}));
     //change drive speeds
     chassis.rightTrigger().whileTrue(new InstantCommand(() -> {SmartDashboard.putNumber("max drive speed", ChassisValues.FAST_MODE_DRIVE_SPEED);})).
-                          onFalse(new InstantCommand(() -> {SmartDashboard.putNumber("max drive speed", ChassisValues.DRIVE_GEAR_RATIO);}));
+                          onFalse(new InstantCommand(() -> {SmartDashboard.putNumber("max drive speed", ChassisValues.DRIVE_SPEED);}));
     
     chassis.leftTrigger().whileTrue(new InstantCommand(() -> {SmartDashboard.putNumber("max drive speed", ChassisValues.SLOW_MODE_DRIVE_SPEED);})).
-                          onFalse(new InstantCommand(() -> {SmartDashboard.putNumber("max drive speed", ChassisValues.DRIVE_GEAR_RATIO);}));
-    
+                          onFalse(new InstantCommand(() -> {SmartDashboard.putNumber("max drive speed", ChassisValues.DRIVE_SPEED);}));
     //Operator buttons
 
     //intake
     operator.a().whileTrue(
-          // new InstantCommand(() -> {
-          //   Shooter.getInstance().turnToAngle(ShooterValues.AIM_MOTOR_MIN_ANGLE);
-          //   Intake.getInstance().intakeWithoutPID(IntakeValues.INTAKE_SPEED);
-          //   Shooter.getInstance().pullNoteWithoutPID(-0.5);
-          // })
           new IntakeWithoutPID(IntakeValues.INTAKE_SPEED)
           )          
         .onFalse(
@@ -102,6 +96,10 @@ public class RobotContainer implements Consts {
         })).onFalse(new InstantCommand(() -> {
           Shooter.getInstance().pushNoteToRollers(0);
     }));    
+
+    operator.start().whileTrue(new ParallelCommandGroup(new InstantCommand(() -> {Shooter.getInstance().turnToAngle(53.02325832558163);}), new InstantCommand(()->{Shooter.getInstance().setShootSpeed(ShooterValues.SPEAKER_SHOOT_SPEED);})))
+                .onFalse(new InstantCommand(() -> {Shooter.getInstance().setShootSpeed(0);}));
+
     
     //climb
     operator.rightBumper().whileTrue(new ClimbWithoutPID(ClimberValues.CLIMBER_SPEED, ClimberSide.CLIMB_WITH_RIGHT_SIDE));

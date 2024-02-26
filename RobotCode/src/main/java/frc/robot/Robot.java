@@ -4,28 +4,22 @@
 
 package frc.robot;
 
-import java.util.function.Supplier;
-
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.ColorSensorV3.RawColor;
-
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.Commands.ClimbWithoutPID;
-import frc.robot.Commands.Shooter.TurnShooterToAngle;
-import frc.robot.Subsystems.Intake;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.Commands.Shooter.TurnShooterToSpeaker;
+import frc.robot.Commands.Swerve.TurnToSpeaker;
 import frc.robot.Subsystems.Shooter;
 import frc.robot.Subsystems.Swerve;
-import frc.robot.Subsystems.Climber.ClimberSide;
 import frc.robot.Utils.Consts;
+import frc.robot.Utils.Vector2d;
 import frc.robot.Utils.Vision;
 
 
@@ -33,34 +27,41 @@ public class Robot extends TimedRobot implements Consts{
   private Swerve m_swerveInstance;
   private Field2d m_field;
   private Vision m_vision;
-
+  private static SendableChooser<Alliance> m_allianceChooser = new SendableChooser<Alliance>();;
   
   @Override
   public void robotInit() {
-    m_swerveInstance = Swerve.getInstance(ChassisValues.USES_ABS_ENCODER);
     new RobotContainer();
+    Shooter.getInstance();
+    //init drive speeds
     SmartDashboard.putNumber("max drive speed", Consts.ChassisValues.DRIVE_SPEED);
     SmartDashboard.putNumber("max angular speed", 200);
-    m_swerveInstance.zeroModulesAngles();
+    //init swerve
+    m_swerveInstance = Swerve.getInstance(ChassisValues.USES_ABS_ENCODER);
     //create and add robot field data to dashboard
     m_field = new Field2d();
     SmartDashboard.putData(m_field);
     //start vision
     m_vision = new Vision(VisionValues.LOCALIZATION_VISION_PORT);
-    Shooter shooter = Shooter.getInstance();
+    //add alliance options to dashboard
+    m_allianceChooser.setDefaultOption("red", Alliance.Red);
+    m_allianceChooser.addOption("blue", Alliance.Blue);
+    SmartDashboard.putData("alliance chooser", m_allianceChooser);
+
   }
 
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
     //get current position and rotation of robot 
-      double xCurrent = m_swerveInstance.getX();
-      double yCurrent = m_swerveInstance.getY();
-      double headingCurrent = m_swerveInstance.getFieldOrientedAngle();
+    double xCurrent = m_swerveInstance.getX();
+    double yCurrent = m_swerveInstance.getY();
+    double headingCurrent = m_swerveInstance.getFieldOrientedAngle();
 
-      //update the robot position of dashboard
-      m_field.setRobotPose(xCurrent, yCurrent, new Rotation2d(Math.toRadians(-headingCurrent + 90)));
-     }
+    //update the robot position of dashboard
+    m_field.setRobotPose(xCurrent, yCurrent, new Rotation2d(Math.toRadians(-headingCurrent + 90)));
+    SmartDashboard.putNumber("top left", m_swerveInstance.getModule(1).getCoderPosInRots());
+  }
 
   @Override
   public void disabledInit() {
@@ -77,6 +78,13 @@ public class Robot extends TimedRobot implements Consts{
 
   @Override
   public void autonomousInit() {
+    new InstantCommand(()->{m_swerveInstance.driveOriginOriented(new Vector2d(0, 1), false);})
+    .andThen(new WaitCommand(1))
+    .andThen(new InstantCommand(() -> {m_swerveInstance.stop();}))
+    .andThen(new InstantCommand(() -> {m_swerveInstance.turnBy(180);}))
+    .andThen(new ParallelCommandGroup(new TurnToSpeaker(), new TurnShooterToSpeaker()));
+
+
   }
 
   @Override
@@ -90,14 +98,14 @@ public class Robot extends TimedRobot implements Consts{
   @Override
   public void teleopInit() {
     CommandScheduler.getInstance().cancelAll();
-    m_swerveInstance.initSwerve();
     RobotContainer.teleop.schedule();
+    m_swerveInstance.initSwerve();
   }
   
 
   @Override
   public void teleopPeriodic() {
-   
+      m_swerveInstance.setModulesToAbs();
   }
 
   @Override
@@ -124,6 +132,6 @@ public class Robot extends TimedRobot implements Consts{
 
 
   public static Alliance getAlliance(){
-    return DriverStation.getAlliance().get();
+    return m_allianceChooser.getSelected();
   }
 }

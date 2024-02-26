@@ -92,11 +92,6 @@ public class Swerve extends SubsystemBase implements Consts {
                 -ms_max_angular_speed, ms_max_angular_speed);
         // calculate odometry
         odometry();
-
-        SmartDashboard.putNumber("top left cancoder", m_modules[0].getVelocity());
-        SmartDashboard.putNumber("top right cancoder", m_modules[1].getVelocity());
-        SmartDashboard.putNumber("down left cancoder", m_modules[2].getVelocity());
-        SmartDashboard.putNumber("down right cancoder", m_modules[3].getVelocity());
     }
 
     /**
@@ -348,9 +343,7 @@ public class Swerve extends SubsystemBase implements Consts {
 
         SmartDashboard.putNumber("x", m_x);
         SmartDashboard.putNumber("y", m_y);
-        SmartDashboard.putNumber("angle", getFieldOrientedAngle());
-        SmartDashboard.putNumber("target angle", m_headingTargetAngle);
-        SmartDashboard.putNumber("vision angle", m_robotHeadingFromVision);
-        SmartDashboard.putNumber("offset", m_angleOffset);
+        SmartDashboard.putNumber("field oriented angle", getFieldOrientedAngle());
+        SmartDashboard.putNumber("origin oriented angle", m_gyro.getAngle());
     }
 }

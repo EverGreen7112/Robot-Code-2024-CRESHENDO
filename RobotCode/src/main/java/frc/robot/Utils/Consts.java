@@ -62,7 +62,7 @@ public interface Consts {
     }
 
     public class ChassisValues{
-        public static final double AUTONOMOUS_MAX_ANGULAR_SPEED = 0.5;
+        public static double AUTONOMOUS_MAX_ANGULAR_SPEED = 0.5;
         public static double DRIVE_SPEED = 1;
         public static double SLOW_MODE_DRIVE_SPEED = 0.5;
         public static double FAST_MODE_DRIVE_SPEED = 2;
@@ -102,10 +102,10 @@ public interface Consts {
         public static final int DOWN_RIGHT_CANCODER = 1;
 
         //cancoder offsets
-        public static final double TOP_RIGHT_CANCODER_OFFSET = -0.187500 - 2;
-        public static final double TOP_LEFT_CANCODER_OFFSET = -1.966553;
-        public static final double DOWN_RIGHT_CANCODER_OFFSET = -0.205078;
-        public static final double DOWN_LEFT_CANCODER_OFFSET = -0.205078 -1.669434 ;
+        public static final double TOP_RIGHT_CANCODER_OFFSET = -3.18798828125;
+        public static final double TOP_LEFT_CANCODER_OFFSET = -1.656005859375;
+        public static final double DOWN_RIGHT_CANCODER_OFFSET = -2.20849609375;
+        public static final double DOWN_LEFT_CANCODER_OFFSET = -1.87744140625;
 
         // chassis size
         public static final double FRONT_WHEEL_DIST_METERS = 0.57;
@@ -168,8 +168,8 @@ public interface Consts {
 
     public class ShooterValues{
         //speaker
-        public static final Vector3d RED_SPAKER_POS = new Vector3d(652.67 * 0.0254, 3.45, 218.42 * 0.0254);
-        public static final Vector3d BLUE_SPAKER_POS = new Vector3d(-1.5 * 0.0254, 3.45 , 218.41 * 0.0254);
+        public static final Vector3d RED_SPAKER_POS = new Vector3d(652.67 * 0.0254 + 1, 4.1, 218.42 * 0.0254 - 1);
+        public static final Vector3d BLUE_SPAKER_POS = new Vector3d(-1.5 * 0.0254 - 1, 3.7, 218.41 * 0.0254);
 
         //gear ratio
         public static final double AIM_MOTOR_GEAR_RATIO = 1 / (45.0);

@@ -294,6 +294,8 @@ public class Shooter extends SubsystemBase implements Consts{
         (Math.abs(getLeftRollerSpeed() - m_targetShootSpeed) <= ShooterValues.SHOOT_SPEED_TOLERANCE)   &&
         (Math.abs(getRightRollersSpeed() - m_targetShootSpeed) <= ShooterValues.SHOOT_SPEED_TOLERANCE))&&
         (isNoteIn()) && 
+        (!isReadyToCollect()) &&
+        (m_targetShootSpeed != 0.0) &&
         (m_bottomLimitSwitch.get());
     }
 
@@ -302,7 +304,8 @@ public class Shooter extends SubsystemBase implements Consts{
      * @return true if ready to collect else false
      */
     public boolean isReadyToCollect(){
-        return !(m_bottomLimitSwitch.get()) && !(isNoteIn());
+        return ((!m_bottomLimitSwitch.get()) || (Math.abs(getShooterAngle()-getTargetAngle()) < ShooterValues.AIM_MOTOR_MIN_TOLERANCE))
+         && !(isNoteIn());
     }
 
     public boolean isNoteIn(){

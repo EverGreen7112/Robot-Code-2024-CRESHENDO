@@ -59,6 +59,9 @@ public class Climber extends SubsystemBase implements Consts {
         m_climberRightMotor.setIdleMode(IdleMode.kBrake);
         m_climberLeftMotor.setIdleMode(IdleMode.kBrake);
 
+        m_climberLeftMotor.getEncoder().setPosition(0);
+        m_climberRightMotor.getEncoder().setPosition(0);
+
     }
 
     /**
@@ -117,23 +120,33 @@ public class Climber extends SubsystemBase implements Consts {
      * @param speed Moves both climb motors at the given speed without pid
      */
     public void climbRightSideWithoutPid(double speed) {
-        m_climberRightMotor.set(speed);
+        // m_climberRightMotor.set(speed);
+        if (m_climberRightMotor.getEncoder().getPosition() >= ClimberValues.CLIMBER_FORCE_STOP_TOLERANCE || speed >= 0) {
+            m_climberRightMotor.set(speed);
+        }
     }
         /**
      * 
      * @param speed Moves both climb motors at the given speed without pid
      */
     public void climbLeftSideWithoutPid(double speed) {
-        m_climberLeftMotor.set(speed);
+        // m_climberLeftMotor.set(speed);
+        if (m_climberLeftMotor.getEncoder().getPosition() >= ClimberValues.CLIMBER_FORCE_STOP_TOLERANCE || speed >= 0) {
+            m_climberLeftMotor.set(speed);
+        }
+        
     }
         /**
      * 
      * @param speed Moves both climb motors at the given speed without pid
      */
     public void climbBothSidesWithoutPid(double speed) {
-        m_climberRightMotor.set(speed);
-        m_climberLeftMotor.set(speed);
+        climbLeftSideWithoutPid(speed);
+        climbRightSideWithoutPid(speed);
     }
+
+
+    // TODO: add the check to make sure we dont pull at 0 when we use PID for the climber
 
     /**
      * the function moves the motors at the given rpm using pid.

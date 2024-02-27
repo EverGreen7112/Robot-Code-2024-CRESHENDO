@@ -9,6 +9,7 @@ import java.util.function.Supplier;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -108,6 +109,14 @@ public class Robot extends TimedRobot implements Consts{
   @Override
   public void teleopPeriodic() {
       m_swerveInstance.setModulesToAbs();
+
+      //rumble when shooter is ready to shoot
+      if(Shooter.getInstance().isReadyToShoot()){
+        RobotContainer.operatorRumble.setRumble(RumbleType.kBothRumble, 1);
+      }
+      else {
+        RobotContainer.operatorRumble.setRumble(RumbleType.kBothRumble, 0);
+      }
   }
 
   @Override

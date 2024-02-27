@@ -63,9 +63,9 @@ public interface Consts {
 
     public class ChassisValues{
         public static double AUTONOMOUS_MAX_ANGULAR_SPEED = 0.5;
-        public static double DRIVE_SPEED = 1;
+        public static double DRIVE_SPEED = 2.5;
         public static double SLOW_MODE_DRIVE_SPEED = 0.5;
-        public static double FAST_MODE_DRIVE_SPEED = 2;
+        public static double FAST_MODE_DRIVE_SPEED = 4;
 
         // max speed values in m/s
         public static Supplier<Double> MAX_SPEED = new Supplier<Double>() {
@@ -169,14 +169,14 @@ public interface Consts {
     public class ShooterValues{
         //speaker
         public static final Vector3d RED_SPAKER_POS = new Vector3d(652.67 * 0.0254 + 1, 4.1, 218.42 * 0.0254 - 1);
-        public static final Vector3d BLUE_SPAKER_POS = new Vector3d(-1.5 * 0.0254 - 1, 3.7, 218.41 * 0.0254);
+        public static final Vector3d BLUE_SPAKER_POS = new Vector3d(-1.5 * 0.0254 - 1, 3.7, 218.41 * 0.0254 - 1);
 
         //gear ratio
         public static final double AIM_MOTOR_GEAR_RATIO = 1 / (45.0);
 
         //shooter speeds(in rpm)
         public static final double SPEAKER_SHOOT_SPEED = 6000;
-        public static final double AMP_SHOOT_SPEED = 2000;
+        public static final double AMP_SHOOT_SPEED = 1700;
         public static final double CONTAINMENT_SPEED = 6000;
         public static final double SHOOT_SPEED_TOLERANCE = 700;
         

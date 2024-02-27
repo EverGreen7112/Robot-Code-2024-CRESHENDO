@@ -6,6 +6,7 @@ package frc.robot;
 
 import java.util.ArrayList;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -40,6 +41,7 @@ public class RobotContainer implements Consts {
   //controllers
   public static final CommandXboxController chassis = new CommandXboxController(JoystickValues.CHASSIS);
   public static final CommandXboxController operator = new CommandXboxController(JoystickValues.OPERATOR);
+  public static final XboxController operatorRumble = new XboxController(JoystickValues.OPERATOR);
 
   //command values
   private static final ArrayList<SwervePoint> posList = new ArrayList<SwervePoint>();
@@ -71,6 +73,17 @@ public class RobotContainer implements Consts {
     //intake
     operator.a().whileTrue(
           new IntakeWithoutPID(IntakeValues.INTAKE_SPEED)
+          )          
+        .onFalse(
+          new InstantCommand(() ->{
+            Shooter.getInstance().pullNoteWithoutPID(0);
+            Intake.getInstance().intakeWithoutPID(0);
+          })
+        );
+
+    // reverse intake
+    operator.back().whileTrue(
+          new IntakeWithoutPID(-IntakeValues.INTAKE_SPEED)
           )          
         .onFalse(
           new InstantCommand(() ->{

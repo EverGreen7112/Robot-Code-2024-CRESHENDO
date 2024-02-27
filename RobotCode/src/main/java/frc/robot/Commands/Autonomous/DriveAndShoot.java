@@ -33,10 +33,12 @@ public class DriveAndShoot extends Command implements Consts{
     public void execute() {
         double time = System.currentTimeMillis() / 1000.0 - m_startTime;
         
-        if(time > 0 && time <= 1 && !m_turned){
+        if(time > 0 && time <= 1){
+            Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).driveOriginOriented(new Vector2d(0, -0.8), false);            
+        }
+        else if (time > 1 && time < 2 && !m_turned) {
             Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).turnBy(180);
             m_turned = true;
-            Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).driveOriginOriented(new Vector2d(0, -1.1), false);            
         }
         else if(time > 2 && time < 3){
             new TurnToSpeaker().schedule();

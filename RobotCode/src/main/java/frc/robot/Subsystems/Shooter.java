@@ -10,10 +10,12 @@ import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
+import frc.robot.RobotContainer;
 import frc.robot.Utils.Consts;
 import frc.robot.Utils.Vector2d;
 import frc.robot.Utils.Vector3d;
@@ -118,7 +120,6 @@ public class Shooter extends SubsystemBase implements Consts{
         SmartDashboard.putNumber("left rollers speed", getLeftRollerSpeed());
         SmartDashboard.putBoolean("is ready to shoot", isReadyToShoot());
         SmartDashboard.putBoolean("is note in", isNoteIn());
-    
         
         //set encoder position value when touches limit switches
         // if(!m_bottomLimitSwitch.get())

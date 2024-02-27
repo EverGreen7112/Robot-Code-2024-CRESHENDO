@@ -99,9 +99,9 @@ public class RobotContainer implements Consts {
     operator.start().whileTrue(new ParallelCommandGroup(new InstantCommand(() -> {Shooter.getInstance().turnToAngle(53.02325832558163);}), new InstantCommand(()->{Shooter.getInstance().setShootSpeed(ShooterValues.SPEAKER_SHOOT_SPEED);})))
                 .onFalse(new InstantCommand(() -> {Shooter.getInstance().stopRollers();}));
 
-    //adjust shooter by 10 degrees
-    operator.povUp().onTrue(new InstantCommand(() ->{Shooter.getInstance().turnToAngle(Shooter.getInstance().getShooterAngle() + 10);}));
-    operator.povDown().onTrue(new InstantCommand(() ->{Shooter.getInstance().turnToAngle(Shooter.getInstance().getShooterAngle() - 10);}));
+    //adjust shooter
+    operator.povUp().onTrue(new InstantCommand(() ->{Shooter.getInstance().turnToAngle(Shooter.getInstance().getTargetAngle() + 4);}));
+    operator.povDown().onTrue(new InstantCommand(() ->{Shooter.getInstance().turnToAngle(Shooter.getInstance().getTargetAngle() - 4);}));
 
 
     //climb

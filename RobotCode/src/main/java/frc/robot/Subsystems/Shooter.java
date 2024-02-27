@@ -117,9 +117,7 @@ public class Shooter extends SubsystemBase implements Consts{
         SmartDashboard.putNumber("right rollers speed", getRightRollersSpeed());
         SmartDashboard.putNumber("left rollers speed", getLeftRollerSpeed());
         SmartDashboard.putBoolean("is ready to shoot", isReadyToShoot());
-        SmartDashboard.putNumber("target", m_targetAngle);
         SmartDashboard.putBoolean("is note in", isNoteIn());
-        SmartDashboard.putNumber("is sensor connected", (Math.pow(m_noteSensor.getAverageVoltage(), -1.2045) * 27.726));
     
         
         //set encoder position value when touches limit switches
@@ -134,7 +132,6 @@ public class Shooter extends SubsystemBase implements Consts{
         double output = MathUtil.clamp(m_aimPidController.calculate(m_aimEncoder.getDistance()), -0.3, 0.3);//put this in consts i dont have time
         //activate motor with ff
         m_aimMotor.set(output + m_aimFF * Math.signum(output));
-        SmartDashboard.putNumber("output", output);
     }
 
     /**
@@ -179,6 +176,10 @@ public class Shooter extends SubsystemBase implements Consts{
         //set target angle
         m_aimPidController.setSetpoint(m_targetAngle);
 
+    }
+
+    public double getTargetAngle(){
+        return m_targetAngle;
     }
 
     /**

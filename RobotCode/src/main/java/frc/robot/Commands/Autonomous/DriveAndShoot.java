@@ -1,5 +1,6 @@
 package frc.robot.Commands.Autonomous;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Robot;
@@ -14,7 +15,7 @@ import frc.robot.Utils.Vector2d;
 public class DriveAndShoot extends Command implements Consts{
     private double m_startTime;
     private boolean m_isFinished;
-
+    private boolean m_turned;
     public DriveAndShoot(){
         addRequirements(Swerve.getInstance(ChassisValues.USES_ABS_ENCODER));
     }
@@ -23,6 +24,7 @@ public class DriveAndShoot extends Command implements Consts{
     public void initialize() {
         m_startTime = System.currentTimeMillis() / 1000.0;
         m_isFinished = false;
+        m_turned = false;
         Vector2d speaker2d = Robot.getSpeaker2d();
         Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).setOdometryVals(speaker2d.x, speaker2d.y, 
         Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).getFieldOrientedAngle());
@@ -31,13 +33,14 @@ public class DriveAndShoot extends Command implements Consts{
     public void execute() {
         double time = System.currentTimeMillis() / 1000.0 - m_startTime;
         
-        if(time > 0 && time <= 1){
-            Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).driveOriginOriented(new Vector2d(0, -1.1), true);
+        if(time > 0 && time <= 1 && !m_turned){
             Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).turnBy(180);
+            m_turned = true;
+            Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).driveOriginOriented(new Vector2d(0, -1.1), false);            
         }
         else if(time > 2 && time < 3){
             new TurnToSpeaker().schedule();
-            Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).driveOriginOriented(new Vector2d(), true);
+            Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).driveOriginOriented(new Vector2d(), false);
         }
         else if(time > 3 && time < 4){
             new TurnShooterToSpeaker().schedule();

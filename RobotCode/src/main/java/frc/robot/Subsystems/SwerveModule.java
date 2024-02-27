@@ -92,9 +92,7 @@ public class SwerveModule extends SubsystemBase implements Consts{
     }
 
     @Override
-    public void periodic() {
-        SmartDashboard.putNumber("vel", getVelocity());
-    }
+    public void periodic() {}
 
     /**
      * set the speeds of motors to 0

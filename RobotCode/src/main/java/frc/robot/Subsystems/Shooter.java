@@ -115,6 +115,7 @@ public class Shooter extends SubsystemBase implements Consts{
 
     @Override
     public void periodic() {
+        SmartDashboard.putNumber("note sensor value", (Math.pow(m_noteSensor.getAverageVoltage(), -1.2045) * 27.726));
         SmartDashboard.putNumber("shooter angle", getShooterAngle());
         SmartDashboard.putNumber("right rollers speed", getRightRollersSpeed());
         SmartDashboard.putNumber("left rollers speed", getLeftRollerSpeed());
@@ -292,8 +293,7 @@ public class Shooter extends SubsystemBase implements Consts{
     public boolean isReadyToShoot() {
         return ((Math.abs(getShooterAngle() - m_targetAngle) <= ShooterValues.AIM_MOTOR_MIN_TOLERANCE) &&
         (Math.abs(getLeftRollerSpeed() - m_targetShootSpeed) <= ShooterValues.SHOOT_SPEED_TOLERANCE)   &&
-        (Math.abs(getRightRollersSpeed() - m_targetShootSpeed) <= ShooterValues.SHOOT_SPEED_TOLERANCE))&&
-        (isNoteIn()) && 
+        (Math.abs(getRightRollersSpeed() - m_targetShootSpeed) <= ShooterValues.SHOOT_SPEED_TOLERANCE))&& 
         (!isReadyToCollect()) &&
         (m_targetShootSpeed != 0.0) &&
         (m_bottomLimitSwitch.get());

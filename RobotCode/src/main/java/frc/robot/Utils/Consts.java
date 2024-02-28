@@ -63,9 +63,9 @@ public interface Consts {
 
     public class ChassisValues{
         public static double AUTONOMOUS_MAX_ANGULAR_SPEED = 0.5;
-        public static double DRIVE_SPEED = 2.5;
-        public static double SLOW_MODE_DRIVE_SPEED = 0.5;
-        public static double FAST_MODE_DRIVE_SPEED = 4;
+        public static double DRIVE_SPEED = 3.5;
+        public static double SLOW_MODE_DRIVE_SPEED = 1;
+        public static double FAST_MODE_DRIVE_SPEED = 4.5;
 
         // max speed values in m/s
         public static Supplier<Double> MAX_SPEED = new Supplier<Double>() {
@@ -179,14 +179,14 @@ public interface Consts {
 
         //shooter speeds(in rpm)
         public static final double SPEAKER_SHOOT_SPEED = 6000;
-        public static final double AMP_SHOOT_SPEED = 1700;
+        public static final double AMP_SHOOT_SPEED = 1400;//1700
         public static final double CONTAINMENT_SPEED = 6000;
         public static final double SHOOT_SPEED_TOLERANCE = 700;
         
         //shooter angles
         public static final double AIM_MOTOR_MAX_ANGLE = 180;
         public static final double AIM_MOTOR_MIN_ANGLE = -50.9;
-        public static final double AIM_MOTOR_AMP_ANGLE = 130;
+        public static final double AIM_MOTOR_AMP_ANGLE = 130;//130 works on our amp not comp's
         public static final double AIM_MOTOR_SPEAKER_ANGLE = 0;
         public static final int AIM_MOTOR_CURRENT_LIMIT = 20;
         public static final double AIM_MOTOR_RATE_LIMIT = 1/9.0;
@@ -225,7 +225,7 @@ public interface Consts {
 
         public static final double EXTERNAL_ENCODER_OFFSET = 0.222401380560035;
 
-        public static final double MIN_NOTE_DISTANCE = 20.0;
+        public static final double MIN_NOTE_DISTANCE = 20.0;//20.0
     }    
 
     public class JoystickValues {

@@ -34,7 +34,7 @@ public class DriveAndShoot extends Command implements Consts{
         double time = System.currentTimeMillis() / 1000.0 - m_startTime;
         
         if(time > 0 && time <= 1){
-            Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).driveOriginOriented(new Vector2d(0, -0.8), false);            
+            Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).driveOriginOriented(new Vector2d(0, -0.4), false);            
         }
         else if (time > 1 && time < 2 && !m_turned) {
             Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).turnBy(180);
@@ -48,7 +48,7 @@ public class DriveAndShoot extends Command implements Consts{
             new TurnShooterToSpeaker().schedule();
             new InstantCommand(() -> {Shooter.getInstance().setShootSpeed(ShooterValues.SPEAKER_SHOOT_SPEED);}).schedule();;
         }
-        else if(time > 5 && time < 6 && Shooter.getInstance().isReadyToShoot()){
+        else if(time > 6 && time < 8 && Shooter.getInstance().isReadyToShoot()){
             new InstantCommand(() -> {Shooter.getInstance().pushNoteToRollers(ShooterValues.CONTAINMENT_SPEED);}).schedule();;
         }
         else{

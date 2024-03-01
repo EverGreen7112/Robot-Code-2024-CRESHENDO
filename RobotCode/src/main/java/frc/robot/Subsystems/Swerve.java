@@ -94,10 +94,10 @@ public class Swerve extends SubsystemBase implements Consts {
         odometry();
 
 
-        // SmartDashboard.putNumber("TOP RIGHT CANCODER", m_modules[0].getCoderPos());
-        // SmartDashboard.putNumber("TOP LEFT CANCODER", m_modules[1].getCoderPos());
-        // SmartDashboard.putNumber("DOWN RIGHT CANCODER", m_modules[2].getCoderPos());
-        // SmartDashboard.putNumber("DOWN LEFT CANCODER", m_modules[3].getCoderPos());
+        SmartDashboard.putNumber("TOP RIGHT CANCODER", m_modules[0].getCoderPosInRots());
+        SmartDashboard.putNumber("TOP LEFT CANCODER", m_modules[1].getCoderPosInRots());
+        SmartDashboard.putNumber("DOWN RIGHT CANCODER", m_modules[2].getCoderPosInRots());
+        SmartDashboard.putNumber("DOWN LEFT CANCODER", m_modules[3].getCoderPosInRots());
     }
 
     /**

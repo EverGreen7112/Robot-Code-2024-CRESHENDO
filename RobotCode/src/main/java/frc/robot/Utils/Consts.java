@@ -102,10 +102,10 @@ public interface Consts {
         public static final int DOWN_RIGHT_CANCODER = 1;
 
         //cancoder offsets
-        public static final double TOP_RIGHT_CANCODER_OFFSET = -3.18798828125;
-        public static final double TOP_LEFT_CANCODER_OFFSET = -1.656005859375;
-        public static final double DOWN_RIGHT_CANCODER_OFFSET = -2.20849609375;
-        public static final double DOWN_LEFT_CANCODER_OFFSET = -1.87744140625;
+        public static final double TOP_RIGHT_CANCODER_OFFSET = -1.191650390625;
+        public static final double TOP_LEFT_CANCODER_OFFSET = -1.6552734375;
+        public static final double DOWN_RIGHT_CANCODER_OFFSET = -0.211181640625;
+        public static final double DOWN_LEFT_CANCODER_OFFSET = -2.875;
 
         // chassis size
         public static final double FRONT_WHEEL_DIST_METERS = 0.57;
@@ -179,14 +179,14 @@ public interface Consts {
 
         //shooter speeds(in rpm)
         public static final double SPEAKER_SHOOT_SPEED = 6000;
-        public static final double AMP_SHOOT_SPEED = 1400;//1700
+        public static final double AMP_SHOOT_SPEED = 900;//1700
         public static final double CONTAINMENT_SPEED = 6000;
         public static final double SHOOT_SPEED_TOLERANCE = 700;
         
         //shooter angles
         public static final double AIM_MOTOR_MAX_ANGLE = 180;
         public static final double AIM_MOTOR_MIN_ANGLE = -50.9;
-        public static final double AIM_MOTOR_AMP_ANGLE = 130;//130 works on our amp not comp's
+        public static final double AIM_MOTOR_AMP_ANGLE = 135;//130 works on our amp not comp's
         public static final double AIM_MOTOR_SPEAKER_ANGLE = 0;
         public static final int AIM_MOTOR_CURRENT_LIMIT = 20;
         public static final double AIM_MOTOR_RATE_LIMIT = 1/9.0;

@@ -57,7 +57,6 @@ public class RobotContainer implements Consts {
     //turn chassis
     chassis.rightBumper().onTrue(new InstantCommand(() -> {Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).turnBy(90);}));
     chassis.leftBumper().onTrue(new InstantCommand(() -> {Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).turnBy(-90);}));
-    chassis.rightStick().onTrue(new InstantCommand(() -> {Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).turnToOriginOriented(0);}));
     //turn chassis to speaker
     chassis.a().whileTrue(new TurnToSpeaker()).onFalse(teleop);
 
@@ -109,7 +108,7 @@ public class RobotContainer implements Consts {
     }));    
 
     //speaker from close
-    operator.start().whileTrue(new ParallelCommandGroup(new InstantCommand(() -> {Shooter.getInstance().turnToAngle(53.02325832558163);}), new InstantCommand(()->{Shooter.getInstance().setShootSpeed(ShooterValues.SPEAKER_SHOOT_SPEED);})))
+    operator.start().whileTrue(new ParallelCommandGroup(new InstantCommand(() -> {Shooter.getInstance().turnToAngle(56);}), new InstantCommand(()->{Shooter.getInstance().setShootSpeed(ShooterValues.SPEAKER_SHOOT_SPEED);})))
                 .onFalse(new InstantCommand(() -> {Shooter.getInstance().stopRollers();}));
 
     //adjust shooter

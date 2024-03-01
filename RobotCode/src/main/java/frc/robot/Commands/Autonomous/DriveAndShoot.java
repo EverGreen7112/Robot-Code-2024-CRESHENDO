@@ -1,5 +1,6 @@
 package frc.robot.Commands.Autonomous;
 
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -26,7 +27,7 @@ public class DriveAndShoot extends Command implements Consts{
         m_isFinished = false;
         m_turned = false;
         Vector2d speaker2d = Robot.getSpeaker2d();
-        Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).setOdometryVals(speaker2d.x, speaker2d.y, 
+        Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).setOdometryVals(speaker2d.x + ((Robot.getAlliance() == Alliance.Blue) ? 2: -2), speaker2d.y, 
         Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).getFieldOrientedAngle());
     }
     @Override
@@ -34,21 +35,21 @@ public class DriveAndShoot extends Command implements Consts{
         double time = System.currentTimeMillis() / 1000.0 - m_startTime;
         
         if(time > 0 && time <= 1){
-            Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).driveOriginOriented(new Vector2d(0, -0.4), false);            
+            Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).driveOriginOriented(new Vector2d(0, -0.45), false);            
         }
         else if (time > 1 && time < 2 && !m_turned) {
-            Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).turnBy(180);
+            Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).turnBy(170);
             m_turned = true;
         }
-        else if(time > 2 && time < 3){
+        else if(time > 3 && time < 4){
             new TurnToSpeaker().schedule();
             Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).driveOriginOriented(new Vector2d(), false);
         }
-        else if(time > 3 && time < 4){
+        else if(time > 4 && time < 5){
             new TurnShooterToSpeaker().schedule();
             new InstantCommand(() -> {Shooter.getInstance().setShootSpeed(ShooterValues.SPEAKER_SHOOT_SPEED);}).schedule();;
         }
-        else if(time > 6 && time < 8 && Shooter.getInstance().isReadyToShoot()){
+        else if(time > 8 && time < 10 && Shooter.getInstance().isReadyToShoot()){
             new InstantCommand(() -> {Shooter.getInstance().pushNoteToRollers(ShooterValues.CONTAINMENT_SPEED);}).schedule();;
         }
         else{

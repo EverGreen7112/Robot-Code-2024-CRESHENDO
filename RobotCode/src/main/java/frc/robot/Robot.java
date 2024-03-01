@@ -102,7 +102,6 @@ public class Robot extends TimedRobot implements Consts{
   public void teleopInit() {
     CommandScheduler.getInstance().cancelAll();
     RobotContainer.teleop.schedule();
-   m_swerveInstance.initSwerve();
   }
   
 

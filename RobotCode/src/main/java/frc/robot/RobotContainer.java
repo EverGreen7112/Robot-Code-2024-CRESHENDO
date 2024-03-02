@@ -19,6 +19,7 @@ import frc.robot.Commands.Swerve.TurnToPoint;
 import frc.robot.Commands.Swerve.TurnToSpeaker;
 import frc.robot.Commands.ClimbWithoutPID;
 import frc.robot.Commands.Intake.IntakeWithoutPID;
+import frc.robot.Commands.Shooter.ShootFromClose;
 import frc.robot.Commands.Shooter.ShootToAmp;
 import frc.robot.Commands.Shooter.TurnShooterToAmp;
 import frc.robot.Commands.Shooter.TurnShooterToSpeaker;
@@ -51,7 +52,7 @@ public class RobotContainer implements Consts {
   public static DriveByJoysticks teleop = new DriveByJoysticks(() -> chassis.getLeftX(), () -> chassis.getLeftY(),
       () -> chassis.getRightX(), () -> true, ChassisValues.USES_ABS_ENCODER);
 
-  private void configureBindings() {
+    private void configureBindings() {
     
     //Chassis driver buttons
     //turn chassis
@@ -92,7 +93,7 @@ public class RobotContainer implements Consts {
         );
     
     //amp
-    operator.x().whileTrue(new ParallelCommandGroup(new TurnShooterToAmp(), new ShootToAmp()))
+    operator.x().whileTrue(new ParallelCommandGroup(new TurnShooterToAmp(), new InstantCommand(() -> {Shooter.getInstance().setShootSpeed(0, 1100);})))
                 .onFalse(new InstantCommand(() -> {Shooter.getInstance().stopRollers();}));
 
     //speaker
@@ -108,14 +109,18 @@ public class RobotContainer implements Consts {
     }));    
 
     //speaker from close
-    operator.start().whileTrue(new ParallelCommandGroup(new InstantCommand(() -> {Shooter.getInstance().turnToAngle(56);}), new InstantCommand(()->{Shooter.getInstance().setShootSpeed(ShooterValues.SPEAKER_SHOOT_SPEED);})))
+    //center
+    operator.povUp().whileTrue(new ParallelCommandGroup(new InstantCommand(() -> {Shooter.getInstance().turnToAngle(114);}), new InstantCommand(()->{Shooter.getInstance().setShootSpeed(7000, ShooterValues.SPEAKER_SHOOT_SPEED * 1.1 / 3);})))
                 .onFalse(new InstantCommand(() -> {Shooter.getInstance().stopRollers();}));
-
-    //adjust shooter
-    operator.povUp().onTrue(new InstantCommand(() ->{Shooter.getInstance().turnToAngle(Shooter.getInstance().getTargetAngle() + 4);}));
-    operator.povDown().onTrue(new InstantCommand(() ->{Shooter.getInstance().turnToAngle(Shooter.getInstance().getTargetAngle() - 4);}));
-
-
+    
+    //amp side 
+    operator.povLeft().whileTrue(new ParallelCommandGroup(new InstantCommand(() -> {Shooter.getInstance().turnToAngle(122);}), new InstantCommand(()->{Shooter.getInstance().setShootSpeed(7000, 5000);})))
+                .onFalse(new InstantCommand(() -> {Shooter.getInstance().stopRollers();}));
+    
+    //not amp side
+    operator.povRight().whileTrue(new ParallelCommandGroup(new InstantCommand(() -> {Shooter.getInstance().turnToAngle(60);}), new InstantCommand(()->{Shooter.getInstance().setShootSpeed(ShooterValues.SPEAKER_SHOOT_SPEED, ShooterValues.SPEAKER_SHOOT_SPEED);})))
+                .onFalse(new InstantCommand(() -> {Shooter.getInstance().stopRollers();}));
+    
     //climb
     operator.rightBumper().whileTrue(new ClimbWithoutPID(ClimberValues.CLIMBER_SPEED, ClimberSide.CLIMB_WITH_RIGHT_SIDE));
     operator.leftBumper().whileTrue(new ClimbWithoutPID(ClimberValues.CLIMBER_SPEED, ClimberSide.CLIMB_WITH_LEFT_SIDE));

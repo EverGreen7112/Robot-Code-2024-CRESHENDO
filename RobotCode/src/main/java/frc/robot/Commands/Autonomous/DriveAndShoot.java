@@ -11,6 +11,7 @@ import frc.robot.Commands.Swerve.TurnToSpeaker;
 import frc.robot.Subsystems.Shooter;
 import frc.robot.Subsystems.Swerve;
 import frc.robot.Utils.Consts;
+import frc.robot.Utils.Funcs;
 import frc.robot.Utils.Vector2d;
 
 public class DriveAndShoot extends Command implements Consts{
@@ -26,7 +27,7 @@ public class DriveAndShoot extends Command implements Consts{
         m_startTime = System.currentTimeMillis() / 1000.0;
         m_isFinished = false;
         m_turned = false;
-        Vector2d speaker2d = Robot.getSpeaker2d();
+        Vector2d speaker2d = Funcs.getSpeaker2d();
         Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).setOdometryVals(speaker2d.x + ((Robot.getAlliance() == Alliance.Blue) ? 2: -2), speaker2d.y, 
         Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).getFieldOrientedAngle());
     }

@@ -19,21 +19,25 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Commands.Autonomous.DriveAndShoot;
+import frc.robot.Commands.Autonomous.TwoNoteAndPickupAmpSideAuto;
+import frc.robot.Commands.Autonomous.TwoNoteAuto;
 import frc.robot.Commands.Shooter.TurnShooterToSpeaker;
 import frc.robot.Commands.Swerve.DriveByJoysticks;
 import frc.robot.Commands.Swerve.TurnToSpeaker;
 import frc.robot.Subsystems.Shooter;
 import frc.robot.Subsystems.Swerve;
 import frc.robot.Utils.Consts;
+import frc.robot.Utils.JetsonHealthChecker;
 import frc.robot.Utils.Vector2d;
 import frc.robot.Utils.Vector3d;
-import frc.robot.Utils.Vision;
+import frc.robot.Utils.LocalizationVision;
 
 
 public class Robot extends TimedRobot implements Consts{
   private Swerve m_swerveInstance;
   private Field2d m_field;
-  private Vision m_vision;
+  private LocalizationVision m_vision;
+  private JetsonHealthChecker m_jetsonHealthChecker;
   private static SendableChooser<Alliance> m_allianceChooser = new SendableChooser<Alliance>();;
   
   @Override
@@ -41,15 +45,16 @@ public class Robot extends TimedRobot implements Consts{
     new RobotContainer();
     Shooter.getInstance();
     //init drive speeds
-    SmartDashboard.putNumber("max drive speed", Consts.ChassisValues.DRIVE_SPEED);
-    SmartDashboard.putNumber("max angular speed", 200);
+    SmartDashboard.putNumber("max drive speed", 1);
+    SmartDashboard.putNumber("max angular speed",200);
     //init swerve
     m_swerveInstance = Swerve.getInstance(ChassisValues.USES_ABS_ENCODER);
     //create and add robot field data to dashboard
     m_field = new Field2d();
     SmartDashboard.putData(m_field);
     //start vision
-    m_vision = new Vision(VisionValues.LOCALIZATION_VISION_PORT);
+    m_vision = new LocalizationVision(VisionValues.LOCALIZATION_VISION_PORT);
+    m_jetsonHealthChecker = new JetsonHealthChecker(VisionValues.JETSON_HEALTH_CHECK_PORT);
     //add alliance options to dashboard
     m_allianceChooser.setDefaultOption("red", Alliance.Red);
     m_allianceChooser.addOption("blue", Alliance.Blue);
@@ -85,7 +90,8 @@ public class Robot extends TimedRobot implements Consts{
   @Override
   public void autonomousInit() {
     m_swerveInstance.initSwerve();
-    new DriveAndShoot().schedule();
+    new TwoNoteAndPickupAmpSideAuto().schedule();
+    // new DriveAndShoot().schedule();
     // .andThen(new ParallelCommandGroup(new TurnToSpeaker(), new TurnShooterToSpeaker())).schedule();;
 
   }
@@ -101,13 +107,13 @@ public class Robot extends TimedRobot implements Consts{
   @Override
   public void teleopInit() {
     CommandScheduler.getInstance().cancelAll();
+    m_swerveInstance.initSwerve();
     RobotContainer.teleop.schedule();
   }
   
 
   @Override
   public void teleopPeriodic() {
-      m_swerveInstance.setModulesToAbs();
 
       //rumble when shooter is ready to shoot
       if(Shooter.getInstance().isReadyToShoot()){
@@ -124,35 +130,8 @@ public class Robot extends TimedRobot implements Consts{
     CommandScheduler.getInstance().cancelAll();
   }
 
-  @Override
-  public void testInit() {
-    m_swerveInstance.zeroYaw();
-    CommandScheduler.getInstance().cancelAll();
-    
-
-  }
-
-  @Override
-  public void testPeriodic() {
-  }
-
-  @Override
-  public void testExit() {
-  }
-
 
   public static Alliance getAlliance(){
     return m_allianceChooser.getSelected();
-  }
-
-  public static Vector2d getSpeaker2d(){
-    Vector3d speaker3d = new Vector3d();
-        if (Robot.getAlliance() == Alliance.Blue) {
-          speaker3d = ShooterValues.BLUE_SPAKER_POS;
-        } 
-        else if (Robot.getAlliance() == Alliance.Red) {
-          speaker3d = ShooterValues.RED_SPAKER_POS;
-        }
-        return new Vector2d(speaker3d.m_x, speaker3d.m_z);
   }
 }

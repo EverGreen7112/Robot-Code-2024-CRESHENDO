@@ -10,7 +10,7 @@ import java.nio.ByteOrder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Subsystems.Swerve;
 
-public class Vision {
+public class LocalizationVision {
      private int m_port;
     private DatagramSocket m_socket;
     private DatagramPacket m_packet;
@@ -18,7 +18,7 @@ public class Vision {
     private float[] m_locals={0, 0, 0, 0};
     private float[] m_lastLocals={0, 0, 0, 0};
     
-    public Vision(int port){
+    public LocalizationVision(int port){
         this.m_port = port;
         try{ 
             m_socket = new DatagramSocket(m_port, InetAddress.getByName("0.0.0.0"));

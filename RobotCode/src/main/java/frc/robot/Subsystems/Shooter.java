@@ -177,7 +177,10 @@ public class Shooter extends SubsystemBase implements Consts{
         m_aimFF = Math.cos(Math.toRadians(m_targetAngle)) * PIDValues.SHOOTER_ANGLE_KF;
         //set target angle
         m_aimPidController.setSetpoint(m_targetAngle);
+    }
 
+    public void moveShooter(double speed){
+        m_aimMotor.set(speed);
     }
 
     public double getTargetAngle(){
@@ -202,6 +205,19 @@ public class Shooter extends SubsystemBase implements Consts{
         //activate velocity pid on left roller
         m_leftShootMotor.getPIDController().setReference(speed, ControlType.kVelocity);
     }
+
+    /**
+     * Shoot note
+     * @param lSpeed - target shoot speed in rpm of left rollers
+     * @param rSpeed - target shoot speed in rpm of right rollers
+     */
+    public void setShootSpeed(double lSpeed, double rSpeed){
+        m_targetShootSpeed = (lSpeed > rSpeed) ? lSpeed: rSpeed;
+        //activate velocity pid on right rollers
+        m_leftShootMotor.getPIDController().setReference(lSpeed, ControlType.kVelocity);
+        //activate velocity pid on left roller
+        m_rightShootMotor.getPIDController().setReference(rSpeed, ControlType.kVelocity);
+    } 
 
     /**
      * Push the note to the shooter rollers 

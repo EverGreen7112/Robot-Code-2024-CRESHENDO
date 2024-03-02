@@ -102,10 +102,10 @@ public interface Consts {
         public static final int DOWN_RIGHT_CANCODER = 1;
 
         //cancoder offsets
-        public static final double TOP_RIGHT_CANCODER_OFFSET = -1.191650390625;
-        public static final double TOP_LEFT_CANCODER_OFFSET = -1.6552734375;
-        public static final double DOWN_RIGHT_CANCODER_OFFSET = -0.211181640625;
-        public static final double DOWN_LEFT_CANCODER_OFFSET = -2.875;
+        public static final double TOP_RIGHT_CANCODER_OFFSET = -2.187255859375;
+        public static final double TOP_LEFT_CANCODER_OFFSET = -1.64965820312;
+        public static final double DOWN_RIGHT_CANCODER_OFFSET = -1.2109375;
+        public static final double DOWN_LEFT_CANCODER_OFFSET = -0.87744140625;
 
         // chassis size
         public static final double FRONT_WHEEL_DIST_METERS = 0.57;
@@ -179,14 +179,14 @@ public interface Consts {
 
         //shooter speeds(in rpm)
         public static final double SPEAKER_SHOOT_SPEED = 6000;
-        public static final double AMP_SHOOT_SPEED = 900;//1700
+        public static final double AMP_SHOOT_SPEED = 400;//1700
         public static final double CONTAINMENT_SPEED = 6000;
         public static final double SHOOT_SPEED_TOLERANCE = 700;
         
         //shooter angles
         public static final double AIM_MOTOR_MAX_ANGLE = 180;
         public static final double AIM_MOTOR_MIN_ANGLE = -50.9;
-        public static final double AIM_MOTOR_AMP_ANGLE = 135;//130 works on our amp not comp's
+        public static  double AIM_MOTOR_AMP_ANGLE = 104;//130 works on our amp not comp's
         public static final double AIM_MOTOR_SPEAKER_ANGLE = 0;
         public static final int AIM_MOTOR_CURRENT_LIMIT = 20;
         public static final double AIM_MOTOR_RATE_LIMIT = 1/9.0;
@@ -217,7 +217,7 @@ public interface Consts {
         //motors idle mode
         public static final IdleMode RIGHT_SHOOT_IDLE_MODE = IdleMode.kCoast;
         public static final IdleMode LEFT_SHOOT_IDLE_MODE = IdleMode.kCoast;
-        public static final IdleMode CONTAINMENT_IDLE_MODE = IdleMode.kBrake;
+        public static final IdleMode CONTAINMENT_IDLE_MODE = IdleMode.kCoast;
         public static final IdleMode AIM_IDLE_MODE = IdleMode.kBrake;
 
         // physical constants
@@ -236,6 +236,7 @@ public interface Consts {
 
     public class VisionValues{
         public static final int LOCALIZATION_VISION_PORT = 5800;
+        public static final int JETSON_HEALTH_CHECK_PORT = 5801;
     }
 
 }

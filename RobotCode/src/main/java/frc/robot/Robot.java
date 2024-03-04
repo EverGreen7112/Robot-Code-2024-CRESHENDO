@@ -18,9 +18,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.Commands.Autonomous.DriveAndShoot;
-import frc.robot.Commands.Autonomous.TwoNoteAndPickupAmpSideAuto;
-import frc.robot.Commands.Autonomous.TwoNoteAuto;
+import frc.robot.Commands.Autonomous.TwoNoteAutoNoVision;
 import frc.robot.Commands.Shooter.TurnShooterToSpeaker;
 import frc.robot.Commands.Swerve.DriveByJoysticks;
 import frc.robot.Commands.Swerve.TurnToSpeaker;
@@ -45,7 +43,7 @@ public class Robot extends TimedRobot implements Consts{
     new RobotContainer();
     Shooter.getInstance();
     //init drive speeds
-    SmartDashboard.putNumber("max drive speed", 1);
+    SmartDashboard.putNumber("max drive speed", 3.5);
     SmartDashboard.putNumber("max angular speed",200);
     //init swerve
     m_swerveInstance = Swerve.getInstance(ChassisValues.USES_ABS_ENCODER);
@@ -90,7 +88,7 @@ public class Robot extends TimedRobot implements Consts{
   @Override
   public void autonomousInit() {
     m_swerveInstance.initSwerve();
-    new TwoNoteAndPickupAmpSideAuto().schedule();
+    new TwoNoteAutoNoVision().schedule();
     // new DriveAndShoot().schedule();
     // .andThen(new ParallelCommandGroup(new TurnToSpeaker(), new TurnShooterToSpeaker())).schedule();;
 
@@ -117,6 +115,13 @@ public class Robot extends TimedRobot implements Consts{
 
       //rumble when shooter is ready to shoot
       if(Shooter.getInstance().isReadyToShoot()){
+        RobotContainer.operatorRumble.setRumble(RumbleType.kBothRumble, 1);
+      }
+      else {
+        RobotContainer.operatorRumble.setRumble(RumbleType.kBothRumble, 0);
+      }
+      
+      if(Shooter.getInstance().isNoteIn()){
         RobotContainer.operatorRumble.setRumble(RumbleType.kBothRumble, 1);
       }
       else {

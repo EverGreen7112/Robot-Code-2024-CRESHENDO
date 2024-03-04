@@ -19,7 +19,6 @@ import frc.robot.Commands.Swerve.TurnToPoint;
 import frc.robot.Commands.Swerve.TurnToSpeaker;
 import frc.robot.Commands.ClimbWithoutPID;
 import frc.robot.Commands.Intake.IntakeWithoutPID;
-import frc.robot.Commands.Shooter.ShootFromClose;
 import frc.robot.Commands.Shooter.ShootToAmp;
 import frc.robot.Commands.Shooter.TurnShooterToAmp;
 import frc.robot.Commands.Shooter.TurnShooterToSpeaker;
@@ -93,7 +92,7 @@ public class RobotContainer implements Consts {
         );
     
     //amp
-    operator.x().whileTrue(new ParallelCommandGroup(new TurnShooterToAmp(), new InstantCommand(() -> {Shooter.getInstance().setShootSpeed(0, 1100);})))
+    operator.x().whileTrue(new ParallelCommandGroup(new TurnShooterToAmp(), new InstantCommand(() -> {Shooter.getInstance().setShootSpeed(0, 600);})))
                 .onFalse(new InstantCommand(() -> {Shooter.getInstance().stopRollers();}));
 
     //speaker

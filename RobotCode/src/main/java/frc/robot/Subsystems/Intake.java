@@ -16,9 +16,9 @@ public class Intake extends SubsystemBase implements Consts {
 
     public Intake(){
         m_intakeMotor = new CANSparkMax(IntakeValues.INTAKE_MOTOR_ID, MotorType.kBrushless);
-
         m_intakeMotor.restoreFactoryDefaults();
 
+        m_intakeMotor.setSmartCurrentLimit(IntakeValues.INTAKE_CURRENT_LIMIT);
         m_intakeMotor.getPIDController().setP(IntakeValues.INTAKE_MOTOR_KP);
         m_intakeMotor.getPIDController().setI(IntakeValues.INATKE_MOTOR_KI);
         m_intakeMotor.getPIDController().setD(IntakeValues.INATKE_MOTOR_KD);

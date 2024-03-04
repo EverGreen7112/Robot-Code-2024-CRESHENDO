@@ -163,6 +163,7 @@ public interface Consts {
 
         public static final double INTAKE_SPEED = 0.7;
 
+        public static final int INTAKE_CURRENT_LIMIT = 60;
         public static final double INTAKE_MOTOR_KP = 0;
         public static final double INATKE_MOTOR_KI = 0;
         public static final double INATKE_MOTOR_KD = 0;

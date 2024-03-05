@@ -225,5 +225,6 @@ public class SwerveModule extends SubsystemBase implements Consts{
      */
     public void updatePos(double pos) {
         m_driveMotor.getEncoder().setPosition(pos);
+        m_currentPosition = pos;
     }
 }

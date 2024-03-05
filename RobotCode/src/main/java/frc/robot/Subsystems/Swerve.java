@@ -100,6 +100,10 @@ public class Swerve extends SubsystemBase implements Consts {
         // SmartDashboard.putNumber("DOWN LEFT CANCODER", m_modules[3].getCoderPosInRots());
     }
 
+    public double getHeadingTargetAngle(){
+        return m_headingTargetAngle;
+    }
+
     /**
      * this function provides a trully field oriented drive as opposed to {@link #driveOriginOriented(Vector2d, boolean) driveRobotOrientedAngle}.
      * 

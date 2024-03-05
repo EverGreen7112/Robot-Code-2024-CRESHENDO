@@ -91,13 +91,11 @@ public class Robot extends TimedRobot implements Consts{
 
   @Override
   public void autonomousInit() {
+
     m_swerveInstance.initSwerve();
-    // new ThreeNoteAuto().schedule();
-    ArrayList<SwervePoint> a = new ArrayList<SwervePoint>();
-    a.add(new SwervePoint(Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).getX(), 
-                                                                     Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).getY(),
-                                                                                        180));
-    new FollowRoute(a).schedule();;
+    SmartDashboard.putNumber("max drive speed", 1);
+    new ThreeNoteAuto().schedule();
+  //  new TwoNoteAutoNoVision().schedule();
     
     // .andThen(new ParallelCommandGroup(new TurnToSpeaker(), new TurnShooterToSpeaker())).schedule();;
 
@@ -109,6 +107,7 @@ public class Robot extends TimedRobot implements Consts{
 
   @Override
   public void autonomousExit() {
+    SmartDashboard.putNumber("max drive speed", 3.5);
   }
 
   @Override

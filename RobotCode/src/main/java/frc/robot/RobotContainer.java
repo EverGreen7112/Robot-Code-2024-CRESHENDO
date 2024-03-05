@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Commands.Swerve.TurnToPoint;
 import frc.robot.Commands.Swerve.TurnToSpeaker;
+import frc.robot.Commands.Swerve.TurnToSpeakerAuto;
 import frc.robot.Commands.ClimbWithoutPID;
 import frc.robot.Commands.Intake.IntakeWithoutPID;
 import frc.robot.Commands.Shooter.ShootToAmp;
@@ -72,24 +73,6 @@ public class RobotContainer implements Consts {
                           onFalse(new InstantCommand(() -> {SmartDashboard.putNumber("max drive speed", ChassisValues.DRIVE_SPEED);}));
     
      ArrayList<SwervePoint> posList = new ArrayList<SwervePoint>();
-
-    //REMOVE THESE 
-    // chassis.a().onTrue(new FollowRoute(posList));
-
-    chassis.b().onTrue(new InstantCommand(() -> {
-      posList.add(new SwervePoint(Swerve.getInstance(Consts.ChassisValues.USES_ABS_ENCODER).getX(),
-                                  Swerve.getInstance(Consts.ChassisValues.USES_ABS_ENCODER).getY(),
-                                  Swerve.getInstance(Consts.ChassisValues.USES_ABS_ENCODER).getGyro().getAngle()));
-    }));
-
-    chassis.back().onTrue(new InstantCommand(() -> {
-      posList.clear();
-    }));
-
-    chassis.y().onTrue(new InstantCommand(() -> {
-      System.out.println(posList);
-    }));
-    //REMOVE THESE
 
     //Operator buttons
 

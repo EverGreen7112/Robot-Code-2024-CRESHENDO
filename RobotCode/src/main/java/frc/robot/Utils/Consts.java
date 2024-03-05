@@ -219,7 +219,7 @@ public interface Consts {
         //motors idle mode
         public static final IdleMode RIGHT_SHOOT_IDLE_MODE = IdleMode.kCoast;
         public static final IdleMode LEFT_SHOOT_IDLE_MODE = IdleMode.kCoast;
-        public static final IdleMode CONTAINMENT_IDLE_MODE = IdleMode.kCoast;
+        public static final IdleMode CONTAINMENT_IDLE_MODE = IdleMode.kBrake;
         public static final IdleMode AIM_IDLE_MODE = IdleMode.kBrake;
 
         // physical constants

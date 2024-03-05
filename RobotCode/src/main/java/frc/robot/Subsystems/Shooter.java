@@ -88,6 +88,7 @@ public class Shooter extends SubsystemBase implements Consts{
         //set idle mode
         m_rightShootMotor.setIdleMode(ShooterValues.RIGHT_SHOOT_IDLE_MODE);
         m_leftShootMotor.setIdleMode(ShooterValues.LEFT_SHOOT_IDLE_MODE);
+        m_containmentMotor.setIdleMode(ShooterValues.CONTAINMENT_IDLE_MODE);
         m_aimMotor.setIdleMode(ShooterValues.AIM_IDLE_MODE);
         
         //create external encoder instance

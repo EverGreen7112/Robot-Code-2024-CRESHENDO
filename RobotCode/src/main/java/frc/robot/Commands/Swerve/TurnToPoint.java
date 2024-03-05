@@ -11,6 +11,7 @@ public class TurnToPoint extends Command implements Consts{
     private Vector2d m_target;
 
     public TurnToPoint(Vector2d target){
+        addRequirements(Swerve.getInstance(ChassisValues.USES_ABS_ENCODER));
         m_target = target;
     }
 

@@ -35,7 +35,8 @@ public class ThreeNoteAuto extends Command implements Consts{
         public void initialize() { 
 
             Vector2d speaker = Funcs.getSpeaker2d();
-             
+            Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).resetOdometry(); 
+            
             Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).setOdometryVals((Robot.getAlliance() == Alliance.Red) ? 15.5 : 0.5,
                                                                                (Robot.getAlliance() == Alliance.Red) ? 5.5 : 5.5,
                                                                                (Robot.getAlliance() == Alliance.Red) ? 270 : 90);
@@ -46,7 +47,15 @@ public class ThreeNoteAuto extends Command implements Consts{
                                           ,(Robot.getAlliance() == Alliance.Red) ? 5.5 : 5.5 
                                           ,(Robot.getAlliance() == Alliance.Red) ? 270 : 90));
             FollowRoute driveRoute = new FollowRoute(posList);
+
+            ArrayList<SwervePoint> rotate180 = new ArrayList<SwervePoint>();
             
+            FollowRoute rotate180Route = new FollowRoute(rotate180);
+
+            ArrayList<SwervePoint> returnPosList = new ArrayList<SwervePoint>();
+            
+            FollowRoute returnDriveRoute = new FollowRoute(returnPosList);
+
             new SequentialCommandGroup(
                  //shoot first note to speaker 
                  new ParallelCommandGroup(new InstantCommand(() -> {Shooter.getInstance().turnToAngle(114);}),
@@ -59,23 +68,37 @@ public class ThreeNoteAuto extends Command implements Consts{
                                           Shooter.getInstance().stopRollers();
                                           Intake.getInstance().stopMotor();})
                 //second note
-                ,new ParallelCommandGroup(driveRoute, new WaitCommand(0.5).andThen(new IntakeWithoutPID(IntakeValues.INTAKE_SPEED)))
+                ,new ParallelCommandGroup(driveRoute, new WaitCommand(0.2).andThen(new IntakeWithoutPID(IntakeValues.INTAKE_SPEED)))
                 .until(new BooleanSupplier() {
                   @Override
                   public boolean getAsBoolean() {
                       return driveRoute.getIsFinished() && Shooter.getInstance().isNoteIn();
                   }
+                }).withTimeout(2.5)
+                , new InstantCommand(() -> {
+                  Shooter.getInstance().pullNoteWithoutPID(-0.3);
+                  // Shooter.getInstance().pushNoteToRollers(0);
                 })
-                ,new WaitCommand(1)
+                ,new WaitCommand(1.5)
                 ,new InstantCommand(() -> { 
-                                          Shooter.getInstance().setShootSpeed(0);
-                                          Intake.getInstance().stopMotor();})
-                ,new WaitCommand(1)
-                ,new InstantCommand(() -> {posList.clear(); 
-                                          posList.add(new SwervePoint(Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).getX(), Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).getY(), 90));
+                                          
+                                          Shooter.getInstance().testMotors(0);
                                         })
-
-                ,new ParallelCommandGroup(new TurnToSpeakerAuto(), new TurnShooterToSpeaker(), new InstantCommand(() -> {Shooter.getInstance().setShootSpeed(ShooterValues.SPEAKER_SHOOT_SPEED);})).until(new BooleanSupplier() {
+                ,new WaitCommand(0.5)
+                ,new InstantCommand(() -> {rotate180.clear(); 
+                                          rotate180.add(new SwervePoint(Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).getX(), 
+                                                        Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).getY(),
+                                                        Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).getFieldOrientedAngle() + 180));
+                                        // Shooter.getInstance().stopRollers();
+                                      })
+                ,rotate180Route
+                ,new InstantCommand(() -> {returnPosList.add(new SwervePoint((Robot.getAlliance() == Alliance.Red) ? 15.5 - 1: 0.5 + 1
+                                          ,(Robot.getAlliance() == Alliance.Red) ? 5.5 : 5.5 
+                                          ,Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).getFieldOrientedAngle()));})
+                ,returnDriveRoute
+                ,new ParallelCommandGroup(new TurnToSpeakerAuto())
+                ,new ParallelCommandGroup(
+                                          new TurnShooterToSpeaker(), new InstantCommand(() -> {Shooter.getInstance().setShootSpeed(ShooterValues.SPEAKER_SHOOT_SPEED);})).until(new BooleanSupplier() {
                     @Override
                     public boolean getAsBoolean() {
                       return Shooter.getInstance().isReadyToShoot();
@@ -85,6 +108,7 @@ public class ThreeNoteAuto extends Command implements Consts{
                 ,new InstantCommand(() ->{ Shooter.getInstance().pushNoteToRollers(ShooterValues.CONTAINMENT_SPEED);})
                 ,new WaitCommand(0.5)
                 ,new InstantCommand(() ->{ Shooter.getInstance().pushNoteToRollers(0);})
+                ,new InstantCommand(() -> {Shooter.getInstance().stopRollers(); Intake.getInstance().stopMotor();})
                 
             ).schedule();
         } 

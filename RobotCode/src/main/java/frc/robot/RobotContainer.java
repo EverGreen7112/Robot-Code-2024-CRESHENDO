@@ -15,6 +15,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Commands.Swerve.TurnToPoint;
 import frc.robot.Commands.Swerve.TurnToSpeaker;
 import frc.robot.Commands.ClimbWithoutPID;
@@ -23,6 +25,7 @@ import frc.robot.Commands.Shooter.ShootToAmp;
 import frc.robot.Commands.Shooter.TurnShooterToAmp;
 import frc.robot.Commands.Shooter.TurnShooterToSpeaker;
 import frc.robot.Commands.Swerve.DriveByJoysticks;
+import frc.robot.Commands.Swerve.FollowRoute;
 import frc.robot.Subsystems.Intake;
 import frc.robot.Subsystems.Shooter;
 import frc.robot.Subsystems.Swerve;
@@ -67,6 +70,27 @@ public class RobotContainer implements Consts {
     
     chassis.leftTrigger().whileTrue(new InstantCommand(() -> {SmartDashboard.putNumber("max drive speed", ChassisValues.SLOW_MODE_DRIVE_SPEED);})).
                           onFalse(new InstantCommand(() -> {SmartDashboard.putNumber("max drive speed", ChassisValues.DRIVE_SPEED);}));
+    
+     ArrayList<SwervePoint> posList = new ArrayList<SwervePoint>();
+
+    //REMOVE THESE 
+    // chassis.a().onTrue(new FollowRoute(posList));
+
+    chassis.b().onTrue(new InstantCommand(() -> {
+      posList.add(new SwervePoint(Swerve.getInstance(Consts.ChassisValues.USES_ABS_ENCODER).getX(),
+                                  Swerve.getInstance(Consts.ChassisValues.USES_ABS_ENCODER).getY(),
+                                  Swerve.getInstance(Consts.ChassisValues.USES_ABS_ENCODER).getGyro().getAngle()));
+    }));
+
+    chassis.back().onTrue(new InstantCommand(() -> {
+      posList.clear();
+    }));
+
+    chassis.y().onTrue(new InstantCommand(() -> {
+      System.out.println(posList);
+    }));
+    //REMOVE THESE
+
     //Operator buttons
 
     //intake
@@ -125,7 +149,6 @@ public class RobotContainer implements Consts {
     operator.leftBumper().whileTrue(new ClimbWithoutPID(ClimberValues.CLIMBER_SPEED, ClimberSide.CLIMB_WITH_LEFT_SIDE));
     operator.rightTrigger().whileTrue(new ClimbWithoutPID(-ClimberValues.CLIMBER_SPEED, ClimberSide.CLIMB_WITH_RIGHT_SIDE));
     operator.leftTrigger().whileTrue(new ClimbWithoutPID(-ClimberValues.CLIMBER_SPEED, ClimberSide.CLIMB_WITH_LEFT_SIDE));
-
 
   }
 

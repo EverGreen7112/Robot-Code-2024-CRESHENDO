@@ -16,7 +16,7 @@ public class FollowRoute extends Command implements Consts {
     private PIDController m_yPidController;
     private ArrayList<SwervePoint> m_posList;
     private int current;
-
+    private boolean m_isFinished;
     public FollowRoute(ArrayList<SwervePoint> posList) {
         addRequirements(Swerve.getInstance(ChassisValues.USES_ABS_ENCODER));
         m_posList = posList;
@@ -27,6 +27,7 @@ public class FollowRoute extends Command implements Consts {
         m_xPidController = new PIDController(PIDValues.POS_KP, PIDValues.POS_KI, PIDValues.POS_KD);
         m_yPidController = new PIDController(PIDValues.POS_KP, PIDValues.POS_KI, PIDValues.POS_KD);
         current = 0;
+        m_isFinished = false;
     }
 
     @Override
@@ -39,11 +40,11 @@ public class FollowRoute extends Command implements Consts {
 
         // calculate outputs
         double xOutput = MathUtil.clamp(m_xPidController.calculate(xCurrent, m_posList.get(current).getX()),
-                -Consts.ChassisValues.MAX_SPEED.get(),
-                Consts.ChassisValues.MAX_SPEED.get());
+                -Consts.ChassisValues.MAX_AUTO_DRIVE_SPEED,
+                Consts.ChassisValues.MAX_AUTO_DRIVE_SPEED);
         double yOutput = MathUtil.clamp(m_yPidController.calculate(yCurrent, m_posList.get(current).getY()),
-                -Consts.ChassisValues.MAX_SPEED.get(),
-                Consts.ChassisValues.MAX_SPEED.get());
+                -Consts.ChassisValues.MAX_AUTO_DRIVE_SPEED,
+                Consts.ChassisValues.MAX_AUTO_DRIVE_SPEED);
 
         // apply outputs
         Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).driveFieldOrientedAngle(new Vector2d(xOutput, yOutput));
@@ -66,6 +67,7 @@ public class FollowRoute extends Command implements Consts {
                 (Math.abs(m_posList.get(current).getAngle() - headingCurrent) % 360) < PIDValues.HEADING_TOLERANCE)) {
             current++;
         }
+        m_isFinished = current >= m_posList.size();
         return current >= m_posList.size();
     }
 
@@ -75,4 +77,7 @@ public class FollowRoute extends Command implements Consts {
         current = 0;
     }
 
+    public boolean getIsFinished(){
+        return m_isFinished;
+    }
 }

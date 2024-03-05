@@ -25,13 +25,12 @@ public class IntakeWithoutPID extends Command implements Consts {
     public void execute(){
         Shooter.getInstance().turnToAngle(ShooterValues.AIM_MOTOR_MIN_ANGLE);
         Shooter.getInstance().pullNoteWithoutPID(-m_speed);
-        Intake.getInstance().intakeWithoutPID(m_speed);
-        // if (Shooter.getInstance().isReadyToCollect()){
-        //     Intake.getInstance().intakeWithoutPID(m_speed);
-        // }
-        // else {
-        //     Intake.getInstance().intakeWithoutPID(0);
-        // }
+        if (Shooter.getInstance().isReadyToCollect()){
+            Intake.getInstance().intakeWithoutPID(m_speed);
+        }
+        else {
+            Intake.getInstance().intakeWithoutPID(0);
+        }
     }
     @Override
     public boolean isFinished(){

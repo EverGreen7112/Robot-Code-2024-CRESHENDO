@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import java.util.ArrayList;
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -18,9 +19,11 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.Commands.Autonomous.ThreeNoteAuto;
 import frc.robot.Commands.Autonomous.TwoNoteAutoNoVision;
 import frc.robot.Commands.Shooter.TurnShooterToSpeaker;
 import frc.robot.Commands.Swerve.DriveByJoysticks;
+import frc.robot.Commands.Swerve.FollowRoute;
 import frc.robot.Commands.Swerve.TurnToSpeaker;
 import frc.robot.Subsystems.Shooter;
 import frc.robot.Subsystems.Swerve;
@@ -29,6 +32,7 @@ import frc.robot.Utils.JetsonHealthChecker;
 import frc.robot.Utils.Vector2d;
 import frc.robot.Utils.Vector3d;
 import frc.robot.Utils.LocalizationVision;
+import frc.robot.Utils.SwervePoint;
 
 
 public class Robot extends TimedRobot implements Consts{
@@ -88,8 +92,13 @@ public class Robot extends TimedRobot implements Consts{
   @Override
   public void autonomousInit() {
     m_swerveInstance.initSwerve();
-    new TwoNoteAutoNoVision().schedule();
-    // new DriveAndShoot().schedule();
+    // new ThreeNoteAuto().schedule();
+    ArrayList<SwervePoint> a = new ArrayList<SwervePoint>();
+    a.add(new SwervePoint(Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).getX(), 
+                                                                     Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).getY(),
+                                                                                        180));
+    new FollowRoute(a).schedule();;
+    
     // .andThen(new ParallelCommandGroup(new TurnToSpeaker(), new TurnShooterToSpeaker())).schedule();;
 
   }
@@ -105,7 +114,8 @@ public class Robot extends TimedRobot implements Consts{
   @Override
   public void teleopInit() {
     CommandScheduler.getInstance().cancelAll();
-    m_swerveInstance.initSwerve();
+    m_swerveInstance.zeroYaw();
+    m_swerveInstance.setModulesToAbs();
     RobotContainer.teleop.schedule();
   }
   
@@ -115,17 +125,17 @@ public class Robot extends TimedRobot implements Consts{
 
       //rumble when shooter is ready to shoot
       if(Shooter.getInstance().isReadyToShoot()){
-        RobotContainer.operatorRumble.setRumble(RumbleType.kBothRumble, 1);
+        RobotContainer.operatorRumble.setRumble(RumbleType.kLeftRumble, 1);
       }
       else {
-        RobotContainer.operatorRumble.setRumble(RumbleType.kBothRumble, 0);
+        RobotContainer.operatorRumble.setRumble(RumbleType.kLeftRumble, 0);
       }
       
       if(Shooter.getInstance().isNoteIn()){
-        RobotContainer.operatorRumble.setRumble(RumbleType.kBothRumble, 1);
+        RobotContainer.operatorRumble.setRumble(RumbleType.kRightRumble, 1);
       }
       else {
-        RobotContainer.operatorRumble.setRumble(RumbleType.kBothRumble, 0);
+        RobotContainer.operatorRumble.setRumble(RumbleType.kRightRumble, 0);
       }
   }
 

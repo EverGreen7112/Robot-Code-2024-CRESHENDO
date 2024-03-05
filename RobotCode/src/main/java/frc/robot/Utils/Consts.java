@@ -66,6 +66,7 @@ public interface Consts {
         public static double DRIVE_SPEED = 3.5;
         public static double SLOW_MODE_DRIVE_SPEED = 1;
         public static double FAST_MODE_DRIVE_SPEED = 4.5;
+        public static double MAX_AUTO_DRIVE_SPEED = 1;
 
         // max speed values in m/s
         public static Supplier<Double> MAX_SPEED = new Supplier<Double>() {

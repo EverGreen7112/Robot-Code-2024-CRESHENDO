@@ -32,11 +32,11 @@ public class TwoNoteAutoNoVision extends Command implements Consts{
             ,new InstantCommand(() -> {Shooter.getInstance().pushNoteToRollers(0); Shooter.getInstance().setShootSpeed(0);})
             ,new IntakeWithoutPID(IntakeValues.INTAKE_SPEED).withTimeout(0.5)
             ,new ParallelCommandGroup(
-                new InstantCommand(() -> {Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).driveOriginOriented(new Vector2d(0, -1), true);})
+                new InstantCommand(() -> {Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).driveOriginOriented(new Vector2d(0, 1), true);})
             ).withTimeout(1.2)       
             ,new InstantCommand(() -> {Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).driveOriginOriented(new Vector2d(0, 0), true);})
             ,new WaitCommand(0.5)
-            ,new InstantCommand(() -> {Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).driveOriginOriented(new Vector2d(0, 1), true);})
+            ,new InstantCommand(() -> {Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).driveOriginOriented(new Vector2d(0, -1), true);})
             ,new WaitCommand(1.2)
             ,new InstantCommand(() -> {Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).driveOriginOriented(new Vector2d(0, 0), true);})
             ,new ParallelCommandGroup(new InstantCommand(() -> {Shooter.getInstance().turnToAngle(114);}),

@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.Commands.Autonomous.NotAmpSIdeAuto;
 import frc.robot.Commands.Autonomous.ThreeNoteAuto;
 import frc.robot.Commands.Autonomous.TwoNoteAutoNoVision;
 import frc.robot.Commands.Shooter.TurnShooterToSpeaker;
@@ -94,8 +95,9 @@ public class Robot extends TimedRobot implements Consts{
 
     m_swerveInstance.initSwerve();
     SmartDashboard.putNumber("max drive speed", 1);
-    new ThreeNoteAuto().schedule();
-  //  new TwoNoteAutoNoVision().schedule();
+    new ThreeNoteAuto().schedule(); //this works from center
+     
+  
     
     // .andThen(new ParallelCommandGroup(new TurnToSpeaker(), new TurnShooterToSpeaker())).schedule();;
 

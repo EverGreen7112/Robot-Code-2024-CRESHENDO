@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Subsystems.Swerve;
 import frc.robot.Utils.Consts;
@@ -17,6 +18,7 @@ public class FollowRoute extends Command implements Consts {
     private ArrayList<SwervePoint> m_posList;
     private int current;
     private boolean m_isFinished;
+
     public FollowRoute(ArrayList<SwervePoint> posList) {
         addRequirements(Swerve.getInstance(ChassisValues.USES_ABS_ENCODER));
         m_posList = posList;
@@ -28,6 +30,7 @@ public class FollowRoute extends Command implements Consts {
         m_yPidController = new PIDController(PIDValues.POS_KP, PIDValues.POS_KI, PIDValues.POS_KD);
         current = 0;
         m_isFinished = false;
+        SmartDashboard.putNumber("max drive speed", ChassisValues.AUTO_DRIVE_SPEED);
     }
 
     @Override
@@ -40,11 +43,11 @@ public class FollowRoute extends Command implements Consts {
 
         // calculate outputs
         double xOutput = MathUtil.clamp(m_xPidController.calculate(xCurrent, m_posList.get(current).getX()),
-                -Consts.ChassisValues.MAX_AUTO_DRIVE_SPEED,
-                Consts.ChassisValues.MAX_AUTO_DRIVE_SPEED);
+                -Consts.ChassisValues.AUTO_DRIVE_SPEED,
+                Consts.ChassisValues.AUTO_DRIVE_SPEED);
         double yOutput = MathUtil.clamp(m_yPidController.calculate(yCurrent, m_posList.get(current).getY()),
-                -Consts.ChassisValues.MAX_AUTO_DRIVE_SPEED,
-                Consts.ChassisValues.MAX_AUTO_DRIVE_SPEED);
+                -Consts.ChassisValues.AUTO_DRIVE_SPEED,
+                Consts.ChassisValues.AUTO_DRIVE_SPEED);
 
         // apply outputs
         Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).driveFieldOrientedAngle(new Vector2d(xOutput, yOutput));
@@ -75,6 +78,7 @@ public class FollowRoute extends Command implements Consts {
     public void end(boolean interrupted) {
         Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).stop();
         current = 0;
+        SmartDashboard.putNumber("max drive speed", ChassisValues.DRIVE_SPEED);
     }
 
     public boolean getIsFinished(){

@@ -22,8 +22,8 @@ public interface Consts {
 
         //pos pid
         public static final double POS_KP = 15;
-        public static final double POS_KI = 0;//5
-        public static final double POS_KD = 0;//2
+        public static final double POS_KI = 0;
+        public static final double POS_KD = 0;
 
         public static final double X_TOLERANCE = 0.05;
         public static final double Y_TOLERANCE = 0.05;
@@ -62,11 +62,11 @@ public interface Consts {
     }
 
     public class ChassisValues{
-        public static double AUTONOMOUS_MAX_ANGULAR_SPEED = 0.5;
-        public static double DRIVE_SPEED = 2.8;
+        public static double DRIVE_SPEED = 2.8; //m/sec
+        public static double ANGULAR_SPEED = 200; //deg/sec
         public static double SLOW_MODE_DRIVE_SPEED = 1;
         public static double FAST_MODE_DRIVE_SPEED = 4.5;
-        public static double MAX_AUTO_DRIVE_SPEED = 1;
+        public static double AUTO_DRIVE_SPEED = 1;
 
         // max speed values in m/s
         public static Supplier<Double> MAX_SPEED = new Supplier<Double>() {
@@ -80,7 +80,7 @@ public interface Consts {
         public static final Supplier<Double> MAX_ANGULAR_SPEED = new Supplier<Double>() {
             @Override
             public Double get() {
-                return SmartDashboard.getNumber("max angular speed", 180);
+                return SmartDashboard.getNumber("max angular speed", 200);
             }
         };
 

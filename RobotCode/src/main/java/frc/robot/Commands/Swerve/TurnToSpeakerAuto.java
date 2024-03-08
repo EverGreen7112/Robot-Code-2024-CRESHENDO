@@ -14,6 +14,7 @@ public class TurnToSpeakerAuto extends TurnToPoint {
     private Vector2d m_speaker2d;
     public TurnToSpeakerAuto(){
         super(new Vector2d(0,0));
+        addRequirements(Swerve.getInstance(ChassisValues.USES_ABS_ENCODER));
         updateAlliance();
     }
 

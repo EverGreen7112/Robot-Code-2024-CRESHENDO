@@ -14,12 +14,17 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.Commands.Autonomous.AmpSIdeAuto;
+import frc.robot.Commands.Autonomous.DriveAndShoot;
+import frc.robot.Commands.Autonomous.DriveAuto;
 import frc.robot.Commands.Autonomous.NotAmpSIdeAuto;
+import frc.robot.Commands.Autonomous.NotCenterAuto;
 import frc.robot.Commands.Autonomous.ThreeNoteAuto;
 import frc.robot.Commands.Autonomous.TwoNoteAutoNoVision;
 import frc.robot.Commands.Shooter.TurnShooterToSpeaker;
@@ -41,17 +46,23 @@ public class Robot extends TimedRobot implements Consts{
   private Field2d m_field;
   private LocalizationVision m_vision;
   private JetsonHealthChecker m_jetsonHealthChecker;
-  private static SendableChooser<Alliance> m_allianceChooser = new SendableChooser<Alliance>();;
   
+  private static SendableChooser<Alliance> m_allianceChooser = new SendableChooser<Alliance>();;
+  private static SendableChooser<Command> m_autoChooser = new SendableChooser<Command>();
+  private static Command centerAuto = new ThreeNoteAuto();
+  private static Command ampSideAuto = new AmpSIdeAuto();
+  private static Command notAmpSideAuto = new NotAmpSIdeAuto();
+  private static Command notCenter = new NotCenterAuto();
   @Override
   public void robotInit() {
     new RobotContainer();
     Shooter.getInstance();
     //init drive speeds
-    SmartDashboard.putNumber("max drive speed", 3.5);
+    SmartDashboard.putNumber("max drive speed", 2.8);
     SmartDashboard.putNumber("max angular speed",200);
     //init swerve
     m_swerveInstance = Swerve.getInstance(ChassisValues.USES_ABS_ENCODER);
+    m_swerveInstance.zeroYaw();
     //create and add robot field data to dashboard
     m_field = new Field2d();
     SmartDashboard.putData(m_field);
@@ -59,10 +70,15 @@ public class Robot extends TimedRobot implements Consts{
     m_vision = new LocalizationVision(VisionValues.LOCALIZATION_VISION_PORT);
     m_jetsonHealthChecker = new JetsonHealthChecker(VisionValues.JETSON_HEALTH_CHECK_PORT);
     //add alliance options to dashboard
+    
     m_allianceChooser.setDefaultOption("red", Alliance.Red);
     m_allianceChooser.addOption("blue", Alliance.Blue);
     SmartDashboard.putData("alliance chooser", m_allianceChooser);
 
+    m_autoChooser.setDefaultOption("center", centerAuto);
+    m_autoChooser.addOption("not center", notCenter);
+
+    SmartDashboard.putData(m_autoChooser);
   }
 
   @Override
@@ -93,11 +109,12 @@ public class Robot extends TimedRobot implements Consts{
   @Override
   public void autonomousInit() {
 
-    m_swerveInstance.initSwerve();
+    Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).resetOdometry();
+    Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).setModulesToAbs();
     SmartDashboard.putNumber("max drive speed", 1);
-    new ThreeNoteAuto().schedule(); //this works from center
-     
-  
+    // new ThreeNoteAuto().schedule(); //this works from center
+    // new DriveAndShoot().schedule();
+    new DriveAuto().schedule();;
     
     // .andThen(new ParallelCommandGroup(new TurnToSpeaker(), new TurnShooterToSpeaker())).schedule();;
 
@@ -109,13 +126,12 @@ public class Robot extends TimedRobot implements Consts{
 
   @Override
   public void autonomousExit() {
-    SmartDashboard.putNumber("max drive speed", 3.5);
+    SmartDashboard.putNumber("max drive speed", 2.8);
   }
 
   @Override
   public void teleopInit() {
     CommandScheduler.getInstance().cancelAll();
-    m_swerveInstance.zeroYaw();
     m_swerveInstance.setModulesToAbs();
     RobotContainer.teleop.schedule();
   }

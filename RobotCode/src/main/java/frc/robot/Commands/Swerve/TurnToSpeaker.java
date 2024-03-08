@@ -30,4 +30,6 @@ public class TurnToSpeaker extends TurnToPoint {
         updateAlliance();
         super.execute();
     }
+    
+
 }

@@ -12,14 +12,11 @@ import frc.robot.Utils.Consts;
 import frc.robot.Utils.Vector2d;
 import frc.robot.Utils.Consts.ShooterValues;
 
-public class NotAmpSIdeAuto extends Command implements Consts{
+public class AmpSIdeAuto extends Command implements Consts{
     @Override
     public void initialize() {
         new SequentialCommandGroup(
-                    
-                new ParallelCommandGroup(new InstantCommand(() -> {Shooter.getInstance().turnToAngle(61);}), new InstantCommand(()->{Shooter.getInstance().setShootSpeed(ShooterValues.SPEAKER_SHOOT_SPEED, ShooterValues.SPEAKER_SHOOT_SPEED);}))
-                
-            
+            new ParallelCommandGroup(new InstantCommand(() -> {Shooter.getInstance().turnToAngle(122);}), new InstantCommand(()->{Shooter.getInstance().setShootSpeed(7000, 5000);}))
                 ,new WaitCommand(2)
                 ,new InstantCommand(() -> {Shooter.getInstance().pushNoteToRollers(ShooterValues.CONTAINMENT_SPEED); }) 
                 ,new WaitCommand(0.5)
@@ -27,7 +24,7 @@ public class NotAmpSIdeAuto extends Command implements Consts{
                                           Shooter.getInstance().setShootSpeed(0);
                                           Shooter.getInstance().stopRollers();
                                           Intake.getInstance().stopMotor();})
-                ,new InstantCommand(() -> {Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).driveOriginOriented(new Vector2d(0, 1), false);})                         
+                ,new InstantCommand(() -> {Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).driveOriginOriented(new Vector2d(0, -1), false);})                         
                 ).schedule();;
     }
 }

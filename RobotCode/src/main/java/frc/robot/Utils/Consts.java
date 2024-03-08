@@ -63,7 +63,7 @@ public interface Consts {
 
     public class ChassisValues{
         public static double AUTONOMOUS_MAX_ANGULAR_SPEED = 0.5;
-        public static double DRIVE_SPEED = 3.5;
+        public static double DRIVE_SPEED = 2.8;
         public static double SLOW_MODE_DRIVE_SPEED = 1;
         public static double FAST_MODE_DRIVE_SPEED = 4.5;
         public static double MAX_AUTO_DRIVE_SPEED = 1;
@@ -173,7 +173,7 @@ public interface Consts {
 
     public class ShooterValues{
         //speaker
-        public static final Vector3d RED_SPAKER_POS = new Vector3d(652.67 * 0.0254 + 1, 3.9, 218.42 * 0.0254 - 0.7);
+        public static final Vector3d RED_SPAKER_POS = new Vector3d(652.67 * 0.0254 + 1, 4.0, 218.42 * 0.0254 - 0.7);
         public static final Vector3d BLUE_SPAKER_POS = new Vector3d(-1.5 * 0.0254 - 1, 4.0, 218.41 * 0.0254 + 0.7);
 
         //gear ratio

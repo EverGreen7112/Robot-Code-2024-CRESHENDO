@@ -37,17 +37,18 @@ public class FollowRoute extends Command implements Consts {
     public void execute() {
         if (m_posList.isEmpty())
             return;
+
         // get current values
         double xCurrent = Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).getX();
         double yCurrent = Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).getY();
 
         // calculate outputs
         double xOutput = MathUtil.clamp(m_xPidController.calculate(xCurrent, m_posList.get(current).getX()),
-                -Consts.ChassisValues.AUTO_DRIVE_SPEED,
-                Consts.ChassisValues.AUTO_DRIVE_SPEED);
+                -ChassisValues.AUTO_DRIVE_SPEED,
+                ChassisValues.AUTO_DRIVE_SPEED);
         double yOutput = MathUtil.clamp(m_yPidController.calculate(yCurrent, m_posList.get(current).getY()),
-                -Consts.ChassisValues.AUTO_DRIVE_SPEED,
-                Consts.ChassisValues.AUTO_DRIVE_SPEED);
+                -ChassisValues.AUTO_DRIVE_SPEED,
+                ChassisValues.AUTO_DRIVE_SPEED);
 
         // apply outputs
         Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).driveFieldOrientedAngle(new Vector2d(xOutput, yOutput));
@@ -58,6 +59,7 @@ public class FollowRoute extends Command implements Consts {
     public boolean isFinished() {
         if (m_posList.isEmpty())
             return true;
+            
         // get current state of robot
         double xCurrent = Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).getX();
         double yCurrent = Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).getY();

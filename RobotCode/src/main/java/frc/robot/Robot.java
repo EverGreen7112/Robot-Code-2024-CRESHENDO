@@ -20,10 +20,13 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.Commands.Autonomous.CenterAuto;
 import frc.robot.Commands.Autonomous.ThreeNoteAuto;
 import frc.robot.Commands.Shooter.TurnShooterToSpeaker;
 import frc.robot.Commands.Swerve.DriveByJoysticks;
+import frc.robot.Commands.Swerve.DriveToPoint;
 import frc.robot.Commands.Swerve.FollowRoute;
+import frc.robot.Commands.Swerve.TurnTo;
 import frc.robot.Commands.Swerve.TurnToSpeaker;
 import frc.robot.Subsystems.Shooter;
 import frc.robot.Subsystems.Swerve;
@@ -106,8 +109,9 @@ public class Robot extends TimedRobot implements Consts{
 
   @Override
   public void autonomousInit() {
-    Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).resetOdometry();
+    Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).zeroYaw();;
     Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).setModulesToAbs();
+    new CenterAuto().schedule();
   }
 
   @Override
@@ -123,6 +127,8 @@ public class Robot extends TimedRobot implements Consts{
     CommandScheduler.getInstance().cancelAll();
     m_swerveInstance.setModulesToAbs();
     RobotContainer.teleop.schedule();
+
+
   }
   
 

@@ -173,8 +173,8 @@ public interface Consts {
 
     public class ShooterValues{
         //speaker
-        public static final Vector3d RED_SPAKER_POS = new Vector3d(652.67 * 0.0254 + 1, 4.0, 218.42 * 0.0254 - 0.7);
-        public static final Vector3d BLUE_SPAKER_POS = new Vector3d(-1.5 * 0.0254 - 1, 4.0, 218.41 * 0.0254 + 0.7);
+        public static final Vector3d RED_SPAKER_POS = new Vector3d(652.67 * 0.0254 + 0.1, 2.1, 218.42 * 0.0254 - 0.5); //new Vector3d(652.67 * 0.0254 + 1, 4.0, 218.42 * 0.0254 - 0.7);
+        public static final Vector3d BLUE_SPAKER_POS = new Vector3d(-1.5 * 0.0254 - 0.1, 2.1, 218.41 * 0.0254 + 0.5); //new Vector3d(-1.5 * 0.0254 - 1, 4.0, 218.41 * 0.0254 + 0.7);
 
         //gear ratio
         public static final double AIM_MOTOR_GEAR_RATIO = 1 / (45.0);

@@ -39,24 +39,24 @@ public class CenterAuto extends Command implements Consts{
             //first note
             new TurnShooterToSpeaker().withTimeout(0.2)
             ,new InstantCommand(() -> {Shooter.getInstance().setShootSpeed(ShooterValues.SPEAKER_SHOOT_SPEED);})
-            ,new TurnToSpeakerAuto()
+            ,new WaitCommand(1)
             ,new InstantCommand(() -> {Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).stop();;})
             ,new WaitCommand(1)
             ,new InstantCommand(() -> {Shooter.getInstance().pushNoteToRollers(ShooterValues.CONTAINMENT_SPEED);})
+            ,new WaitCommand(0.5)
             
             //second note
-            ,new DriveToPoint(new SwervePoint((blueAlliance) ? 1.65 : 0, 5.5, (blueAlliance) ? 93 : 270))
-            ,new WaitCommand(0.2)
+            ,new DriveToPoint(new SwervePoint((blueAlliance) ? 1.65 : 0, 5.5, (blueAlliance) ? 90 : 270))
             ,new ParallelCommandGroup(
                 new IntakeWithoutPID(IntakeValues.INTAKE_SPEED)
-                ,new InstantCommand(() -> {Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).driveOriginOriented(new Vector2d(0, -0.5),false);})
+                ,new DriveToPoint(new SwervePoint((blueAlliance) ? 2.2 : 0, 5.5, (blueAlliance) ? 91 : 270))
             ).until(new BooleanSupplier() {
                 @Override
                 public boolean getAsBoolean() {
                     return Shooter.getInstance().isNoteIn();
                 }
             }).withTimeout(2)
-            ,new InstantCommand(() -> {Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).driveOriginOriented(new Vector2d(0, 0),false);})
+            ,new InstantCommand(() -> {Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).driveOriginOriented(new Vector2d(0, 1),false);}).withTimeout(0.5)
             ,new TurnToSpeakerAuto()
             ,new InstantCommand(() -> {Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).stop();;})
             ,new TurnShooterToSpeaker().withTimeout(0.2)
@@ -64,6 +64,44 @@ public class CenterAuto extends Command implements Consts{
             ,new WaitCommand(1.5)
             ,new InstantCommand(() -> {Shooter.getInstance().pushNoteToRollers(ShooterValues.CONTAINMENT_SPEED);})
 
+            //third note 
+            ,new DriveToPoint(new SwervePoint((blueAlliance) ? 2.7 : 0, (blueAlliance) ? 6.2 : 0, (blueAlliance) ? 0 : 180))
+            ,new ParallelCommandGroup(
+                new IntakeWithoutPID(IntakeValues.INTAKE_SPEED)
+                ,new WaitCommand(0.2).andThen(new DriveToPoint(new SwervePoint((blueAlliance) ? 2.7 : 0, 6.55, (blueAlliance) ? 0 : 180)))
+            ).until(new BooleanSupplier() {
+                @Override
+                public boolean getAsBoolean() {
+                    return Shooter.getInstance().isNoteIn();
+                }
+            }).withTimeout(2)
+            ,new IntakeWithoutPID(0).withTimeout(0.1)
+            ,new TurnToSpeakerAuto()
+            ,new InstantCommand(() -> {Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).stop();;})
+            ,new TurnShooterToSpeaker().withTimeout(0.2)
+            ,new InstantCommand(() -> {Shooter.getInstance().setShootSpeed(ShooterValues.SPEAKER_SHOOT_SPEED);})
+            ,new WaitCommand(1.5)
+            ,new InstantCommand(() -> {Shooter.getInstance().pushNoteToRollers(ShooterValues.CONTAINMENT_SPEED);})
+
+            //fourth note
+            ,new DriveToPoint(new SwervePoint((blueAlliance) ? 2.9 : 0, (blueAlliance) ? 4.7 : 0, (blueAlliance) ? 180 : 0))
+            ,new ParallelCommandGroup(
+                new IntakeWithoutPID(IntakeValues.INTAKE_SPEED)
+                ,new WaitCommand(0.2).andThen(new DriveToPoint(new SwervePoint((blueAlliance) ? 2.9 : 0, 4.95, (blueAlliance) ? 0 : 180)))
+            ).until(new BooleanSupplier() {
+                @Override
+                public boolean getAsBoolean() {
+                    return Shooter.getInstance().isNoteIn();
+                }
+            }).withTimeout(2)
+            ,new IntakeWithoutPID(0).withTimeout(0.1)
+            ,new TurnToSpeakerAuto()
+            ,new InstantCommand(() -> {Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).stop();;})
+            ,new TurnShooterToSpeaker().withTimeout(0.2)
+            ,new InstantCommand(() -> {Shooter.getInstance().setShootSpeed(ShooterValues.SPEAKER_SHOOT_SPEED);})
+            ,new WaitCommand(1.5)
+            ,new InstantCommand(() -> {Shooter.getInstance().pushNoteToRollers(ShooterValues.CONTAINMENT_SPEED);})
+            
         ).schedule();
 
     }

@@ -29,7 +29,7 @@ public interface Consts {
         public static final double Y_TOLERANCE = 0.05;
 
         //speed values
-        public static final double HEADING_KP = 0.03;
+        public static final double HEADING_KP = 0.02675;
         public static final double HEADING_KI = 0;
         public static final double HEADING_KD = 0;
         public static final double HEADING_TOLERANCE = 2;

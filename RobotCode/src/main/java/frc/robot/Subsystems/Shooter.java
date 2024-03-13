@@ -118,6 +118,7 @@ public class Shooter extends SubsystemBase implements Consts{
     public void periodic() {
         SmartDashboard.putNumber("note sensor value", (Math.pow(m_noteSensor.getAverageVoltage(), -1.2045) * 27.726));
         SmartDashboard.putNumber("shooter angle", getShooterAngle());
+        SmartDashboard.putNumber("target shooter angle", m_targetAngle);
         SmartDashboard.putNumber("right rollers speed", getRightRollersSpeed());
         SmartDashboard.putNumber("left rollers speed", getLeftRollerSpeed());
         SmartDashboard.putBoolean("is ready to shoot", isReadyToShoot());
@@ -161,6 +162,7 @@ public class Shooter extends SubsystemBase implements Consts{
         delta.add(new Vector3d(0, 
         -ShooterValues.SPEAKER_HEIGHT_SCALAR * (delta.getX()*delta.getX() + delta.getZ()*delta.getZ()), 
         0));
+        SmartDashboard.putNumber("distance from speaker",  Math.sqrt(delta.getX()*delta.getX() + delta.getZ()*delta.getZ()));
         return -Math.toDegrees(delta.getPitch());
     }
 

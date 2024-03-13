@@ -20,6 +20,10 @@ public class ClimbWithoutPID extends Command implements Consts {
 
     @Override
     public void initialize(){
+    } 
+    
+    @Override
+    public void execute(){
         switch(m_climbSide){
             case CLIMB_WITH_RIGHT_SIDE:
                 Climber.getInstance().climbRightSideWithoutPid(MathUtil.applyDeadband(m_speed, JoystickValues.JOYSTICK_DEADZONE));
@@ -31,10 +35,6 @@ public class ClimbWithoutPID extends Command implements Consts {
                 Climber.getInstance().climbBothSidesWithoutPid(MathUtil.applyDeadband(m_speed, JoystickValues.JOYSTICK_DEADZONE));
                 break;
         }
-    } 
-    
-    @Override
-    public void execute(){
          
     } 
 

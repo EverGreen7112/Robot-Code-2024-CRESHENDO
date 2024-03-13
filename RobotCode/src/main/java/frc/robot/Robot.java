@@ -31,6 +31,7 @@ import frc.robot.Commands.Shooter.TurnShooterToSpeaker;
 import frc.robot.Commands.Swerve.DriveByJoysticks;
 import frc.robot.Commands.Swerve.FollowRoute;
 import frc.robot.Commands.Swerve.TurnToSpeaker;
+import frc.robot.Subsystems.Climber;
 import frc.robot.Subsystems.Shooter;
 import frc.robot.Subsystems.Swerve;
 import frc.robot.Utils.Consts;
@@ -57,6 +58,7 @@ public class Robot extends TimedRobot implements Consts{
   public void robotInit() {
     new RobotContainer();
     Shooter.getInstance();
+    Climber.getInstance();
     //init drive speeds
     SmartDashboard.putNumber("max drive speed", 2.8);
     SmartDashboard.putNumber("max angular speed",200);

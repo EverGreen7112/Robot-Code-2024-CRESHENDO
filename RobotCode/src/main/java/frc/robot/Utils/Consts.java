@@ -139,6 +139,9 @@ public interface Consts {
         public static final int CLIMBER_MOTOR_RIGHT_PORT = 15;
         public static final int CLIMBER_MOTOR_LEFT_PORT = 61;
 
+        public static final int CLIMBER_LIMIT_SWITCH_RIGHT = 1;
+        public static final int CLIMBER_LIMIT_SWITCH_LEFT = 2;
+
         public static final double CLIMBER_SPEED = 1;
         public static final double CLIMBER_RPM = 0;
 
@@ -173,8 +176,10 @@ public interface Consts {
 
     public class ShooterValues{
         //speaker
-        public static final Vector3d RED_SPAKER_POS = new Vector3d(652.67 * 0.0254 + 0.1, 1.98, 218.42 * 0.0254 - 0.5); //new Vector3d(652.67 * 0.0254 + 1, 4.0, 218.42 * 0.0254 - 0.7);
-        public static final Vector3d BLUE_SPAKER_POS = new Vector3d(-1.5 * 0.0254 - 0.1, 1.98, 218.41 * 0.0254 + 0.5); //new Vector3d(-1.5 * 0.0254 - 1, 4.0, 218.41 * 0.0254 + 0.7);
+        public static final Vector3d RED_SPAKER_POS = new Vector3d(652.67 * 0.0254 + 0.1, 2.03, 218.42 * 0.0254 - 0.4); //new Vector3d(652.67 * 0.0254 + 1, 4.0, 218.42 * 0.0254 - 0.7);
+        public static final Vector3d BLUE_SPAKER_POS = new Vector3d(-1.5 * 0.0254 - 0.1, 2.03, 218.41 * 0.0254 + 0.4); //new Vector3d(-1.5 * 0.0254 - 1, 4.0, 218.41 * 0.0254 + 0.7);
+        public static final double SPEAKER_HEIGHT_SCALAR = 0.14; // 300
+        // public static final double SPEAKER_HEIGHT_SCALAR = 0.12;
 
         //gear ratio
         public static final double AIM_MOTOR_GEAR_RATIO = 1 / (45.0);

@@ -6,6 +6,7 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Utils.Consts;
 
@@ -13,6 +14,7 @@ public class Climber extends SubsystemBase implements Consts {
     
     private static Climber m_instance;
     private CANSparkMax m_climberRightMotor, m_climberLeftMotor;
+    private DigitalInput m_limitSwitchRight, m_limitSwitchLeft;
     // private DigitalInput m_climberRightLimitSwitch, m_climberLeftLimitSwitch;
 
     public static enum ClimberSide{
@@ -62,6 +64,10 @@ public class Climber extends SubsystemBase implements Consts {
         m_climberLeftMotor.getEncoder().setPosition(0);
         m_climberRightMotor.getEncoder().setPosition(0);
 
+
+        m_limitSwitchRight = new DigitalInput(ClimberValues.CLIMBER_LIMIT_SWITCH_RIGHT);
+        m_limitSwitchLeft = new DigitalInput(ClimberValues.CLIMBER_LIMIT_SWITCH_LEFT);
+
     }
 
     /**
@@ -76,6 +82,9 @@ public class Climber extends SubsystemBase implements Consts {
 
     @Override
     public void periodic(){
+
+        SmartDashboard.putBoolean("right limit switch", m_limitSwitchRight.get());
+        SmartDashboard.putBoolean("left limit switch", m_limitSwitchLeft.get());
 
         // if(Climber.getInstance().m_climberRightLimitSwitch.get())
             // Climber.getInstance().m_climberRightMotor.stopMotor();
@@ -115,14 +124,18 @@ public class Climber extends SubsystemBase implements Consts {
         m_climberLeftMotor.setIdleMode(Mode);
     }
 
+
     /**
      * 
      * @param speed Moves both climb motors at the given speed without pid
      */
     public void climbRightSideWithoutPid(double speed) {
         // m_climberRightMotor.set(speed);
-        if (m_climberRightMotor.getEncoder().getPosition() >= ClimberValues.CLIMBER_FORCE_STOP_TOLERANCE || speed >= 0) {
+        // if (m_climberRightMotor.getEncoder().getPosition() >= ClimberValues.CLIMBER_FORCE_STOP_TOLERANCE || speed >= 0) {
+        if (m_limitSwitchRight.get() || speed >= 0){
             m_climberRightMotor.set(speed);
+        } else {
+            m_climberRightMotor.set(0);
         }
     }
         /**
@@ -131,8 +144,11 @@ public class Climber extends SubsystemBase implements Consts {
      */
     public void climbLeftSideWithoutPid(double speed) {
         // m_climberLeftMotor.set(speed);
-        if (m_climberLeftMotor.getEncoder().getPosition() >= ClimberValues.CLIMBER_FORCE_STOP_TOLERANCE || speed >= 0) {
+        // if ((m_climberLeftMotor.getEncoder().getPosition() >= ClimberValues.CLIMBER_FORCE_STOP_TOLERANCE || speed >= 0)) {
+        if (m_limitSwitchLeft.get() || speed >= 0){
             m_climberLeftMotor.set(speed);
+        } else {
+            m_climberLeftMotor.set(0);
         }
         
     }

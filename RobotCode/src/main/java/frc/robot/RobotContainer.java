@@ -49,7 +49,7 @@ public class RobotContainer implements Consts {
 
   //command values
   private static final ArrayList<SwervePoint> posList = new ArrayList<SwervePoint>();
-  private static Vector2d m_speaker2d = new Vector2d(0,0);
+  
   
   //command instances
   public static DriveByJoysticks teleop = new DriveByJoysticks(() -> chassis.getLeftX(), () -> chassis.getLeftY(),
@@ -58,13 +58,16 @@ public class RobotContainer implements Consts {
     private void configureBindings() {
     
     //Chassis driver buttons
+    
     //turn chassis
     // chassis.rightBumper().onTrue(new InstantCommand(() -> {Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).turnBy(90);}));
     // chassis.leftBumper().onTrue(new InstantCommand(() -> {Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).turnBy(-90);}));
+
     //turn chassis to speaker
     chassis.a().whileTrue(new TurnToSpeaker()).onFalse(teleop);
 
     chassis.start().onTrue(new InstantCommand(() -> {Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).zeroYaw();}));
+
     //change drive speeds
     chassis.rightTrigger().whileTrue(new InstantCommand(() -> {SmartDashboard.putNumber("max drive speed", ChassisValues.FAST_MODE_DRIVE_SPEED);})).
                           onFalse(new InstantCommand(() -> {SmartDashboard.putNumber("max drive speed", ChassisValues.DRIVE_SPEED);}));
@@ -72,7 +75,6 @@ public class RobotContainer implements Consts {
     chassis.leftTrigger().whileTrue(new InstantCommand(() -> {SmartDashboard.putNumber("max drive speed", ChassisValues.SLOW_MODE_DRIVE_SPEED);})).
                           onFalse(new InstantCommand(() -> {SmartDashboard.putNumber("max drive speed", ChassisValues.DRIVE_SPEED);}));
     
-     ArrayList<SwervePoint> posList = new ArrayList<SwervePoint>();
 
     //Operator buttons
 

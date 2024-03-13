@@ -20,16 +20,13 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.Commands.Autonomous.AmpSIdeAuto;
-import frc.robot.Commands.Autonomous.DriveAndShoot;
-import frc.robot.Commands.Autonomous.DriveAuto;
-import frc.robot.Commands.Autonomous.NotAmpSIdeAuto;
-import frc.robot.Commands.Autonomous.NotCenterAuto;
+import frc.robot.Commands.Autonomous.CenterAuto;
 import frc.robot.Commands.Autonomous.ThreeNoteAuto;
-import frc.robot.Commands.Autonomous.TwoNoteAutoNoVision;
 import frc.robot.Commands.Shooter.TurnShooterToSpeaker;
 import frc.robot.Commands.Swerve.DriveByJoysticks;
+import frc.robot.Commands.Swerve.DriveToPoint;
 import frc.robot.Commands.Swerve.FollowRoute;
+import frc.robot.Commands.Swerve.TurnTo;
 import frc.robot.Commands.Swerve.TurnToSpeaker;
 import frc.robot.Subsystems.Climber;
 import frc.robot.Subsystems.Shooter;
@@ -43,44 +40,47 @@ import frc.robot.Utils.SwervePoint;
 
 
 public class Robot extends TimedRobot implements Consts{
-  private Swerve m_swerveInstance;
-  private Field2d m_field;
+  
+  //vision
   private LocalizationVision m_vision;
   private JetsonHealthChecker m_jetsonHealthChecker;
   
+  //swerve instance
+  private Swerve m_swerveInstance;
+
+  //shuffleboard
+  private Field2d m_field;
   private static SendableChooser<Alliance> m_allianceChooser = new SendableChooser<Alliance>();;
   private static SendableChooser<Command> m_autoChooser = new SendableChooser<Command>();
-  private static Command centerAuto = new ThreeNoteAuto();
-  private static Command ampSideAuto = new AmpSIdeAuto();
-  private static Command notAmpSideAuto = new NotAmpSIdeAuto();
-  private static Command notCenter = new NotCenterAuto();
+  
+
   @Override
   public void robotInit() {
     new RobotContainer();
     Shooter.getInstance();
     Climber.getInstance();
     //init drive speeds
-    SmartDashboard.putNumber("max drive speed", 2.8);
-    SmartDashboard.putNumber("max angular speed",200);
+    SmartDashboard.putNumber("max drive speed", ChassisValues.DRIVE_SPEED);
+    SmartDashboard.putNumber("max angular speed",ChassisValues.ANGULAR_SPEED);
+    
     //init swerve
     m_swerveInstance = Swerve.getInstance(ChassisValues.USES_ABS_ENCODER);
     m_swerveInstance.zeroYaw();
+    
     //create and add robot field data to dashboard
     m_field = new Field2d();
     SmartDashboard.putData(m_field);
+    
     //start vision
     m_vision = new LocalizationVision(VisionValues.LOCALIZATION_VISION_PORT);
     m_jetsonHealthChecker = new JetsonHealthChecker(VisionValues.JETSON_HEALTH_CHECK_PORT);
-    //add alliance options to dashboard
     
+    //add alliance options to dashboard
     m_allianceChooser.setDefaultOption("red", Alliance.Red);
     m_allianceChooser.addOption("blue", Alliance.Blue);
     SmartDashboard.putData("alliance chooser", m_allianceChooser);
 
-    m_autoChooser.setDefaultOption("center", centerAuto);
-    m_autoChooser.addOption("not center", notCenter);
-
-    SmartDashboard.putData(m_autoChooser);
+    //TODO: add auto options and put data in shuffleboard
   }
 
   @Override
@@ -110,16 +110,9 @@ public class Robot extends TimedRobot implements Consts{
 
   @Override
   public void autonomousInit() {
-
-    Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).resetOdometry();
+    Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).zeroYaw();;
     Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).setModulesToAbs();
-    SmartDashboard.putNumber("max drive speed", 1);
-    // new ThreeNoteAuto().schedule(); //this works from center
-    // new DriveAndShoot().schedule();
-    new DriveAuto().schedule();;
-    
-    // .andThen(new ParallelCommandGroup(new TurnToSpeaker(), new TurnShooterToSpeaker())).schedule();;
-
+    new CenterAuto().schedule();
   }
 
   @Override
@@ -128,7 +121,6 @@ public class Robot extends TimedRobot implements Consts{
 
   @Override
   public void autonomousExit() {
-    SmartDashboard.putNumber("max drive speed", 2.8);
   }
 
   @Override
@@ -136,6 +128,8 @@ public class Robot extends TimedRobot implements Consts{
     CommandScheduler.getInstance().cancelAll();
     m_swerveInstance.setModulesToAbs();
     RobotContainer.teleop.schedule();
+
+
   }
   
 

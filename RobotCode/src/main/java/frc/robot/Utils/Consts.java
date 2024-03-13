@@ -22,17 +22,17 @@ public interface Consts {
 
         //pos pid
         public static final double POS_KP = 15;
-        public static final double POS_KI = 0;//5
-        public static final double POS_KD = 0;//2
+        public static final double POS_KI = 0;
+        public static final double POS_KD = 0;
 
         public static final double X_TOLERANCE = 0.05;
         public static final double Y_TOLERANCE = 0.05;
 
         //speed values
-        public static final double HEADING_KP = 0.03;
+        public static final double HEADING_KP = 0.02675;
         public static final double HEADING_KI = 0;
         public static final double HEADING_KD = 0;
-        public static final double HEADING_TOLERANCE = 3;
+        public static final double HEADING_TOLERANCE = 2;
         
         //shooter angle
         public static final double SHOOTER_ANGLE_KP = 0.011;//0.011
@@ -62,11 +62,11 @@ public interface Consts {
     }
 
     public class ChassisValues{
-        public static double AUTONOMOUS_MAX_ANGULAR_SPEED = 0.5;
-        public static double DRIVE_SPEED = 2.8;
+        public static double DRIVE_SPEED = 2.8; //m/sec
+        public static double ANGULAR_SPEED = 200; //deg/sec
         public static double SLOW_MODE_DRIVE_SPEED = 1;
         public static double FAST_MODE_DRIVE_SPEED = 4.5;
-        public static double MAX_AUTO_DRIVE_SPEED = 1;
+        public static double AUTO_DRIVE_SPEED = 1;
 
         // max speed values in m/s
         public static Supplier<Double> MAX_SPEED = new Supplier<Double>() {
@@ -80,7 +80,7 @@ public interface Consts {
         public static final Supplier<Double> MAX_ANGULAR_SPEED = new Supplier<Double>() {
             @Override
             public Double get() {
-                return SmartDashboard.getNumber("max angular speed", 180);
+                return SmartDashboard.getNumber("max angular speed", 200);
             }
         };
 
@@ -176,10 +176,9 @@ public interface Consts {
 
     public class ShooterValues{
         //speaker
-        public static final Vector3d RED_SPAKER_POS = new Vector3d(652.67 * 0.0254 + 0.1, 2.03, 218.42 * 0.0254 - 0.4); //new Vector3d(652.67 * 0.0254 + 1, 4.0, 218.42 * 0.0254 - 0.7);
-        public static final Vector3d BLUE_SPAKER_POS = new Vector3d(-1.5 * 0.0254 - 0.1, 2.03, 218.41 * 0.0254 + 0.4); //new Vector3d(-1.5 * 0.0254 - 1, 4.0, 218.41 * 0.0254 + 0.7);
-        public static final double SPEAKER_HEIGHT_SCALAR = 0.14; // 300
-        // public static final double SPEAKER_HEIGHT_SCALAR = 0.12;
+        public static final Vector3d RED_SPAKER_POS = new Vector3d(652.67 * 0.0254 + 1, 2.05, 218.42 * 0.0254 - 0.4);
+        public static final Vector3d BLUE_SPAKER_POS = new Vector3d(-1.5 * 0.0254 - 1, 2.05, 218.41 * 0.0254 + 0.4);
+        public static final double SPEAKER_HEIGHT_SCALAR = 0.15; 
 
         //gear ratio
         public static final double AIM_MOTOR_GEAR_RATIO = 1 / (45.0);

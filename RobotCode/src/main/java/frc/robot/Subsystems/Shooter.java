@@ -158,6 +158,7 @@ public class Shooter extends SubsystemBase implements Consts{
 
         //calculate the vector between them
         Vector3d delta = currentPos.subtract(speakerPos);
+        delta.add(new Vector3d(0, -0.15*(delta.getX()*delta.getX() + delta.getY()*delta.getY()), 0 ));
         return -Math.toDegrees(delta.getPitch());
     }
 

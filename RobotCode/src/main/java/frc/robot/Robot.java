@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Commands.Autonomous.CenterAuto;
+import frc.robot.Commands.Autonomous.NotAmpSideAuto;
 import frc.robot.Commands.Autonomous.ThreeNoteAuto;
 import frc.robot.Commands.Shooter.TurnShooterToSpeaker;
 import frc.robot.Commands.Swerve.DriveByJoysticks;
@@ -87,8 +88,8 @@ public class Robot extends TimedRobot implements Consts{
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
     //get current position and rotation of robot 
-    double xCurrent = m_swerveInstance.getX();
-    double yCurrent = m_swerveInstance.getY();
+    double xCurrent = m_swerveInstance.getNextX();
+    double yCurrent = m_swerveInstance.getNextY();
     double headingCurrent = m_swerveInstance.getFieldOrientedAngle();
 
     //update the robot position of dashboard
@@ -110,9 +111,10 @@ public class Robot extends TimedRobot implements Consts{
 
   @Override
   public void autonomousInit() {
-    Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).zeroYaw();;
+    // Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).zeroYaw();;
     Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).setModulesToAbs();
     new CenterAuto().schedule();
+    // new NotAmpSideAuto().schedule();
   }
 
   @Override
@@ -128,28 +130,27 @@ public class Robot extends TimedRobot implements Consts{
     CommandScheduler.getInstance().cancelAll();
     m_swerveInstance.setModulesToAbs();
     RobotContainer.teleop.schedule();
-
-
   }
   
 
   @Override
   public void teleopPeriodic() {
-
       //rumble when shooter is ready to shoot
       if(Shooter.getInstance().isReadyToShoot()){
         RobotContainer.operatorRumble.setRumble(RumbleType.kLeftRumble, 1);
+        Shooter.getInstance().pushNoteToRollers(ShooterValues.CONTAINMENT_SPEED);
       }
       else {
+        Shooter.getInstance().setContainmentSpeed(0);
         RobotContainer.operatorRumble.setRumble(RumbleType.kLeftRumble, 0);
       }
       
-      if(Shooter.getInstance().isNoteIn()){
-        RobotContainer.operatorRumble.setRumble(RumbleType.kRightRumble, 1);
-      }
-      else {
-        RobotContainer.operatorRumble.setRumble(RumbleType.kRightRumble, 0);
-      }
+      // // if(Shooter.getInstance().isNoteIn()){
+      //   RobotContainer.operatorRumble.setRumble(RumbleType.kRightRumble, 1);
+      // }
+      // else {
+      //   RobotContainer.operatorRumble.setRumble(RumbleType.kRightRumble, 0);
+      // }
   }
 
   @Override

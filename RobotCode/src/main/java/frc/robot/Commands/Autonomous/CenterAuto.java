@@ -15,6 +15,7 @@ import frc.robot.Robot;
 import frc.robot.Commands.Intake.IntakeWithPID;
 import frc.robot.Commands.Intake.IntakeWithoutPID;
 import frc.robot.Commands.Shooter.ShootToSpeaker;
+import frc.robot.Commands.Shooter.TurnShooterToIntake;
 import frc.robot.Commands.Shooter.TurnShooterToSpeaker;
 import frc.robot.Commands.Swerve.DriveToPoint;
 import frc.robot.Commands.Swerve.FollowRoute;
@@ -31,6 +32,8 @@ public class CenterAuto extends Command implements Consts{
 
     @Override
     public void initialize() {
+         
+        final double INTAKE_LOCALIZATION_OFFSET = 0.14;
         
         boolean blueAlliance = (Robot.getAlliance() == Alliance.Blue) ? true : false;
         
@@ -40,42 +43,46 @@ public class CenterAuto extends Command implements Consts{
             new TurnShooterToSpeaker().withTimeout(0.2)
             ,new InstantCommand(() -> {Shooter.getInstance().setShootSpeed(ShooterValues.SPEAKER_SHOOT_SPEED);})
             ,new WaitCommand(1)
-            ,new InstantCommand(() -> {Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).stop();;})
+            ,new InstantCommand(() -> {Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).stop();})
             ,new WaitCommand(1)
             ,new InstantCommand(() -> {Shooter.getInstance().pushNoteToRollers(ShooterValues.CONTAINMENT_SPEED);})
             ,new WaitCommand(0.5)
+
+            //second note   
+            ,new TurnShooterToIntake()
+            ,new DriveToPoint(new SwervePoint((blueAlliance) ? 1.65 : 0, 5.5 - INTAKE_LOCALIZATION_OFFSET, (blueAlliance) ? 90 : 270))
             
-            //second note
-            ,new DriveToPoint(new SwervePoint((blueAlliance) ? 1.65 : 0, 5.5, (blueAlliance) ? 90 : 270))
             ,new ParallelCommandGroup(
                 new IntakeWithoutPID(IntakeValues.INTAKE_SPEED)
-                ,new DriveToPoint(new SwervePoint((blueAlliance) ? 2.2 : 0, 5.5, (blueAlliance) ? 91 : 270))
+                ,new DriveToPoint(new SwervePoint((blueAlliance) ? 2.5 : 0, 5.5 - INTAKE_LOCALIZATION_OFFSET, (blueAlliance) ? 91 : 270))
             ).until(new BooleanSupplier() {
                 @Override
                 public boolean getAsBoolean() {
                     return Shooter.getInstance().isNoteIn();
                 }
             }).withTimeout(2)
+
             ,new InstantCommand(() -> {Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).driveOriginOriented(new Vector2d(0, 1),false);}).withTimeout(0.5)
             ,new TurnToSpeakerAuto()
-            ,new InstantCommand(() -> {Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).stop();;})
+            ,new InstantCommand(() -> {Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).stop();})
             ,new TurnShooterToSpeaker().withTimeout(0.2)
             ,new InstantCommand(() -> {Shooter.getInstance().setShootSpeed(ShooterValues.SPEAKER_SHOOT_SPEED);})
             ,new WaitCommand(1.5)
             ,new InstantCommand(() -> {Shooter.getInstance().pushNoteToRollers(ShooterValues.CONTAINMENT_SPEED);})
 
             //third note 
-            ,new DriveToPoint(new SwervePoint((blueAlliance) ? 2.7 : 0, (blueAlliance) ? 6.2 : 0, (blueAlliance) ? 0 : 180))
+            ,new TurnShooterToIntake()
+            ,new DriveToPoint(new SwervePoint((blueAlliance) ? 2.7 + INTAKE_LOCALIZATION_OFFSET : 0, (blueAlliance) ? 6.2 : 0, (blueAlliance) ? 0 : 180))
             ,new ParallelCommandGroup(
                 new IntakeWithoutPID(IntakeValues.INTAKE_SPEED)
-                ,new WaitCommand(0.2).andThen(new DriveToPoint(new SwervePoint((blueAlliance) ? 2.7 : 0, 6.55, (blueAlliance) ? 0 : 180)))
+                ,new WaitCommand(0.2).andThen(new DriveToPoint(new SwervePoint((blueAlliance) ? 2.7 : 0, 6.65, (blueAlliance) ? 0 : 180)))
             ).until(new BooleanSupplier() {
                 @Override
                 public boolean getAsBoolean() {
                     return Shooter.getInstance().isNoteIn();
                 }
             }).withTimeout(2)
-            ,new IntakeWithoutPID(0).withTimeout(0.1)
+
             ,new TurnToSpeakerAuto()
             ,new InstantCommand(() -> {Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).stop();;})
             ,new TurnShooterToSpeaker().withTimeout(0.2)
@@ -84,19 +91,19 @@ public class CenterAuto extends Command implements Consts{
             ,new InstantCommand(() -> {Shooter.getInstance().pushNoteToRollers(ShooterValues.CONTAINMENT_SPEED);})
 
             //fourth note
-            ,new DriveToPoint(new SwervePoint((blueAlliance) ? 2.9 : 0, (blueAlliance) ? 4.7 : 0, (blueAlliance) ? 180 : 0))
+            ,new TurnShooterToIntake()
+            ,new DriveToPoint(new SwervePoint((blueAlliance) ? 2.9 - INTAKE_LOCALIZATION_OFFSET : 0, (blueAlliance) ? 4.7 : 0, (blueAlliance) ? 180 : 0))
             ,new ParallelCommandGroup(
                 new IntakeWithoutPID(IntakeValues.INTAKE_SPEED)
-                ,new WaitCommand(0.2).andThen(new DriveToPoint(new SwervePoint((blueAlliance) ? 2.9 : 0, 4.95, (blueAlliance) ? 0 : 180)))
+                ,new WaitCommand(0.2).andThen(new DriveToPoint(new SwervePoint((blueAlliance) ? 2.9 : 0, 4.35, (blueAlliance) ? 0 : 180)))
             ).until(new BooleanSupplier() {
                 @Override
                 public boolean getAsBoolean() {
                     return Shooter.getInstance().isNoteIn();
                 }
             }).withTimeout(2)
-            ,new IntakeWithoutPID(0).withTimeout(0.1)
             ,new TurnToSpeakerAuto()
-            ,new InstantCommand(() -> {Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).stop();;})
+            ,new InstantCommand(() -> {Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).stop();})
             ,new TurnShooterToSpeaker().withTimeout(0.2)
             ,new InstantCommand(() -> {Shooter.getInstance().setShootSpeed(ShooterValues.SPEAKER_SHOOT_SPEED);})
             ,new WaitCommand(1.5)

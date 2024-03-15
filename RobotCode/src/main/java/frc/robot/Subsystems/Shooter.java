@@ -144,7 +144,7 @@ public class Shooter extends SubsystemBase implements Consts{
      */
     public double getShooterAngleToSpeaker(){
        
-        Vector2d currentPos2d = Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).getPos();
+        Vector2d currentPos2d = Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).getNextPos();
         //get position of shooter (NOT ROBOT)
         Vector3d currentPos = new Vector3d(currentPos2d.x, ShooterValues.SHOOTER_HEIGHT_METERS, currentPos2d.y);
         Vector3d speakerPos = new Vector3d();
@@ -231,6 +231,11 @@ public class Shooter extends SubsystemBase implements Consts{
      */
     public void pushNoteToRollers(double speed){
         m_containmentMotor.getPIDController().setReference(speed, ControlType.kVelocity);
+    }
+
+
+    public void setContainmentSpeed(double speed){
+        m_containmentMotor.set(speed);
     }
 
     /**

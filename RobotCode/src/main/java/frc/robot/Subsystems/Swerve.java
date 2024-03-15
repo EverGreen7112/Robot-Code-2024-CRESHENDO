@@ -93,7 +93,8 @@ public class Swerve extends SubsystemBase implements Consts {
         // calculate odometry
         odometry();
 
-
+        SmartDashboard.putNumber("robot vel x ", getFieldOrientedVelocity().x);
+        SmartDashboard.putNumber("robot vel y ", getFieldOrientedVelocity().y);
         // SmartDashboard.putNumber("TOP RIGHT CANCODER", m_modules[0].getCoderPosInRots());
         // SmartDashboard.putNumber("TOP LEFT CANCODER", m_modules[1].getCoderPosInRots());
         // SmartDashboard.putNumber("DOWN RIGHT CANCODER", m_modules[2].getCoderPosInRots());
@@ -276,12 +277,40 @@ public class Swerve extends SubsystemBase implements Consts {
         return m_modules[idx];
     }
 
+    public Vector2d getFieldOrientedVelocity(){
+        double xVel = 0, yVel = 0;  // these are robot oriented
+        
+        for (int i = 0; i < m_modules.length; i++) {
+            double moduleVel = m_modules[i].getVelocity();
+            //get current speed in each axis
+            double moduleX = (Math.cos(Math.toRadians(m_modules[i].getAngle())) * moduleVel);
+            double moduleY = (Math.sin(Math.toRadians(m_modules[i].getAngle())) * moduleVel);
+
+            //sum velocities
+            xVel -= moduleX;
+            yVel += moduleY;
+        }
+         
+        xVel /= (double)ChassisValues.physicalMoudulesVector.length;
+        yVel /= (double)ChassisValues.physicalMoudulesVector.length;
+
+        //convert to field oriented
+        Vector2d vel = new Vector2d(xVel, yVel);
+        vel.rotateBy(Math.toRadians(getFieldOrientedAngle()));  // changes robotDelta to field oriented
+
+        return vel;
+    }
+
     /**  
      * get current position in the x axis
     */
     public double getX() {
         return m_x;
     }
+
+    public double getNextX(){
+        return getX() + getFieldOrientedVelocity().x * ChassisValues.NEXT_POS_ESTIMATION_DELTA_TIME;
+    }    
 
     /**  
      * get current position in the y axis
@@ -290,12 +319,25 @@ public class Swerve extends SubsystemBase implements Consts {
         return m_y;
     }
 
+    public double getNextY(){
+        return getY() + getFieldOrientedVelocity().y * ChassisValues.NEXT_POS_ESTIMATION_DELTA_TIME;
+    }    
+
+
     /**
      * 
      * @return get the current position as a vector
      */
     public Vector2d getPos(){
         return new Vector2d(getX(), getY());
+    }
+
+      /**
+     * 
+     * @return get the current position as a vector
+     */
+    public Vector2d getNextPos(){
+        return new Vector2d(getNextX(), getNextY());
     }
 
     /**
@@ -340,8 +382,8 @@ public class Swerve extends SubsystemBase implements Consts {
             m_modules[i].updatePos(); 
         }
         // takes the average 
-        robotDeltaX *= 0.25;
-        robotDeltaY *= 0.25;
+        robotDeltaX /= (double)ChassisValues.physicalMoudulesVector.length;
+        robotDeltaY /= (double)ChassisValues.physicalMoudulesVector.length;
 
         // this is the robot's Delta movement in robot oriented coordinates
         Vector2d robotDelta = new Vector2d(robotDeltaX, robotDeltaY);

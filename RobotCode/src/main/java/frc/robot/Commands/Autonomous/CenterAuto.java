@@ -32,9 +32,9 @@ public class CenterAuto extends Command implements Consts{
 
     @Override
     public void initialize() {
-         
-        final double INTAKE_LOCALIZATION_OFFSET = 0.14;
         
+        
+        ChassisValues.AUTO_DRIVE_SPEED = 1.5;
         boolean blueAlliance = (Robot.getAlliance() == Alliance.Blue) ? true : false;
         
         new SequentialCommandGroup(
@@ -42,7 +42,6 @@ public class CenterAuto extends Command implements Consts{
             //first note
             new TurnShooterToSpeaker().withTimeout(0.2)
             ,new InstantCommand(() -> {Shooter.getInstance().setShootSpeed(ShooterValues.SPEAKER_SHOOT_SPEED);})
-            ,new WaitCommand(1)
             ,new InstantCommand(() -> {Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).stop();})
             ,new WaitCommand(1)
             ,new InstantCommand(() -> {Shooter.getInstance().pushNoteToRollers(ShooterValues.CONTAINMENT_SPEED);})
@@ -50,11 +49,10 @@ public class CenterAuto extends Command implements Consts{
 
             //second note   
             ,new TurnShooterToIntake()
-            ,new DriveToPoint(new SwervePoint((blueAlliance) ? 1.65 : 0, 5.5 - INTAKE_LOCALIZATION_OFFSET, (blueAlliance) ? 90 : 270))
-            
+            ,new DriveToPoint(new SwervePoint((blueAlliance) ? 1.4: 0, 5.4, (blueAlliance) ? 90 : 270))
             ,new ParallelCommandGroup(
                 new IntakeWithoutPID(IntakeValues.INTAKE_SPEED)
-                ,new DriveToPoint(new SwervePoint((blueAlliance) ? 2.5 : 0, 5.5 - INTAKE_LOCALIZATION_OFFSET, (blueAlliance) ? 91 : 270))
+                ,new DriveToPoint(new SwervePoint((blueAlliance) ? 2.5 : 0, 5.4 , (blueAlliance) ? 90.5 : 270))
             ).until(new BooleanSupplier() {
                 @Override
                 public boolean getAsBoolean() {
@@ -69,13 +67,14 @@ public class CenterAuto extends Command implements Consts{
             ,new InstantCommand(() -> {Shooter.getInstance().setShootSpeed(ShooterValues.SPEAKER_SHOOT_SPEED);})
             ,new WaitCommand(1.5)
             ,new InstantCommand(() -> {Shooter.getInstance().pushNoteToRollers(ShooterValues.CONTAINMENT_SPEED);})
+            ,new WaitCommand(0.5)
 
             //third note 
             ,new TurnShooterToIntake()
-            ,new DriveToPoint(new SwervePoint((blueAlliance) ? 2.7 + INTAKE_LOCALIZATION_OFFSET : 0, (blueAlliance) ? 6.2 : 0, (blueAlliance) ? 0 : 180))
+            ,new DriveToPoint(new SwervePoint((blueAlliance) ? 2.5 : 0, (blueAlliance) ? 6.3 : 0, (blueAlliance) ? 0 : 180))
             ,new ParallelCommandGroup(
                 new IntakeWithoutPID(IntakeValues.INTAKE_SPEED)
-                ,new WaitCommand(0.2).andThen(new DriveToPoint(new SwervePoint((blueAlliance) ? 2.7 : 0, 6.65, (blueAlliance) ? 0 : 180)))
+                ,new WaitCommand(0.2).andThen(new DriveToPoint(new SwervePoint((blueAlliance) ? 2.5 : 0, 6.65, (blueAlliance) ? 0 : 180)))
             ).until(new BooleanSupplier() {
                 @Override
                 public boolean getAsBoolean() {
@@ -89,8 +88,10 @@ public class CenterAuto extends Command implements Consts{
             ,new InstantCommand(() -> {Shooter.getInstance().setShootSpeed(ShooterValues.SPEAKER_SHOOT_SPEED);})
             ,new WaitCommand(1.5)
             ,new InstantCommand(() -> {Shooter.getInstance().pushNoteToRollers(ShooterValues.CONTAINMENT_SPEED);})
+            ,new WaitCommand(0.5)
 
             //fourth note
+            /* 
             ,new TurnShooterToIntake()
             ,new DriveToPoint(new SwervePoint((blueAlliance) ? 2.9 - INTAKE_LOCALIZATION_OFFSET : 0, (blueAlliance) ? 4.7 : 0, (blueAlliance) ? 180 : 0))
             ,new ParallelCommandGroup(
@@ -108,7 +109,7 @@ public class CenterAuto extends Command implements Consts{
             ,new InstantCommand(() -> {Shooter.getInstance().setShootSpeed(ShooterValues.SPEAKER_SHOOT_SPEED);})
             ,new WaitCommand(1.5)
             ,new InstantCommand(() -> {Shooter.getInstance().pushNoteToRollers(ShooterValues.CONTAINMENT_SPEED);})
-            
+            */
         ).schedule();
 
     }

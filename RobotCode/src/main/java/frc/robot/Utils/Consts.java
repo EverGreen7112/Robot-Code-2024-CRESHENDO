@@ -21,12 +21,12 @@ public interface Consts {
         public static final double WHEEL_VELOCITY_KF = 0.75 / 2.81;
 
         //pos pid
-        public static final double POS_KP = 15;
+        public static final double POS_KP = 10;
         public static final double POS_KI = 0;
         public static final double POS_KD = 0;
 
-        public static final double X_TOLERANCE = 0.05;
-        public static final double Y_TOLERANCE = 0.05;
+        public static final double X_TOLERANCE = 0.12;
+        public static final double Y_TOLERANCE = 0.12;
 
         //speed values
         public static final double HEADING_KP = 0.02675;
@@ -66,7 +66,7 @@ public interface Consts {
         public static double ANGULAR_SPEED = 200; //deg/sec
         public static double SLOW_MODE_DRIVE_SPEED = 1;
         public static double FAST_MODE_DRIVE_SPEED = 4.5;
-        public static double AUTO_DRIVE_SPEED = 1;
+        public static double AUTO_DRIVE_SPEED = 1.5;
 
         // max speed values in m/s
         public static Supplier<Double> MAX_SPEED = new Supplier<Double>() {

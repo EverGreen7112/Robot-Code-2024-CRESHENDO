@@ -88,8 +88,8 @@ public class Robot extends TimedRobot implements Consts{
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
     //get current position and rotation of robot 
-    double xCurrent = m_swerveInstance.getNextX();
-    double yCurrent = m_swerveInstance.getNextY();
+    double xCurrent = m_swerveInstance.getX();
+    double yCurrent = m_swerveInstance.getY();
     double headingCurrent = m_swerveInstance.getFieldOrientedAngle();
 
     //update the robot position of dashboard
@@ -138,10 +138,10 @@ public class Robot extends TimedRobot implements Consts{
       //rumble when shooter is ready to shoot
       if(Shooter.getInstance().isReadyToShoot()){
         RobotContainer.operatorRumble.setRumble(RumbleType.kLeftRumble, 1);
-        Shooter.getInstance().pushNoteToRollers(ShooterValues.CONTAINMENT_SPEED);
+        
       }
       else {
-        Shooter.getInstance().setContainmentSpeed(0);
+        // Shooter.getInstance().setContainmentSpeed(0);
         RobotContainer.operatorRumble.setRumble(RumbleType.kLeftRumble, 0);
       }
       

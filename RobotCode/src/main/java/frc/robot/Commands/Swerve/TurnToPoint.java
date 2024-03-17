@@ -21,7 +21,7 @@ public class TurnToPoint extends Command implements Consts{
     @Override
     public void execute() {
         // get current position of robot
-        Vector2d currentPos = Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).getPos();
+        Vector2d currentPos = Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).getNextPos();
         double targetAngle = Math.toDegrees(Math.atan2(m_target.x - currentPos.x, m_target.y - currentPos.y));
         // turn swerve to point
         Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).turnToFieldOriented(targetAngle);

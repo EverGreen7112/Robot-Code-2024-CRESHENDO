@@ -134,7 +134,7 @@ public interface Consts {
         public static final double STEERING_GEAR_RATIO = 1 / 12.8;
 
 
-        public static final double NEXT_POS_ESTIMATION_DELTA_TIME = 0.4;
+        public static final double NEXT_POS_ESTIMATION_DELTA_TIME = 0.3;
     }
 
     public class ClimberValues{
@@ -178,9 +178,9 @@ public interface Consts {
 
     public class ShooterValues{
         //speaker
-        public static final Vector3d RED_SPAKER_POS = new Vector3d(652.67 * 0.0254 + 0.05, 2.05, 218.42 * 0.0254 - 0.3);
-        public static final Vector3d BLUE_SPAKER_POS = new Vector3d(-1.5 * 0.0254 - 0.05, 2.05, 218.41 * 0.0254 + 0.3);
-        public static final double SPEAKER_HEIGHT_SCALAR = 0.128; 
+        public static final Vector3d RED_SPAKER_POS = new Vector3d(652.67 * 0.0254 + 0.05, 2.05, 218.42 * 0.0254 - 0.4);
+        public static final Vector3d BLUE_SPAKER_POS = new Vector3d(-1.5 * 0.0254 - 0.05, 2.05, 218.41 * 0.0254 + 0.4);
+        public static final double SPEAKER_HEIGHT_SCALAR = 0.12216; 
 
         //gear ratio
         public static final double AIM_MOTOR_GEAR_RATIO = 1 / (45.0);
@@ -190,17 +190,18 @@ public interface Consts {
         public static final double AMP_SHOOT_SPEED = 400;//1700
         public static final double CONTAINMENT_SPEED = 6000;
         public static final double SHOOT_SPEED_TOLERANCE = 500;
+        // public static final double SHOOTER_AIM_MAX_VELOCITY = 260.0; // max RPM of shooter aim motor where its okay to shoot
         
         //shooter angles
         public static final double AIM_MOTOR_MAX_ANGLE = 180;
-        public static final double AIM_MOTOR_MIN_ANGLE = -50.9;
+        public static final double AIM_MOTOR_MIN_ANGLE = -50.4;
         public static final double AIM_MOTOR_AMP_ANGLE = 98;//130 works on our amp not comp's
         public static final double AIM_MOTOR_SPEAKER_ANGLE = 0;
         public static final int AIM_MOTOR_CURRENT_LIMIT = 20;
         public static final double AIM_MOTOR_RATE_LIMIT = 1/9.0;
         public static final double AIM_MOTOR_SPEED_LIMIT = 0.2;
         public static final double AIM_MOTOR_MIN_SPEED = 0.0001;
-        public static final double AIM_MOTOR_MIN_TOLERANCE = 4.0;
+        public static final double AIM_MOTOR_MIN_TOLERANCE = 3.0;
 
         //motor controllers ids
         public static final int RIGHT_SHOOT_MOTOR_ID = 6;
@@ -249,4 +250,11 @@ public interface Consts {
         public static final int JETSON_HEALTH_CHECK_PORT = 5801;
     }
 
+
+    public class PhysicalConsts {
+        public static final double FIELD_HEIGHT = 8.21055;
+        public static final double FIELD_WIDTH = 16.54175;
+    
+        
+    }
 }

@@ -138,19 +138,20 @@ public class Robot extends TimedRobot implements Consts{
       //rumble when shooter is ready to shoot
       if(Shooter.getInstance().isReadyToShoot()){
         RobotContainer.operatorRumble.setRumble(RumbleType.kLeftRumble, 1);
-        
+        // Shooter.getInstance().setContainmentSpeed(ShooterValues.CONTAINMENT_SPEED);
       }
       else {
         // Shooter.getInstance().setContainmentSpeed(0);
         RobotContainer.operatorRumble.setRumble(RumbleType.kLeftRumble, 0);
+        // Shooter.getInstance().setContainmentSpeed(0);
       }
       
-      // // if(Shooter.getInstance().isNoteIn()){
-      //   RobotContainer.operatorRumble.setRumble(RumbleType.kRightRumble, 1);
-      // }
-      // else {
-      //   RobotContainer.operatorRumble.setRumble(RumbleType.kRightRumble, 0);
-      // }
+      if(Shooter.getInstance().isNoteIn()){
+        RobotContainer.operatorRumble.setRumble(RumbleType.kRightRumble, 0.5);
+      }
+      else {
+        RobotContainer.operatorRumble.setRumble(RumbleType.kRightRumble, 0);
+      }
   }
 
   @Override

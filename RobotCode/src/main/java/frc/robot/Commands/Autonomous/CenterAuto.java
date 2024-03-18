@@ -49,7 +49,7 @@ public class CenterAuto extends Command implements Consts{
 
             //second note   
             ,new TurnShooterToIntake()
-            ,new DriveToPoint(new SwervePoint((blueAlliance) ? 1.4: PhysicalConsts.FIELD_WIDTH - 1.4, 5.4, (blueAlliance) ? 90 : 270))
+            ,new DriveToPoint(new SwervePoint((blueAlliance) ? 1.4: PhysicalConsts.FIELD_WIDTH - 1.4, 5.4, (blueAlliance) ? 90 : 270)).withTimeout(1)
             ,new ParallelCommandGroup(
                 new IntakeWithoutPID(IntakeValues.INTAKE_SPEED)
                 ,new DriveToPoint(new SwervePoint((blueAlliance) ? 2.5 : PhysicalConsts.FIELD_WIDTH - 2.5, 5.4 , (blueAlliance) ? 90.5 : 270))
@@ -59,6 +59,7 @@ public class CenterAuto extends Command implements Consts{
                     return Shooter.getInstance().isNoteIn();
                 }
             }).withTimeout(2)
+            ,new InstantCommand(() -> {Shooter.getInstance().pullNoteWithoutPID(0);})
 
             ,new InstantCommand(() -> {Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).driveOriginOriented(new Vector2d(0, 1),false);}).withTimeout(0.5)
             ,new TurnToSpeakerAuto()
@@ -81,7 +82,7 @@ public class CenterAuto extends Command implements Consts{
                     return Shooter.getInstance().isNoteIn();
                 }
             }).withTimeout(2)
-
+            ,new InstantCommand(() -> {Shooter.getInstance().pullNoteWithoutPID(0);})
             ,new TurnToSpeakerAuto()
             ,new InstantCommand(() -> {Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).stop();})
             ,new TurnShooterToSpeaker().withTimeout(0.2)
@@ -89,6 +90,9 @@ public class CenterAuto extends Command implements Consts{
             ,new WaitCommand(1.5)
             ,new InstantCommand(() -> {Shooter.getInstance().pushNoteToRollers(ShooterValues.CONTAINMENT_SPEED);})
             ,new WaitCommand(0.5)
+
+            ,new TurnShooterToIntake()
+            ,new InstantCommand(() -> {Shooter.getInstance().stopRollers();})
 
             //fourth note
             /* 

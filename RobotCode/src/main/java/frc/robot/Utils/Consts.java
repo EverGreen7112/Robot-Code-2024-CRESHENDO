@@ -185,7 +185,7 @@ public interface Consts {
         //speaker
         public static final Vector3d RED_SPAKER_POS = new Vector3d(652.67 * 0.0254 + 0.05, 2.05, 218.42 * 0.0254 - 0.4);
         public static final Vector3d BLUE_SPAKER_POS = new Vector3d(-1.5 * 0.0254 - 0.05, 2.05, 218.41 * 0.0254 + 0.4);
-        public static final double SPEAKER_HEIGHT_SCALAR = 0.12216; 
+        public static final double SPEAKER_HEIGHT_SCALAR = 0.14936; 
 
         //gear ratio
         public static final double AIM_MOTOR_GEAR_RATIO = 1 / (45.0);
@@ -199,7 +199,7 @@ public interface Consts {
         
         //shooter angles
         public static final double AIM_MOTOR_MAX_ANGLE = 180;
-        public static final double AIM_MOTOR_MIN_ANGLE = -50.4;
+        public static final double AIM_MOTOR_MIN_ANGLE = -50.0;
         public static final double AIM_MOTOR_AMP_ANGLE = 98;//130 works on our amp not comp's
         public static final double AIM_MOTOR_SPEAKER_ANGLE = 0;
         public static final int AIM_MOTOR_CURRENT_LIMIT = 20;

@@ -211,6 +211,7 @@ public class Swerve extends SubsystemBase implements Consts {
      * set gyro's yaw value to 0 
      */
     public void zeroYaw() {
+        m_angleOffset -= m_gyro.getAngle();
         m_gyro.zeroYaw();
         m_headingTargetAngle = m_gyro.getAngle();
     }
@@ -260,14 +261,24 @@ public class Swerve extends SubsystemBase implements Consts {
         m_y = 0;
     }
 
-    public void setOdometryVals(double x, double y, double robotHeadingFromVision){
+    public void offsetLocalizationTo(double x, double y, double robotHeadingFromVision){
         for (int i = 0; i < m_modules.length; i++) {
             m_modules[i].updatePos(0);
         }
         m_x = x;
         m_y = y;
         m_robotHeadingFromVision = robotHeadingFromVision;
-        m_angleOffset = m_robotHeadingFromVision - m_gyro.getAngle();
+        double new_offset = (m_robotHeadingFromVision - m_gyro.getAngle());
+
+        // if the new angle offset is drastically different than the last, we should try 
+        if (Math.abs(m_angleOffset - new_offset) > ChassisValues.MIN_DIFF_FOR_ANGLE_OFFSET_REPLACEMENT){
+            m_angleOffset = new_offset;
+        } else {
+            // this averages all angle offset values over time but giving more weight to more recent values
+            // this is supposed to help stop offset drfiting, but worse case scenario it still slows offset drifting by ANGLE_OFFSET_AVERAGE_NEW_READING_WEIGHT
+            m_angleOffset = (ChassisValues.ANGLE_OFFSET_AVERAGE_NEW_READING_WEIGHT * new_offset) +
+             ((1 - ChassisValues.ANGLE_OFFSET_AVERAGE_NEW_READING_WEIGHT) * m_angleOffset); 
+        }
     }
 
     /**
@@ -276,6 +287,7 @@ public class Swerve extends SubsystemBase implements Consts {
     public SwerveModule getModule(int idx) {
         return m_modules[idx];
     }
+
 
     public Vector2d getFieldOrientedVelocity(){
         double xVel = 0, yVel = 0;  // these are robot oriented
@@ -299,6 +311,36 @@ public class Swerve extends SubsystemBase implements Consts {
         vel.rotateBy(Math.toRadians(getFieldOrientedAngle()));  // changes robotDelta to field oriented
 
         return vel;
+    }
+
+    /**
+     * get the swerves angular velocity (degrees / sec)
+     */
+    public double getAngularVelocity() {
+        double angularVelocity = 0;
+        
+        for (int i = 0; i < m_modules.length; i++) {
+            Vector2d moduleRotationVector = new Vector2d(ChassisValues.physicalMoudulesVector[i]);
+            moduleRotationVector.rotate(Math.toRadians(90));
+            moduleRotationVector.normalise();
+
+            double moduleVel = m_modules[i].getVelocity();
+            //get current speed in each axis
+            double moduleX = (Math.cos(Math.toRadians(m_modules[i].getAngle())) * moduleVel);
+            double moduleY = (Math.sin(Math.toRadians(m_modules[i].getAngle())) * moduleVel);
+            Vector2d moduleVelocity = new Vector2d(moduleX, moduleY);
+
+            angularVelocity += moduleVelocity.dot(moduleRotationVector);
+        }
+        
+        // at this point the angular velocity is in m/s
+        angularVelocity /= (double)ChassisValues.physicalMoudulesVector.length;
+
+        // converts angularVelocity to degrees/s
+        angularVelocity /= ChassisValues.ROBOT_BOUNDING_CIRCLE_PERIMETER;  // rotations / s
+        angularVelocity *= 360;  // degrees / s
+
+        return angularVelocity;
     }
 
     /**  

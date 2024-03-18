@@ -37,7 +37,7 @@ public class ThreeNoteAuto extends Command implements Consts{
             Vector2d speaker = Funcs.getSpeaker2d();
             Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).resetOdometry(); 
             
-            Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).setOdometryVals((Robot.getAlliance() == Alliance.Red) ? 15.5 : 0.5,
+            Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).offsetLocalizationTo((Robot.getAlliance() == Alliance.Red) ? 15.5 : 0.5,
                                                                                (Robot.getAlliance() == Alliance.Red) ? 5.5 : 5.5,
                                                                                (Robot.getAlliance() == Alliance.Red) ? 270 : 90);
             

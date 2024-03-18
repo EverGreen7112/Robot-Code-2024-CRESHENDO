@@ -9,6 +9,7 @@ import java.nio.ByteOrder;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Subsystems.Swerve;
+import frc.robot.Utils.Consts.VisionValues;
 
 public class LocalizationVision {
      private int m_port;
@@ -19,6 +20,7 @@ public class LocalizationVision {
     private float[] m_lastLocals={0, 0, 0, 0};
     
     public LocalizationVision(int port){
+        Swerve swerve = Swerve.getInstance(Consts.ChassisValues.USES_ABS_ENCODER);
         this.m_port = port;
         try{ 
             m_socket = new DatagramSocket(m_port, InetAddress.getByName("0.0.0.0"));
@@ -50,8 +52,14 @@ public class LocalizationVision {
                         for(int i=0; i<m_locals.length; i++){
                             m_locals[i] = new_locals[i];
                         }
-                    //put localization values from vision in swerve (not in the correct order because axises are flipped)
-                    Swerve.getInstance(Consts.ChassisValues.USES_ABS_ENCODER).setOdometryVals(m_locals[0], m_locals[2], -m_locals[3]);
+                    double angularVelocity = swerve.getAngularVelocity();
+                    swerve.offsetLocalizationTo(
+                        m_locals[0],                                                         // x
+                        m_locals[2],                                                         // y
+                        -m_locals[3] + (angularVelocity * VisionValues.VISION_FRAME_TIME));  // angle
+                        // we add an estimation for delta angle to the angle given by the vision
+                        // this is an attempt to compensate for the fact that the data as given by the vision is delayed
+                        // this was added to help compensate for angle offset drifting
 
             }
         });

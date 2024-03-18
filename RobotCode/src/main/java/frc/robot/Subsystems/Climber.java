@@ -161,9 +161,6 @@ public class Climber extends SubsystemBase implements Consts {
         climbRightSideWithoutPid(speed);
     }
 
-
-    // TODO: add the check to make sure we dont pull at 0 when we use PID for the climber
-
     /**
      * the function moves the motors at the given rpm using pid.
      * 

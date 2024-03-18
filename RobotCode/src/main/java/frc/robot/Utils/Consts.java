@@ -67,6 +67,11 @@ public interface Consts {
         public static double SLOW_MODE_DRIVE_SPEED = 1;
         public static double FAST_MODE_DRIVE_SPEED = 4.5;
         public static double AUTO_DRIVE_SPEED = 1.5;
+        public static double MIN_DIFF_FOR_ANGLE_OFFSET_REPLACEMENT = 10.0; // minimum difference between the new calculated angle offset and the old angle offset to replace the old offset by the new offset (degrees)
+        public static double ANGLE_OFFSET_AVERAGE_NEW_READING_WEIGHT = 0.5; // how much weight do we give the new offset when averaging with the last offset
+        // (theoretically) the lower the number the less offset drifting
+        // keep in mind this number should be between 0 and 1 with 0 meaning that we'll always stick to the old offset and 1 meaning we'll always replace the offset not caring about the old offset
+        // also keep in mind that even if you set it to 0 the offset will still update if the new offset is drastically different than the last
 
         // max speed values in m/s
         public static Supplier<Double> MAX_SPEED = new Supplier<Double>() {
@@ -248,6 +253,7 @@ public interface Consts {
     public class VisionValues{
         public static final int LOCALIZATION_VISION_PORT = 5800;
         public static final int JETSON_HEALTH_CHECK_PORT = 5801;
+        public static final double VISION_FRAME_TIME = 1.0 / 20.0;
     }
 
 

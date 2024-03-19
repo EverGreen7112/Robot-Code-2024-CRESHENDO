@@ -54,6 +54,8 @@ public class Robot extends TimedRobot implements Consts{
   private static SendableChooser<Alliance> m_allianceChooser = new SendableChooser<Alliance>();;
   private static SendableChooser<Command> m_autoChooser = new SendableChooser<Command>();
   
+  private static Command centerAuto = new CenterAuto();
+  private static Command notAmpSideAuto = new NotAmpSideAuto();
 
   @Override
   public void robotInit() {
@@ -82,6 +84,10 @@ public class Robot extends TimedRobot implements Consts{
     SmartDashboard.putData("alliance chooser", m_allianceChooser);
 
     //TODO: add auto options and put data in shuffleboard
+    m_autoChooser.setDefaultOption("center", centerAuto);
+    m_autoChooser.addOption("center", centerAuto);
+    m_autoChooser.addOption("not amp side", notAmpSideAuto);
+    SmartDashboard.putData("auto chooser", m_autoChooser);
   }
 
   @Override
@@ -113,8 +119,7 @@ public class Robot extends TimedRobot implements Consts{
   public void autonomousInit() {
     // Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).zeroYaw();;
     Swerve.getInstance(ChassisValues.USES_ABS_ENCODER).setModulesToAbs();
-    new CenterAuto().schedule();
-    // new NotAmpSideAuto().schedule();
+    m_autoChooser.getSelected().schedule();
   }
 
   @Override

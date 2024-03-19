@@ -83,16 +83,17 @@ public class Climber extends SubsystemBase implements Consts {
     @Override
     public void periodic(){
 
-        SmartDashboard.putBoolean("right limit switch", m_limitSwitchRight.get());
-        SmartDashboard.putBoolean("left limit switch", m_limitSwitchLeft.get());
 
         // if(Climber.getInstance().m_climberRightLimitSwitch.get())
             // Climber.getInstance().m_climberRightMotor.stopMotor();
         
         // if(Climber.getInstance().m_climberLeftLimitSwitch.get())
-            // Climber.getInstance().m_climberLeftMotor.stopMotor();
+            // Climber.getInstance().m_climberLeftMotor.stopMo
+
+
+   
         
-        
+       
     }
 
     /**
@@ -132,7 +133,7 @@ public class Climber extends SubsystemBase implements Consts {
     public void climbRightSideWithoutPid(double speed) {
         // m_climberRightMotor.set(speed);
         // if (m_climberRightMotor.getEncoder().getPosition() >= ClimberValues.CLIMBER_FORCE_STOP_TOLERANCE || speed >= 0) {
-        if (m_limitSwitchRight.get() || speed >= 0){
+        if ((m_limitSwitchRight.get() || (speed >= 0 && m_climberRightMotor.getEncoder().getPosition() < ClimberValues.MAX_HEIGHT))){
             m_climberRightMotor.set(speed);
         } else {
             m_climberRightMotor.set(0);
@@ -145,7 +146,7 @@ public class Climber extends SubsystemBase implements Consts {
     public void climbLeftSideWithoutPid(double speed) {
         // m_climberLeftMotor.set(speed);
         // if ((m_climberLeftMotor.getEncoder().getPosition() >= ClimberValues.CLIMBER_FORCE_STOP_TOLERANCE || speed >= 0)) {
-        if (m_limitSwitchLeft.get() || speed >= 0){
+        if ((m_limitSwitchLeft.get() || (speed >= 0 && m_climberLeftMotor.getEncoder().getPosition() < ClimberValues.MAX_HEIGHT))){
             m_climberLeftMotor.set(speed);
         } else {
             m_climberLeftMotor.set(0);

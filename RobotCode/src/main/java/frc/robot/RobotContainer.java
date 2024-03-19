@@ -101,7 +101,7 @@ public class RobotContainer implements Consts {
         );
     
     //amp
-    operator.x().whileTrue(new ParallelCommandGroup(new TurnShooterToAmp(), new InstantCommand(() -> {Shooter.getInstance().setShootSpeed(700, 700);})))
+    operator.x().whileTrue(new ParallelCommandGroup(new TurnShooterToAmp(), new InstantCommand(() -> {Shooter.getInstance().setShootSpeed(550, 550);})))
                 .onFalse(new InstantCommand(() -> {Shooter.getInstance().stopRollers();}));
 
     //speaker

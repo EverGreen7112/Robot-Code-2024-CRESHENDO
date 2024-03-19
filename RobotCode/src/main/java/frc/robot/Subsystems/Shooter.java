@@ -116,7 +116,6 @@ public class Shooter extends SubsystemBase implements Consts{
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("note sensor value", (Math.pow(m_noteSensor.getAverageVoltage(), -1.2045) * 27.726));
         SmartDashboard.putNumber("shooter angle", getShooterAngle());
         SmartDashboard.putNumber("target shooter angle", m_targetAngle);
         SmartDashboard.putNumber("right rollers speed", getRightRollersSpeed());
